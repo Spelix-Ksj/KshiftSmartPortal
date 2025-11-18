@@ -1,18 +1,18 @@
 using System;
 using System.Data;
-using System.Web;
-using System.Web.UI;
 using Oracle.ManagedDataAccess.Client;
 using System.Configuration;
 using System.Text.RegularExpressions;
 
-namespace ScmBlockContractWeb
+namespace ScmBlockContractWeb.Controllers
 {
-    public partial class Login : System.Web.UI.Page
+    /// <summary>
+    /// 로그인 비즈니스 로직을 담당하는 컨트롤러
+    /// </summary>
+    public class LoginController
     {
-        // 로그인 실패 제한 횟수
         private const int MAX_LOGIN_FAIL_COUNT = 5;
-
+        
         private string ConnectionString
         {
             get
@@ -21,27 +21,10 @@ namespace ScmBlockContractWeb
             }
         }
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            if (!IsPostBack)
-            {
-                // 이미 로그인되어 있으면 메인 페이지로 리디렉션
-                if (Session["UserID"] != null)
-                {
-                    Response.Redirect("Default.aspx", false);
-                    Context.ApplicationInstance.CompleteRequest();
-                    return;
-                }
-
-                LoadCompanyList();
-                SetFocusOnLoad();
-            }
-        }
-
         /// <summary>
-        /// 회사 목록 로드
+        /// 회사 목록 조회
         /// </summary>
-        private void LoadCompanyList()
+        public DataTable GetCompanyList()
         {
             try
             {
@@ -61,149 +44,41 @@ namespace ScmBlockContractWeb
                         {
                             DataTable dt = new DataTable();
                             adapter.Fill(dt);
-
-                            cmbCompany.DataSource = dt;
-                            cmbCompany.DataBind();
-
-                            // 기본값 설정 (1002 - SPELIX)
-                            if (dt.Rows.Count > 0)
-                            {
-                                var defaultRow = dt.Select("COMPANY_NO = '1002'");
-                                if (defaultRow.Length > 0)
-                                {
-                                    cmbCompany.Value = "1002";
-                                }
-                                else
-                                {
-                                    cmbCompany.SelectedIndex = 0;
-                                }
-                            }
+                            return dt;
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                ShowError($"회사 목록 로드 실패: {ex.Message}");
+                throw new Exception($"회사 목록 조회 실패: {ex.Message}", ex);
             }
-        }
-
-        /// <summary>
-        /// 로그인 버튼 클릭 이벤트
-        /// </summary>
-        protected void btnLogin_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // 입력값 검증
-                if (!ValidateInput())
-                {
-                    return;
-                }
-
-                string companyNo = cmbCompany.Value?.ToString();
-                string userId = txtUserId.Text.Trim();
-                string password = txtPassword.Text;
-
-                // SQL Injection 방지 - 입력값 검증
-                if (!IsValidUserId(userId))
-                {
-                    ShowError("아이디 형식이 올바르지 않습니다.");
-                    return;
-                }
-
-                // 로그인 처리
-                if (AuthenticateUser(companyNo, userId, password))
-                {
-                    // 로그인 성공
-                    Session["UserID"] = userId;
-                    Session["CompanyNo"] = companyNo;
-                    Session["LoginTime"] = DateTime.Now;
-                    Session.Timeout = 30; // 30분
-
-                    // 로그인 실패 횟수 초기화
-                    UpdateLoginFailCount(userId, companyNo, 0);
-
-                    // 메인 페이지로 리디렉션
-                    // Response.Redirect("Default.aspx");
-                    Response.Redirect("Default.aspx", false);  // ✅ 예외 없음
-                    Context.ApplicationInstance.CompleteRequest();
-                    return;
-                }
-                else
-                {
-                    // 로그인 실패
-                    int failCount = IncrementLoginFailCount(userId, companyNo);
-
-                    if (failCount >= MAX_LOGIN_FAIL_COUNT)
-                    {
-                        // 계정 잠금
-                        BlockUser(userId, companyNo, $"비밀번호 {MAX_LOGIN_FAIL_COUNT}회 이상 실패");
-                        ShowError($"로그인 {MAX_LOGIN_FAIL_COUNT}회 실패로 계정이 잠겼습니다. 관리자에게 문의하세요.");
-                    }
-                    else
-                    {
-                        ShowError($"로그인 실패 ({failCount}/{MAX_LOGIN_FAIL_COUNT}회). 아이디 또는 암호를 확인하세요.");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowError($"로그인 처리 중 오류 발생: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// 입력값 검증
-        /// </summary>
-        private bool ValidateInput()
-        {
-            if (cmbCompany.Value == null || string.IsNullOrEmpty(cmbCompany.Value.ToString()))
-            {
-                ShowError("회사를 선택하세요.");
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtUserId.Text))
-            {
-                ShowError("아이디를 입력하세요.");
-                txtUserId.Focus();
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtPassword.Text))
-            {
-                ShowError("암호를 입력하세요.");
-                txtPassword.Focus();
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// 아이디 유효성 검증 (SQL Injection 방지)
-        /// </summary>
-        private bool IsValidUserId(string userId)
-        {
-            // 영문, 숫자, _, - 만 허용 (3-50자)
-            return Regex.IsMatch(userId, @"^[a-zA-Z0-9_-]{3,50}$");
         }
 
         /// <summary>
         /// 사용자 인증
         /// </summary>
-        private bool AuthenticateUser(string companyNo, string userId, string password)
+        public LoginResult AuthenticateUser(string companyNo, string userId, string password)
         {
+            LoginResult result = new LoginResult();
+
+            // 입력값 검증
+            if (!IsValidUserId(userId))
+            {
+                result.Success = false;
+                result.Message = "아이디 형식이 올바르지 않습니다.";
+                return result;
+            }
+
             try
             {
                 using (OracleConnection conn = new OracleConnection(ConnectionString))
                 {
                     conn.Open();
 
-                    // ⭐ SQL Injection 방지: 파라미터화된 쿼리 사용
                     string query = @"
-                        SELECT USER_ID, DOMAIN_CATEGORY, IS_BLOCKED, BLOCKED_REASON 
+                        SELECT USER_ID, DOMAIN_CATEGORY, IS_BLOCKED, BLOCKED_REASON, 
+                               NVL(TAG05, '0') AS FAIL_COUNT
                         FROM TCM_USER 
                         WHERE COMPANY_NO = :COMPANY_NO 
                           AND USER_ID = :USER_ID 
@@ -211,7 +86,6 @@ namespace ScmBlockContractWeb
 
                     using (OracleCommand cmd = new OracleCommand(query, conn))
                     {
-                        // 파라미터 바인딩
                         cmd.Parameters.Add("COMPANY_NO", OracleDbType.Varchar2, 128).Value = companyNo;
                         cmd.Parameters.Add("USER_ID", OracleDbType.Varchar2, 50).Value = userId;
                         cmd.Parameters.Add("USER_PW", OracleDbType.Varchar2, 100).Value = password;
@@ -225,14 +99,39 @@ namespace ScmBlockContractWeb
                                 if (isBlocked == "Y")
                                 {
                                     string blockReason = GetSafeString(reader, "BLOCKED_REASON");
-                                    ShowError($"계정이 잠겨 있습니다. 사유: {blockReason}");
-                                    return false;
+                                    result.Success = false;
+                                    result.Message = $"계정이 잠겨 있습니다. 사유: {blockReason}";
+                                    return result;
                                 }
 
-                                // 세션에 추가 정보 저장
-                                Session["DomainCategory"] = GetSafeString(reader, "DOMAIN_CATEGORY");
-
-                                return true;
+                                // 로그인 성공
+                                result.Success = true;
+                                result.UserId = userId;
+                                result.CompanyNo = companyNo;
+                                result.DomainCategory = GetSafeString(reader, "DOMAIN_CATEGORY");
+                                
+                                // 실패 횟수 초기화
+                                UpdateLoginFailCount(userId, companyNo, 0);
+                                
+                                return result;
+                            }
+                            else
+                            {
+                                // 로그인 실패
+                                int failCount = IncrementLoginFailCount(userId, companyNo);
+                                
+                                if (failCount >= MAX_LOGIN_FAIL_COUNT)
+                                {
+                                    BlockUser(userId, companyNo, $"비밀번호 {MAX_LOGIN_FAIL_COUNT}회 이상 실패");
+                                    result.Message = $"로그인 {MAX_LOGIN_FAIL_COUNT}회 실패로 계정이 잠겼습니다. 관리자에게 문의하세요.";
+                                }
+                                else
+                                {
+                                    result.Message = $"로그인 실패 ({failCount}/{MAX_LOGIN_FAIL_COUNT}회). 아이디 또는 암호를 확인하세요.";
+                                }
+                                
+                                result.Success = false;
+                                return result;
                             }
                         }
                     }
@@ -240,10 +139,19 @@ namespace ScmBlockContractWeb
             }
             catch (Exception ex)
             {
-                throw new Exception($"사용자 인증 실패: {ex.Message}", ex);
+                result.Success = false;
+                result.Message = $"로그인 처리 중 오류 발생: {ex.Message}";
+                return result;
             }
+        }
 
-            return false;
+        /// <summary>
+        /// 아이디 유효성 검증 (SQL Injection 방지)
+        /// </summary>
+        private bool IsValidUserId(string userId)
+        {
+            // 영문, 숫자, _, - 만 허용 (3-50자)
+            return Regex.IsMatch(userId, @"^[a-zA-Z0-9_-]{3,50}$");
         }
 
         /// <summary>
@@ -257,7 +165,6 @@ namespace ScmBlockContractWeb
                 {
                     conn.Open();
 
-                    // 현재 실패 횟수 조회
                     string selectQuery = @"
                         SELECT NVL(TAG05, '0') AS FAIL_COUNT 
                         FROM TCM_USER 
@@ -278,7 +185,6 @@ namespace ScmBlockContractWeb
                         }
                     }
 
-                    // 실패 횟수 증가
                     failCount++;
                     UpdateLoginFailCount(userId, companyNo, failCount);
 
@@ -375,22 +281,17 @@ namespace ScmBlockContractWeb
                 return string.Empty;
             }
         }
+    }
 
-        /// <summary>
-        /// 오류 메시지 표시
-        /// </summary>
-        private void ShowError(string message)
-        {
-            pnlError.Visible = true;
-            lblError.Text = message;
-        }
-
-        /// <summary>
-        /// 페이지 로드 시 포커스 설정
-        /// </summary>
-        private void SetFocusOnLoad()
-        {
-            txtUserId.Focus();
-        }
+    /// <summary>
+    /// 로그인 결과 모델
+    /// </summary>
+    public class LoginResult
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public string UserId { get; set; }
+        public string CompanyNo { get; set; }
+        public string DomainCategory { get; set; }
     }
 }
