@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="ScmBlockContractWeb.Login" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="ScmBlockContractWeb.Login" %>
 <%@ Register Assembly="DevExpress.Web.v24.2, Version=24.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
 
 <!DOCTYPE html>
@@ -83,29 +83,29 @@
             margin-bottom: 8px;
         }
 
-        .theme-selector {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            width: 150px;
+        .btn-container {
+            margin-top: 30px;
+        }
+
+        .theme-selector-container {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e5e7eb;
         }
 
         .theme-label {
-            font-size: 11px;
+            font-size: 12px;
             color: #666;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             display: block;
-        }
-
-        .btn-container {
-            margin-top: 30px;
+            font-weight: 500;
         }
 
         .copyright {
             text-align: center;
             padding: 20px;
             font-size: 12px;
-            color: #999;
+            color: #666;
             background: #f8f9fa;
         }
 
@@ -116,6 +116,24 @@
 
         .dxeEditArea {
             border-radius: 8px !important;
+        }
+
+        /* DevExpress 컨트롤 너비 100% 강제 적용 */
+        .form-group .dx-textbox,
+        .form-group .dx-combobox,
+        .form-group table.dxeBase {
+            width: 100% !important;
+        }
+
+        .btn-container .dx-button,
+        .btn-container table.dxeBase {
+            width: 100% !important;
+        }
+
+        .theme-selector-container .dx-combobox,
+        .theme-selector-container table.dxeBase {
+            width: 100% !important;
+        }
         }
     </style>
 </head>
@@ -194,11 +212,11 @@
                 </div>
 
                 <!-- 테마 선택 -->
-                <div class="theme-selector">
+                <div class="theme-selector-container">
                     <label class="theme-label">테마 선택</label>
                     <dx:ASPxComboBox ID="cmbTheme" runat="server" 
                         Width="100%"
-                        Height="32px"
+                        Height="36px"
                         AutoPostBack="true"
                         OnSelectedIndexChanged="cmbTheme_SelectedIndexChanged"
                         DropDownStyle="DropDownList">
@@ -206,7 +224,6 @@
                             <dx:ListEditItem Text="Office 365" Value="Office365" Selected="true" />
                             <dx:ListEditItem Text="Material" Value="Material" />
                             <dx:ListEditItem Text="Material Compact" Value="MaterialCompact" />
-                            <dx:ListEditItem Text="Modern Blue" Value="ModernBlue" />
                             <dx:ListEditItem Text="Metropolis" Value="Metropolis" />
                             <dx:ListEditItem Text="iOS" Value="iOS" />
                         </Items>

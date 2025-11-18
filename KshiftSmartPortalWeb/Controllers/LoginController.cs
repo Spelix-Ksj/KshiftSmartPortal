@@ -12,7 +12,7 @@ namespace ScmBlockContractWeb.Controllers
     public class LoginController
     {
         private const int MAX_LOGIN_FAIL_COUNT = 5;
-        
+
         private string ConnectionString
         {
             get
@@ -109,17 +109,17 @@ namespace ScmBlockContractWeb.Controllers
                                 result.UserId = userId;
                                 result.CompanyNo = companyNo;
                                 result.DomainCategory = GetSafeString(reader, "DOMAIN_CATEGORY");
-                                
+
                                 // 실패 횟수 초기화
                                 UpdateLoginFailCount(userId, companyNo, 0);
-                                
+
                                 return result;
                             }
                             else
                             {
                                 // 로그인 실패
                                 int failCount = IncrementLoginFailCount(userId, companyNo);
-                                
+
                                 if (failCount >= MAX_LOGIN_FAIL_COUNT)
                                 {
                                     BlockUser(userId, companyNo, $"비밀번호 {MAX_LOGIN_FAIL_COUNT}회 이상 실패");
@@ -129,7 +129,7 @@ namespace ScmBlockContractWeb.Controllers
                                 {
                                     result.Message = $"로그인 실패 ({failCount}/{MAX_LOGIN_FAIL_COUNT}회). 아이디 또는 암호를 확인하세요.";
                                 }
-                                
+
                                 result.Success = false;
                                 return result;
                             }

@@ -9,8 +9,11 @@
 
 namespace ScmBlockContractWeb
 {
+
+
     public partial class Login
     {
+
         /// <summary>
         /// form1 컨트롤입니다.
         /// </summary>

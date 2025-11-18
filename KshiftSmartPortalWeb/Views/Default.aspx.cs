@@ -67,9 +67,40 @@ namespace ScmBlockContractWeb
                 Session["AppTheme"] = theme;
             }
 
-            // 페이지의 모든 DevExpress 컨트롤에 테마 적용
-            // Web.config에 설정된 기본 테마를 오버라이드
-            Page.Theme = theme;
+            // DevExpress 컨트롤에 테마 적용
+            ApplyDevExpressTheme(theme);
+        }
+
+        /// <summary>
+        /// DevExpress 컨트롤에 테마 적용
+        /// </summary>
+        private void ApplyDevExpressTheme(string theme)
+        {
+            // GridView 테마 설정
+            if (gridContracts != null)
+            {
+                gridContracts.Theme = theme;
+            }
+
+            // 콤보박스 테마 설정
+            if (cmbCompanyType != null) cmbCompanyType.Theme = theme;
+            if (cmbCompany != null) cmbCompany.Theme = theme;
+            if (cmbCase != null) cmbCase.Theme = theme;
+
+            // 날짜 컨트롤 테마 설정
+            if (dtStartDate != null) dtStartDate.Theme = theme;
+            if (dtEndDate != null) dtEndDate.Theme = theme;
+
+            // 체크박스 테마 설정
+            if (chkSelectAll != null) chkSelectAll.Theme = theme;
+
+            // 버튼 테마 설정
+            if (btnSearch != null) btnSearch.Theme = theme;
+            if (btnReset != null) btnReset.Theme = theme;
+            if (btnExport != null) btnExport.Theme = theme;
+
+            // 레이블 테마 설정
+            if (lblRecordCount != null) lblRecordCount.Theme = theme;
         }
 
         /// <summary>
@@ -159,7 +190,7 @@ namespace ScmBlockContractWeb
         {
             string companyNo = cmbCompany.Value?.ToString();
             string caseNo = cmbCase.Value?.ToString();
-            
+
             return _contractController.GetContractList(companyNo, caseNo);
         }
 
