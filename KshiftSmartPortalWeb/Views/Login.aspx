@@ -133,8 +133,7 @@
         .theme-selector-container .dx-combobox,
         .theme-selector-container table.dxeBase {
             width: 100% !important;
-        }
-        }
+        }        
     </style>
 </head>
 <body>
@@ -170,7 +169,7 @@
                 <div class="form-group">
                     <label class="form-label">아이디</label>
                     <dx:ASPxTextBox ID="txtUserId" runat="server" 
-                        Width="100%" 
+                        Width="120%" 
                         Height="42px"
                         MaxLength="50"
                         NullText="아이디를 입력하세요">
