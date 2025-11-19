@@ -20,8 +20,8 @@
 - **Oracle Database** 접근 권한
 
 ### 필수 NuGet 패키지
-- DevExpress.Web (v24.2.10)
-- DevExpress.Web.Mvc (v24.2.10)
+- DevExpress.Web (v25.1.10)
+- DevExpress.Web.Mvc (v25.1.10)
 
 ---
 
@@ -215,7 +215,7 @@ Web.config에 다음이 포함되어 있는지 확인:
 <pages>
   <controls>
     <add tagPrefix="dx" namespace="DevExpress.Web" 
-         assembly="DevExpress.Web.v24.2, Version=24.2.10.0, ..." />
+         assembly="DevExpress.Web.v25.1, Version=25.1.6.0, ..." />
   </controls>
 </pages>
 ```
@@ -230,7 +230,7 @@ Web.config에 다음이 포함되어 있는지 확인:
 4. 연결 문자열 구문 확인
 
 ### 3. 빌드 오류
-**증상**: "Could not load file or assembly 'DevExpress.Web.v24.2'"
+**증상**: "Could not load file or assembly 'DevExpress.Web.v25.1'"
 
 **해결방법**:
 1. NuGet 패키지 복원
@@ -259,7 +259,7 @@ Web.config에 다음이 포함되어 있는지 확인:
 **증상**: "Unable to export to Excel"
 
 **해결방법**:
-- DevExpress.Printing.v24.2.Core 패키지 설치 확인
+- DevExpress.Printing.v25.1.Core 패키지 설치 확인
 - 브라우저 팝업 차단 해제
 - 파일 다운로드 권한 확인
 

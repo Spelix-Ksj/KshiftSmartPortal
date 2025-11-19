@@ -1,12 +1,12 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="ScmBlockContractWeb.Login" %>
-<%@ Register Assembly="DevExpress.Web.v25.1, Version=25.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
+<%@ Register Assembly="DevExpress.Web.v24.2, Version=24.2.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>K-SHIFT Portal Management - Login</title>
+    <title>SCM Contract Management - Login</title>
     
     <style>
         * {
@@ -141,7 +141,7 @@
     <form id="form1" runat="server">
         <div class="login-container">
             <div class="login-header">
-                <h1>K-SHIFT Portal - Login</h1>
+                <h1>SCM Contract</h1>
                 <p>Supply Chain Management System</p>
             </div>
 
