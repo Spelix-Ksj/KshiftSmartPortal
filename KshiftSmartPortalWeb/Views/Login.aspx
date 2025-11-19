@@ -117,14 +117,24 @@
         .dxeEditArea {
             border-radius: 8px !important;
         }
-
-        /* DevExpress 컨트롤 너비 100% 강제 적용 */
-        .form-group .dx-textbox,
-        .form-group .dx-combobox,
-        .form-group table.dxeBase {
+        
+        /* ASPxTextBox 및 ASPxComboBox 내부의 입력 필드 폭을 100%로 맞추기 위한 CSS 수정 */
+        /* 1) Validation 래퍼(table …_ET)부터 안쪽 에디터 테이블까지 전부 100% */
+        /*.form-group table.dxeValidDynEditorTable,
+        .form-group table.dxeValidDynEditorTable > tbody > tr > td,
+        .form-group table.dxeValidDynEditorTable > tbody > tr > td > table.dxeTextBoxSys,
+        .form-group table.dxeTextBoxSys > tbody > tr > td.dxic {
             width: 100% !important;
-        }
+        }*/
 
+        /* 2) 실제 입력 <input> 의 폭을 100% + border-box 로 고정 */
+        .form-group table.dxeTextBoxSys input.dxeEditAreaSys {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            display: block;
+        }
+        
         .btn-container .dx-button,
         .btn-container table.dxeBase {
             width: 100% !important;
@@ -169,12 +179,18 @@
                 <div class="form-group">
                     <label class="form-label">아이디</label>
                     <dx:ASPxTextBox ID="txtUserId" runat="server" 
-                        Width="120%" 
+                        Width="100%" 
+                        AutoResizeWithContainer="true"
                         Height="42px"
-                        MaxLength="50"
+                        MaxLength="150"
                         NullText="아이디를 입력하세요">
                         <Border BorderWidth="1px" BorderColor="#ddd" />
-                        <ValidationSettings ValidationGroup="LoginGroup">
+                        <ValidationSettings ValidationGroup="LoginGroup"
+                            Display="Dynamic"
+                            ErrorDisplayMode="Text"                            
+                            ErrorFrameStyle-VerticalAlign="NotSet" 
+                            ErrorTextPosition="Bottom" 
+                            SetFocusOnError="True">
                             <RequiredField IsRequired="true" ErrorText="아이디를 입력하세요" />
                         </ValidationSettings>
                     </dx:ASPxTextBox>
@@ -191,7 +207,12 @@
                         NullText="비밀번호를 입력하세요">
                         <Border BorderWidth="1px" BorderColor="#ddd" />
                         <ClientSideEvents KeyPress="function(s, e) { if (e.htmlEvent.keyCode == 13) btnLogin.Click(); }" />
-                        <ValidationSettings ValidationGroup="LoginGroup">
+                        <ValidationSettings ValidationGroup="LoginGroup"
+                            Display="Dynamic"
+                            ErrorDisplayMode="Text"                            
+                            ErrorFrameStyle-VerticalAlign="NotSet" 
+                            ErrorTextPosition="Bottom" 
+                            SetFocusOnError="True">
                             <RequiredField IsRequired="true" ErrorText="비밀번호를 입력하세요" />
                         </ValidationSettings>
                     </dx:ASPxTextBox>
