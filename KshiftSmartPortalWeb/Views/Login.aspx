@@ -222,7 +222,7 @@
                     <h1>
                         <i class="bi bi-box-seam"></i> K-SHIFT Portal
                     </h1>
-                    <p>Supply Chain Management System</p>
+                    <p>Master Plan Management System</p>
                 </div>
 
                 <!-- 카드 본문 -->

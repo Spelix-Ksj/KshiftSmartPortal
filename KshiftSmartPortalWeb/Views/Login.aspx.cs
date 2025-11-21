@@ -23,7 +23,7 @@ namespace ScmBlockContractWeb
                 // 이미 로그인되어 있으면 메인 페이지로 리디렉션
                 if (Session["UserID"] != null)
                 {
-                    Response.Redirect("Default.aspx", false);
+                    Response.Redirect("Home.aspx", false);
                     Context.ApplicationInstance.CompleteRequest();
                     return;
                 }
@@ -163,8 +163,8 @@ namespace ScmBlockContractWeb
                         Session["AppTheme"] = cmbTheme.Value.ToString();
                     }
 
-                    // 메인 페이지로 리디렉션
-                    Response.Redirect("Default.aspx", false);
+                    // 메인 바로가기 페이지로 리디렉션
+                    Response.Redirect("Home.aspx", false);
                     Context.ApplicationInstance.CompleteRequest();
                 }
                 else
