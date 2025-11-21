@@ -37,70 +37,12 @@ namespace ScmBlockContractWeb
                 lblUserName.Text = Session["UserID"].ToString();
             }
 
-            // 테마 적용
-            ApplyTheme();
-
             // 기본 날짜 설정 (최근 1년)
             dtStartDate.Value = DateTime.Now.AddYears(-1);
             dtEndDate.Value = DateTime.Now;
 
             // 초기 데이터 로드 비활성화 (사용자가 조회 버튼 클릭 시에만 로드)
             // LoadData();
-        }
-
-        /// <summary>
-        /// 테마 적용
-        /// </summary>
-        private void ApplyTheme()
-        {
-            string theme = "Office365"; // 기본 테마
-
-            // 세션에서 테마 가져오기
-            if (Session["AppTheme"] != null)
-            {
-                theme = Session["AppTheme"].ToString();
-            }
-            // 쿠키에서 테마 가져오기
-            else if (Request.Cookies["AppTheme"] != null)
-            {
-                theme = Request.Cookies["AppTheme"].Value;
-                Session["AppTheme"] = theme;
-            }
-
-            // DevExpress 컨트롤에 테마 적용
-            ApplyDevExpressTheme(theme);
-        }
-
-        /// <summary>
-        /// DevExpress 컨트롤에 테마 적용
-        /// </summary>
-        private void ApplyDevExpressTheme(string theme)
-        {
-            // GridView 테마 설정
-            if (gridContracts != null)
-            {
-                gridContracts.Theme = theme;
-            }
-
-            // 콤보박스 테마 설정
-            if (cmbCompanyType != null) cmbCompanyType.Theme = theme;
-            if (cmbCompany != null) cmbCompany.Theme = theme;
-            if (cmbCase != null) cmbCase.Theme = theme;
-
-            // 날짜 컨트롤 테마 설정
-            if (dtStartDate != null) dtStartDate.Theme = theme;
-            if (dtEndDate != null) dtEndDate.Theme = theme;
-
-            // 체크박스 테마 설정
-            if (chkSelectAll != null) chkSelectAll.Theme = theme;
-
-            // 버튼 테마 설정
-            if (btnSearch != null) btnSearch.Theme = theme;
-            if (btnReset != null) btnReset.Theme = theme;
-            if (btnExport != null) btnExport.Theme = theme;
-
-            // 레이블 테마 설정
-            if (lblRecordCount != null) lblRecordCount.Theme = theme;
         }
 
         /// <summary>
@@ -114,7 +56,7 @@ namespace ScmBlockContractWeb
             }
             catch (Exception ex)
             {
-                ShowMessage($"데이터 조회 중 오류가 발생했습니다: {ex.Message}", "error");
+                ShowMessage($"데이터 조회 중 오류가 발생했습니다: {ex.Message}");
             }
         }
 
@@ -144,11 +86,12 @@ namespace ScmBlockContractWeb
         {
             try
             {
+                // BootstrapGridView도 ASPxGridViewExporter 사용 가능
                 gridContracts.ExportXlsxToResponse("SCM_Contract_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx");
             }
             catch (Exception ex)
             {
-                ShowMessage($"엑셀 내보내기 중 오류가 발생했습니다: {ex.Message}", "error");
+                ShowMessage($"엑셀 내보내기 중 오류가 발생했습니다: {ex.Message}");
             }
         }
 
@@ -174,7 +117,7 @@ namespace ScmBlockContractWeb
 
                 if (contractList.Count == 0)
                 {
-                    ShowMessage("조회된 데이터가 없습니다.", "info");
+                    ShowMessage("조회된 데이터가 없습니다.");
                 }
             }
             catch (Exception ex)
@@ -197,7 +140,7 @@ namespace ScmBlockContractWeb
         /// <summary>
         /// 메시지 표시
         /// </summary>
-        private void ShowMessage(string message, string type)
+        private void ShowMessage(string message)
         {
             string script = $"alert('{message.Replace("'", "\\'")}');";
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowMessage", script, true);

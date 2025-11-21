@@ -33,13 +33,22 @@ namespace ScmBlockContractWeb
         protected global::System.Web.UI.WebControls.Label lblUserName;
 
         /// <summary>
+        /// chkSelectAll 컨트롤입니다.
+        /// </summary>
+        /// <remarks>
+        /// 자동 생성 필드입니다.
+        /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
+        /// </remarks>
+        protected global::DevExpress.Web.Bootstrap.BootstrapCheckBox chkSelectAll;
+
+        /// <summary>
         /// cmbCompanyType 컨트롤입니다.
         /// </summary>
         /// <remarks>
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxComboBox cmbCompanyType;
+        protected global::DevExpress.Web.Bootstrap.BootstrapComboBox cmbCompanyType;
 
         /// <summary>
         /// cmbCompany 컨트롤입니다.
@@ -48,7 +57,7 @@ namespace ScmBlockContractWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxComboBox cmbCompany;
+        protected global::DevExpress.Web.Bootstrap.BootstrapComboBox cmbCompany;
 
         /// <summary>
         /// cmbCase 컨트롤입니다.
@@ -57,16 +66,7 @@ namespace ScmBlockContractWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxComboBox cmbCase;
-
-        /// <summary>
-        /// chkSelectAll 컨트롤입니다.
-        /// </summary>
-        /// <remarks>
-        /// 자동 생성 필드입니다.
-        /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
-        /// </remarks>
-        protected global::DevExpress.Web.ASPxCheckBox chkSelectAll;
+        protected global::DevExpress.Web.Bootstrap.BootstrapComboBox cmbCase;
 
         /// <summary>
         /// dtStartDate 컨트롤입니다.
@@ -75,7 +75,7 @@ namespace ScmBlockContractWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxDateEdit dtStartDate;
+        protected global::DevExpress.Web.Bootstrap.BootstrapDateEdit dtStartDate;
 
         /// <summary>
         /// dtEndDate 컨트롤입니다.
@@ -84,7 +84,7 @@ namespace ScmBlockContractWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxDateEdit dtEndDate;
+        protected global::DevExpress.Web.Bootstrap.BootstrapDateEdit dtEndDate;
 
         /// <summary>
         /// btnSearch 컨트롤입니다.
@@ -93,7 +93,7 @@ namespace ScmBlockContractWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxButton btnSearch;
+        protected global::DevExpress.Web.Bootstrap.BootstrapButton btnSearch;
 
         /// <summary>
         /// btnReset 컨트롤입니다.
@@ -102,7 +102,7 @@ namespace ScmBlockContractWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxButton btnReset;
+        protected global::DevExpress.Web.Bootstrap.BootstrapButton btnReset;
 
         /// <summary>
         /// btnExport 컨트롤입니다.
@@ -111,7 +111,7 @@ namespace ScmBlockContractWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxButton btnExport;
+        protected global::DevExpress.Web.Bootstrap.BootstrapButton btnExport;
 
         /// <summary>
         /// gridContracts 컨트롤입니다.
@@ -120,7 +120,7 @@ namespace ScmBlockContractWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxGridView gridContracts;
+        protected global::DevExpress.Web.Bootstrap.BootstrapGridView gridContracts;
 
         /// <summary>
         /// lblRecordCount 컨트롤입니다.
@@ -129,6 +129,6 @@ namespace ScmBlockContractWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxLabel lblRecordCount;
+        protected global::System.Web.UI.WebControls.Label lblRecordCount;
     }
 }
