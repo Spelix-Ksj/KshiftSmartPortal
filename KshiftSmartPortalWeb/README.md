@@ -32,7 +32,7 @@ DevExpress 25.1.6을 사용한 ASP.NET Web Forms 기반 공급망 관리(SCM) �
 
 ## 프로젝트 구조
 ```
-ScmBlockContractWeb/
+KShiftSmartPortalWeb/
 ├── Views/
 │   ├── Login.aspx                 # 로그인 페이지
 │   ├── Home.aspx                  # 메인 바로가기 화면

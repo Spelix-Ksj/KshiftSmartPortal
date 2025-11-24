@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ScmBlockContractWeb.Models
+namespace KShiftSmartPortalWeb.Models
 {
     /// <summary>
     /// SCM_CONTRACT_DETAIL 테이블 모델 클래스

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using Oracle.ManagedDataAccess.Client;
-using ScmBlockContractWeb.Models;
+using KShiftSmartPortalWeb.Models;
 
-namespace ScmBlockContractWeb.Controllers
+namespace KShiftSmartPortalWeb.Controllers
 {
     /// <summary>
     /// 계약 데이터 비즈니스 로직을 담당하는 컨트롤러

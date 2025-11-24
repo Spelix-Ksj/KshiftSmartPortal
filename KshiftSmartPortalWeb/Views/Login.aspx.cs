@@ -2,9 +2,9 @@ using System;
 using System.Data;
 using System.Web;
 using System.Web.UI;
-using ScmBlockContractWeb.Controllers;
+using KShiftSmartPortalWeb.Controllers;
 
-namespace ScmBlockContractWeb
+namespace KShiftSmartPortalWeb
 {
     public partial class Login : System.Web.UI.Page
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Web;
 
-namespace ScmBlockContractWeb
+namespace KShiftSmartPortalWeb
 {
     public partial class Logout : System.Web.UI.Page
     {

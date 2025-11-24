@@ -4,7 +4,7 @@ using Oracle.ManagedDataAccess.Client;
 using System.Configuration;
 using System.Text.RegularExpressions;
 
-namespace ScmBlockContractWeb.Controllers
+namespace KShiftSmartPortalWeb.Controllers
 {
     /// <summary>
     /// 로그인 비즈니스 로직을 담당하는 컨트롤러

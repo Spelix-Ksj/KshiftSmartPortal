@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ScmBlockContractWeb.Models
+namespace KShiftSmartPortalWeb.Models
 {
     /// <summary>
     /// 사용자 바로가기 설정 모델 클래스

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Web.UI;
-using ScmBlockContractWeb.Controllers;
-using ScmBlockContractWeb.Models;
+using KShiftSmartPortalWeb.Controllers;
+using KShiftSmartPortalWeb.Models;
 
-namespace ScmBlockContractWeb
+namespace KShiftSmartPortalWeb
 {
     public partial class Home : System.Web.UI.Page
     {
@@ -136,11 +136,48 @@ namespace ScmBlockContractWeb
                         break;
 
                     case "add":
-                        // TODO: 바로가기 추가 구현
+                        // ShortcutOrder를 서버에서 자동 계산 (DB의 MAX + 1)
+                        int nextOrder = _shortcutController.GetNextShortcutOrder(userId, companyNo);
+
+                        UserShortcut newShortcut = new UserShortcut
+                        {
+                            UserId = userId,
+                            CompanyNo = companyNo,
+                            ShortcutOrder = nextOrder,
+                            MenuName = hdnMenuName.Value,
+                            MenuUrl = hdnMenuUrl.Value,
+                            MenuIcon = hdnMenuIcon.Value,
+                            MenuColor = hdnMenuColor.Value,
+                            IsEnabled = "Y",
+                            IsLocked = "N"
+                        };
+
+                        _shortcutController.SaveShortcut(newShortcut);
+                        ShowMessage("바로가기가 추가되었습니다.");
+                        LoadShortcuts(); // 재로드
                         break;
 
                     case "edit":
-                        // TODO: 바로가기 편집 구현
+                        int editOrder = 0;
+                        if (int.TryParse(hdnShortcutOrder.Value, out editOrder))
+                        {
+                            UserShortcut editShortcut = new UserShortcut
+                            {
+                                UserId = userId,
+                                CompanyNo = companyNo,
+                                ShortcutOrder = editOrder,
+                                MenuName = hdnMenuName.Value,
+                                MenuUrl = hdnMenuUrl.Value,
+                                MenuIcon = hdnMenuIcon.Value,
+                                MenuColor = hdnMenuColor.Value,
+                                IsEnabled = "Y",
+                                IsLocked = "N"
+                            };
+
+                            _shortcutController.SaveShortcut(editShortcut);
+                            ShowMessage("바로가기가 수정되었습니다.");
+                            LoadShortcuts(); // 재로드
+                        }
                         break;
                 }
 

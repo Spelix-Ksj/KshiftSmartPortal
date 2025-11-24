@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Web.UI;
-using ScmBlockContractWeb.Controllers;
-using ScmBlockContractWeb.Models;
+using KShiftSmartPortalWeb.Controllers;
+using KShiftSmartPortalWeb.Models;
 
-namespace ScmBlockContractWeb
+namespace KShiftSmartPortalWeb
 {
     public partial class Default : System.Web.UI.Page
     {
@@ -31,12 +31,6 @@ namespace ScmBlockContractWeb
         /// </summary>
         private void InitializePage()
         {
-            // 사용자 정보 표시
-            if (Session["UserID"] != null)
-            {
-                lblUserName.Text = Session["UserID"].ToString();
-            }
-
             // 기본 날짜 설정 (최근 1년)
             dtStartDate.Value = DateTime.Now.AddYears(-1);
             dtEndDate.Value = DateTime.Now;

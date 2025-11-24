@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="ScmBlockContractWeb.Home" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="KShiftSmartPortalWeb.Home" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -37,7 +37,7 @@
             text-align: center;
             color: white;
             margin-bottom: 30px;
-            padding: 30px 20px;
+            padding: 50px 20px;
         }
 
         .header-section h1 {
@@ -144,6 +144,11 @@
             background: rgba(255, 255, 255, 0.1);
             border: 2px dashed rgba(255, 255, 255, 0.3);
             color: white;
+            display: none; /* 기본적으로 숨김 */
+        }
+
+        .edit-mode .add-shortcut-tile {
+            display: flex; /* 편집모드에서만 표시 */
         }
 
         .add-shortcut-tile:hover {
@@ -218,7 +223,7 @@
         .user-info-section {
             position: absolute;
             top: 20px;
-            right: 20px;
+            right: 20px;            
             color: white;
             display: flex;
             align-items: center;
@@ -285,7 +290,7 @@
             <!-- 헤더 영역 -->
             <div class="header-section">
                 <h1>
-                    K-SHIFT 
+                    K-SHIFT Web Portal
                     <span class="version-badge">ver 1.0</span>
                 </h1>
             </div>
@@ -339,6 +344,10 @@
         <asp:HiddenField ID="hdnAction" runat="server" />
         <asp:HiddenField ID="hdnShortcutOrder" runat="server" />
         <asp:HiddenField ID="hdnEditMode" runat="server" Value="false" />
+        <asp:HiddenField ID="hdnMenuName" runat="server" />
+        <asp:HiddenField ID="hdnMenuUrl" runat="server" />
+        <asp:HiddenField ID="hdnMenuIcon" runat="server" />
+        <asp:HiddenField ID="hdnMenuColor" runat="server" />
     </form>
 
     <!-- Bootstrap JS -->
@@ -376,23 +385,45 @@
         function addNewShortcut() {
             var menuName = prompt('메뉴 이름을 입력하세요:');
             if (menuName) {
-                var menuUrl = prompt('메뉴 URL을 입력하세요 (예: Default.aspx):');
+                var menuUrl = prompt('메뉴 URL을 입력하세요 (예: Default.aspx):', "Default.aspx");
                 if (menuUrl) {
+                    var menuIcon = prompt('아이콘 클래스를 입력하세요 (예: fa-file, 기본값: fa-star):', 'fa-star');
+                    var menuColor = prompt('배경색을 입력하세요 (예: #3498db, 기본값: #3498db):', '#3498db');
+
+                    // HiddenField에 값 설정
+                    // ShortcutOrder는 서버에서 자동으로 계산됨 (DB의 MAX + 1)
                     document.getElementById('<%= hdnAction.ClientID %>').value = 'add';
-                    alert('바로가기가 추가되었습니다: ' + menuName);
-                    // TODO: 서버로 전송하여 저장
+                    document.getElementById('<%= hdnMenuName.ClientID %>').value = menuName;
+                    document.getElementById('<%= hdnMenuUrl.ClientID %>').value = menuUrl;
+                    document.getElementById('<%= hdnMenuIcon.ClientID %>').value = menuIcon || 'fa-star';
+                    document.getElementById('<%= hdnMenuColor.ClientID %>').value = menuColor || '#3498db';
+
+                    // 서버로 전송하여 저장
+                    __doPostBack('<%= hdnAction.ClientID %>', '');
                 }
             }
         }
 
         // 바로가기 편집
         function editShortcut(order) {
-            document.getElementById('<%= hdnAction.ClientID %>').value = 'edit';
-            document.getElementById('<%= hdnShortcutOrder.ClientID %>').value = order;
             var menuName = prompt('새 메뉴 이름을 입력하세요:');
             if (menuName) {
-                alert('바로가기가 수정되었습니다.');
-                // TODO: 서버로 전송하여 저장
+                var menuUrl = prompt('새 메뉴 URL을 입력하세요 (예: Default.aspx):', "Default.aspx");
+                if (menuUrl) {
+                    var menuIcon = prompt('아이콘 클래스를 입력하세요 (예: fa-file):', 'fa-star');
+                    var menuColor = prompt('배경색을 입력하세요 (예: #3498db):', '#3498db');
+
+                    // HiddenField에 값 설정
+                    document.getElementById('<%= hdnAction.ClientID %>').value = 'edit';
+                    document.getElementById('<%= hdnShortcutOrder.ClientID %>').value = order;
+                    document.getElementById('<%= hdnMenuName.ClientID %>').value = menuName;
+                    document.getElementById('<%= hdnMenuUrl.ClientID %>').value = menuUrl;
+                    document.getElementById('<%= hdnMenuIcon.ClientID %>').value = menuIcon || 'fa-star';
+                    document.getElementById('<%= hdnMenuColor.ClientID %>').value = menuColor || '#3498db';
+
+                    // 서버로 전송하여 저장
+                    __doPostBack('<%= hdnAction.ClientID %>', '');
+                }
             }
         }
 
