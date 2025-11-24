@@ -142,7 +142,7 @@
                     <h1>
                         <i class="fas fa-file-contract"></i>
                         <asp:ContentPlaceHolder ID="PageTitleContent" runat="server">
-                            SCM Block Contract Manager
+                            K-SHIFT Smart Portal Web
                         </asp:ContentPlaceHolder>
                     </h1>                    
                 </div>

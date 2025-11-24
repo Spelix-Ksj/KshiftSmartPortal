@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // 어셈블리와 관련된 정보를 수정하려면
 // 이러한 특성 값을 변경하세요.
 [assembly: AssemblyTitle("KShiftSmartPortalWeb")]
-[assembly: AssemblyDescription("SCM Block Contract Management Web Application")]
+[assembly: AssemblyDescription("K-SHIFT Smart Portal Web Application")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SPELIX")]
 [assembly: AssemblyProduct("KShiftSmartPortalWeb")]
