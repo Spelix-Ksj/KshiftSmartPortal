@@ -68,6 +68,8 @@
     <PackageReference Include="Oracle.ManagedDataAccess" Version="23.5.1" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Global.asax" />
+    <Content Include="Views\ContractManager.aspx" />
     <Content Include="Views\Default.aspx" />
     <Content Include="Views\Home.aspx" />
     <Content Include="Views\Login.aspx" />
@@ -76,18 +78,29 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ContractManagerController.cs" />
     <Compile Include="Controllers\ContractController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ShortcutController.cs" />
     <Compile Include="Repositories\UserShortcutRepository.cs" />
     <Compile Include="Services\ShortcutService.cs" />
     <Compile Include="Utils\SqlLogger.cs" />
+	<Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="Views\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Views\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ContractManager.aspx.cs">
+      <DependentUpon>ContractManager.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\ContractManager.aspx.designer.cs">
+      <DependentUpon>ContractManager.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
@@ -107,6 +120,7 @@
       <DependentUpon>Logout.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Models\ScmContractMaster.cs" />
     <Compile Include="Models\ScmContractDetail.cs" />
     <Compile Include="Models\UserShortcut.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

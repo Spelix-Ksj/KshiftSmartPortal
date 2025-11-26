@@ -48,7 +48,7 @@
             border: none;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
+            overflow: visible;
             width: 100%;
             max-width: 450px;  /* 기본 최대 너비 */
         }
@@ -75,6 +75,7 @@
 
         .login-card .card-body {
             padding: 40px 30px;
+            overflow: visible;
         }
 
         .login-card .card-footer {
@@ -83,6 +84,7 @@
             padding: 20px;
             text-align: center;
             font-size: 12px;
+            overflow: visible;
             color: #666;
         }
 
@@ -320,16 +322,31 @@
                         </label>
                         <dx:ASPxComboBox ID="cmbTheme" runat="server" 
                             Width="100%"
-                            Height="36px"
-                            AutoPostBack="true"
+                            Height="42px"
+                            AutoPostBack="true"                            
                             OnSelectedIndexChanged="cmbTheme_SelectedIndexChanged"
-                            DropDownStyle="DropDownList">
+                            DropDownStyle="DropDownList"
+                            DropDownRows="12">
                             <Items>
-                                <dx:ListEditItem Text="Office 365" Value="Office365" Selected="true" />
+                                <%--<dx:ListEditItem Text="Office 365" Value="Office365" Selected="true" />
                                 <dx:ListEditItem Text="Material" Value="Material" />
                                 <dx:ListEditItem Text="Material Compact" Value="MaterialCompact" />
                                 <dx:ListEditItem Text="Metropolis" Value="Metropolis" />
+                                <dx:ListEditItem Text="iOS" Value="iOS" />--%>                                
+                                <dx:ListEditItem Text="Office 365" Value="Office365" Selected="true" />
+                                <dx:ListEditItem Text="Material" Value="Material" />
+                                <dx:ListEditItem Text="Material Compact" Value="MaterialCompact" />
+                                <dx:ListEditItem Text="Moderno" Value="Moderno" />
                                 <dx:ListEditItem Text="iOS" Value="iOS" />
+                                <dx:ListEditItem Text="Metropolis" Value="Metropolis" />
+                                <dx:ListEditItem Text="Office 2010 Blue" Value="Office2010Blue" />
+                                <dx:ListEditItem Text="Office 2010 Silver" Value="Office2010Silver" />
+                                <dx:ListEditItem Text="Office 2010 Black" Value="Office2010Black" />
+                                <dx:ListEditItem Text="Aqua" Value="Aqua" />
+                                <dx:ListEditItem Text="Glass" Value="Glass" />
+                                <dx:ListEditItem Text="Mulberry" Value="Mulberry" />
+                                <dx:ListEditItem Text="Plastic Blue" Value="PlasticBlue" />
+                                <dx:ListEditItem Text="Soft Orange" Value="SoftOrange" />
                             </Items>
                             <Border BorderWidth="1px" BorderColor="#ced4da" />
                         </dx:ASPxComboBox>

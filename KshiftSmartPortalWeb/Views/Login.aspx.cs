@@ -87,10 +87,7 @@ namespace KShiftSmartPortalWeb
                 // 세션에도 저장
                 Session["AppTheme"] = selectedTheme;
 
-                // DevExpress 컨트롤에 즉시 테마 적용
-                ApplyDevExpressTheme(selectedTheme);
-
-                // 페이지 리로드하여 테마 적용
+                // 페이지 리로드하여 Global.asax에서 테마 적용
                 Response.Redirect(Request.RawUrl, false);
                 Context.ApplicationInstance.CompleteRequest();
             }

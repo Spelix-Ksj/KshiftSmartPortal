@@ -33,7 +33,7 @@ namespace KShiftSmartPortalWeb.Controllers
                     conn.Open();
 
                     string query = @"
-                        SELECT COMPANY_NO, COMPANY_NAME 
+                        SELECT COMPANY_NO, COMPANY_NAME, COMPANY_TYPE
                         FROM STD_COMPANY_MASTER 
                         WHERE NVL(USE_YN, 'Y') = 'Y' 
                         ORDER BY COMPANY_TYPE, VIEW_ORDER";
