@@ -298,7 +298,7 @@
             <!-- 검색 영역 -->
             <div class="search-section">
                 <div class="search-box">
-                    <input type="text" id="txtSearch" placeholder="메뉴스타일은 또는 키워드 입력" />
+                    <input type="text" id="txtSearch" placeholder="메뉴 이름 또는 키워드 입력" />
                     <i class="fas fa-search search-icon"></i>
                 </div>
             </div>
