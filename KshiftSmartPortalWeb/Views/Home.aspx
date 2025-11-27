@@ -315,7 +315,8 @@
                         <div class="shortcut-tile <%# Eval("IsLocked").ToString() == "Y" ? "locked" : "" %>" 
                              onclick='navigateToUrl("<%# Eval("MenuUrl") %>")'>
                             <div class="tile-actions">
-                                <button type="button" class="tile-action-btn" onclick='event.stopPropagation(); editShortcut(<%# Eval("ShortcutOrder") %>);'>
+                                <button type="button" class="tile-action-btn" 
+                                        onclick='event.stopPropagation(); editShortcut(<%# Eval("ShortcutOrder") %>, "<%# Eval("MenuName") %>", "<%# Eval("MenuUrl") %>", "<%# Eval("MenuIcon") %>", "<%# Eval("MenuColor") %>");'>
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button type="button" class="tile-action-btn" onclick='event.stopPropagation(); deleteShortcut(<%# Eval("ShortcutOrder") %>);'>
@@ -405,23 +406,21 @@
         }
 
         // 바로가기 편집
-        function editShortcut(order) {
-            var menuName = prompt('새 메뉴 이름을 입력하세요:');
-            if (menuName) {
-                var menuUrl = prompt('새 메뉴 URL을 입력하세요 (예: Default.aspx):', "Default.aspx");
-                if (menuUrl) {
-                    var menuIcon = prompt('아이콘 클래스를 입력하세요 (예: fa-file):', 'fa-star');
-                    var menuColor = prompt('배경색을 입력하세요 (예: #3498db):', '#3498db');
+        function editShortcut(order, menuName, menuUrl, menuIcon, menuColor) {
+            var newMenuName = prompt('새 메뉴 이름을 입력하세요:', menuName);
+            if (newMenuName) {
+                var newMenuUrl = prompt('새 메뉴 URL을 입력하세요 (예: Default.aspx):', menuUrl);
+                if (newMenuUrl) {
+                    var newMenuIcon = prompt('아이콘 클래스를 입력하세요 (예: fa-file):', menuIcon);
+                    var newMenuColor = prompt('배경색을 입력하세요 (예: #3498db):', menuColor);
 
-                    // HiddenField에 값 설정
                     document.getElementById('<%= hdnAction.ClientID %>').value = 'edit';
                     document.getElementById('<%= hdnShortcutOrder.ClientID %>').value = order;
-                    document.getElementById('<%= hdnMenuName.ClientID %>').value = menuName;
-                    document.getElementById('<%= hdnMenuUrl.ClientID %>').value = menuUrl;
-                    document.getElementById('<%= hdnMenuIcon.ClientID %>').value = menuIcon || 'fa-star';
-                    document.getElementById('<%= hdnMenuColor.ClientID %>').value = menuColor || '#3498db';
+                    document.getElementById('<%= hdnMenuName.ClientID %>').value = newMenuName;
+                    document.getElementById('<%= hdnMenuUrl.ClientID %>').value = newMenuUrl;
+                    document.getElementById('<%= hdnMenuIcon.ClientID %>').value = newMenuIcon || 'fa-star';
+                    document.getElementById('<%= hdnMenuColor.ClientID %>').value = newMenuColor || '#3498db';
 
-                    // 서버로 전송하여 저장
                     __doPostBack('<%= hdnAction.ClientID %>', '');
                 }
             }

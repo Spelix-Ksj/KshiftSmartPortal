@@ -69,7 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Views\ContractManager.aspx" />
+    <Content Include="Views\ContractManagerXpo.aspx" />
     <Content Include="Views\Default.aspx" />
     <Content Include="Views\Home.aspx" />
     <Content Include="Views\Login.aspx" />
@@ -80,13 +80,30 @@
   <ItemGroup>
     <Compile Include="Controllers\ContractManagerController.cs" />
     <Compile Include="Controllers\ContractController.cs" />
+    <Compile Include="Controllers\ContractManagerXpoController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ShortcutController.cs" />
+    <Compile Include="ORMDataModel1Code\ConnectionHelper.cs" />
+    <Compile Include="ORMDataModel1Code\SCM_CONTRACT_DETAIL.cs" />
+    <Compile Include="ORMDataModel1Code\SCM_CONTRACT_DETAIL.Designer.cs">
+      <DependentUpon>SCM_CONTRACT_DETAIL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ORMDataModel1Code\SCM_CONTRACT_MASTER.cs" />
+    <Compile Include="ORMDataModel1Code\SCM_CONTRACT_MASTER.Designer.cs">
+      <DependentUpon>SCM_CONTRACT_MASTER.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\UserShortcutRepository.cs" />
     <Compile Include="Services\ShortcutService.cs" />
     <Compile Include="Utils\SqlLogger.cs" />
-	<Compile Include="Global.asax.cs">
+    <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ContractManagerXpo.aspx.cs">
+      <DependentUpon>ContractManagerXpo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\ContractManagerXpo.aspx.designer.cs">
+      <DependentUpon>ContractManagerXpo.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -94,13 +111,6 @@
     </Compile>
     <Compile Include="Views\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ContractManager.aspx.cs">
-      <DependentUpon>ContractManager.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\ContractManager.aspx.designer.cs">
-      <DependentUpon>ContractManager.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
@@ -136,6 +146,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ORMDataModel1.xpo" />
+    <None Include="ORMDataModel1.xpo.diagram">
+      <DependentUpon>ORMDataModel1.xpo</DependentUpon>
+    </None>
     <None Include="README.md" />
     <None Include="INSTALLATION_GUIDE.md" />
     <None Include="Database_Scripts.sql" />

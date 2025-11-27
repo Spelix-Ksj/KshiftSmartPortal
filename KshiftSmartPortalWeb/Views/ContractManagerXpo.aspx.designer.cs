@@ -11,7 +11,7 @@ namespace KShiftSmartPortalWeb
 {
 
 
-    public partial class ContractManager
+    public partial class ContractManagerXpo
     {
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using DevExpress.Web;
+using KShiftSmartPortal.Database;
 
 namespace KShiftSmartPortalWeb
 {
@@ -9,6 +10,7 @@ namespace KShiftSmartPortalWeb
         protected void Application_Start(object sender, EventArgs e)
         {
             // 애플리케이션 시작 시 초기화
+            ConnectionHelper.Connect(DevExpress.Xpo.DB.AutoCreateOption.SchemaAlreadyExists, true);
         }
 
         /// <summary>

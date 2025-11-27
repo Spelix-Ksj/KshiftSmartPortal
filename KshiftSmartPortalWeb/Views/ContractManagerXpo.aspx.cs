@@ -1,4 +1,4 @@
-Ôªøusing System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Web.UI;
@@ -8,32 +8,21 @@ using KShiftSmartPortalWeb.Models;
 
 namespace KShiftSmartPortalWeb
 {
-    public partial class ContractManager : System.Web.UI.Page
+    public partial class ContractManagerXpo : System.Web.UI.Page
     {
-        private ContractManagerController _controller = new ContractManagerController();
+        private ContractManagerXpoController _xpoController = new ContractManagerXpoController();
         private LoginController _loginController = new LoginController();
 
-        // ÏÑ∏ÏÖò ÌÇ§ ÏÉÅÏàò
-        private const string SESSION_KEY_DATA = "ContractManager_Data";
+        private const string SESSION_KEY_DATA = "ContractManagerXpo_Data";
 
-        #region Properties
-
-        /// <summary>
-        /// ÏÑ∏ÏÖòÏóê Ï†ÄÏû•Îêú Îç∞Ïù¥ÌÑ∞ (ÌéòÏù¥Ïßï/ÌïÑÌÑ∞ÎßÅ Ïãú Ïú†ÏßÄ)
-        /// </summary>
         private List<ContractViewModel> GridData
         {
             get { return Session[SESSION_KEY_DATA] as List<ContractViewModel>; }
             set { Session[SESSION_KEY_DATA] = value; }
         }
 
-        #endregion
-
-        #region Page Events
-
         protected void Page_Load(object sender, EventArgs e)
         {
-            // ÏÑ∏ÏÖò Ï≤¥ÌÅ¨
             if (Session["UserID"] == null)
             {
                 Response.Redirect("Login.aspx", false);
@@ -47,80 +36,36 @@ namespace KShiftSmartPortalWeb
             }
             else
             {
-                // Ìè¨Ïä§Ìä∏Î∞±/ÏΩúÎ∞± Ïãú Îç∞Ïù¥ÌÑ∞ Ïû¨Î∞îÏù∏Îî©
                 BindGridFromSession();
             }
         }
 
-        /// <summary>
-        /// ÌéòÏù¥ÏßÄ Ï¥àÍ∏∞Ìôî
-        /// </summary>
         private void InitializePage()
         {
             try
             {
-                // Company Íµ¨Î∂Ñ Î°úÎìú
                 LoadCompanyTypeList();
-
-                // Company Î™©Î°ù Î°úÎìú
                 LoadCompanyList();
-
-                // ÏºÄÏù¥Ïä§ Î™©Î°ù Î°úÎìú
                 LoadCaseList();
 
-                // Í∏∞Î≥∏ ÎÇ†Ïßú ÏÑ§Ï†ï (1ÎÖÑ Ï†Ñ ~ Ïò§Îäò)
                 dtStartDate.Value = DateTime.Today.AddYears(-1);
                 dtEndDate.Value = DateTime.Today;
 
-                // Ï°∞ÌöåÏ°∞Í±¥ Ï≤¥ÌÅ¨Î∞ïÏä§ Í∏∞Î≥∏Í∞í
                 chkSelectAll.Checked = true;
-
-                // ÏÑ∏ÏÖò Îç∞Ïù¥ÌÑ∞ Ï¥àÍ∏∞Ìôî
                 GridData = null;
             }
             catch (Exception ex)
             {
-                ShowMessage($"ÌéòÏù¥ÏßÄ Ï¥àÍ∏∞Ìôî Ïã§Ìå®: {ex.Message}");
+                ShowMessage($"∆‰¿Ã¡ˆ √ ±‚»≠ Ω«∆–: {ex.Message}");
             }
         }
 
-        #endregion
-
-        #region Grid Events
-
-        protected void gridContracts_PageIndexChanged(object sender, EventArgs e)
-        {
-            BindGridFromSession();
-        }
-
-        protected void gridContracts_BeforeColumnSortingGrouping(object sender, ASPxGridViewBeforeColumnGroupingSortingEventArgs e)
-        {
-            BindGridFromSession();
-        }
-
-        protected void gridContracts_CustomCallback(object sender, ASPxGridViewCustomCallbackEventArgs e)
-        {
-            BindGridFromSession();
-        }
-
-        private void BindGridFromSession()
-        {
-            if (GridData != null)
-            {
-                gridContracts.DataSource = GridData;
-                gridContracts.DataBind();
-            }
-        }
-
-        #endregion
-
-        #region ComboBox Ï¥àÍ∏∞Ìôî
-
+        #region ComboBox √ ±‚»≠ (¿ÁªÁøÎ)
         private void LoadCompanyTypeList()
         {
             cmbCompanyType.Items.Clear();
-            cmbCompanyType.Items.Add("Ï†ÑÏ≤¥", "*");
-            cmbCompanyType.Items.Add("ÌòëÎ†•ÏÇ¨", "VENDOR");
+            cmbCompanyType.Items.Add("¿¸√º", "*");
+            cmbCompanyType.Items.Add("«˘∑¬ªÁ", "VENDOR");
             cmbCompanyType.Items.Add("MASTER", "MASTER");
             cmbCompanyType.SelectedIndex = 0;
         }
@@ -144,17 +89,13 @@ namespace KShiftSmartPortalWeb
                 }
 
                 if (cmbCompany.Items.FindByValue("1002") != null)
-                {
                     cmbCompany.Value = "1002";
-                }
                 else if (cmbCompany.Items.Count > 0)
-                {
                     cmbCompany.SelectedIndex = 0;
-                }
             }
             catch (Exception ex)
             {
-                ShowMessage($"Company Î™©Î°ù Î°úÎìú Ïã§Ìå®: {ex.Message}");
+                ShowMessage($"Company ∏Ò∑œ ∑ŒµÂ Ω«∆–: {ex.Message}");
             }
         }
 
@@ -165,19 +106,18 @@ namespace KShiftSmartPortalWeb
                 string companyNo = cmbCompany.Value?.ToString();
                 if (string.IsNullOrEmpty(companyNo)) return;
 
-                DataTable dt = _controller.GetCaseList(companyNo);
+                // ±‚¡∏ controller¿« GetCaseList ªÁøÎ (Oracle)                
+                DataTable dt = _xpoController.GetCaseList(companyNo);
 
                 cmbCase.DataSource = dt;
                 cmbCase.DataBind();
 
                 if (cmbCase.Items.Count > 0)
-                {
                     cmbCase.SelectedIndex = 0;
-                }
             }
             catch (Exception ex)
             {
-                ShowMessage($"ÏºÄÏù¥Ïä§ Î™©Î°ù Î°úÎìú Ïã§Ìå®: {ex.Message}");
+                ShowMessage($"ƒ…¿ÃΩ∫ ∏Ò∑œ ∑ŒµÂ Ω«∆–: {ex.Message}");
             }
         }
 
@@ -191,11 +131,9 @@ namespace KShiftSmartPortalWeb
         {
             LoadCaseList();
         }
-
         #endregion
 
         #region Button Events
-
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             try
@@ -204,7 +142,7 @@ namespace KShiftSmartPortalWeb
             }
             catch (Exception ex)
             {
-                ShowMessage($"Îç∞Ïù¥ÌÑ∞ Ï°∞Ìöå Ïã§Ìå®: {ex.Message}");
+                ShowMessage($"µ•¿Ã≈Õ ¡∂»∏ Ω«∆–: {ex.Message}");
             }
         }
 
@@ -221,7 +159,7 @@ namespace KShiftSmartPortalWeb
             GridData = null;
             gridContracts.DataSource = null;
             gridContracts.DataBind();
-            lblRecordCount.Text = "Ï°∞ÌöåÎêú Îç∞Ïù¥ÌÑ∞Í∞Ä ÏóÜÏäµÎãàÎã§.";
+            lblRecordCount.Text = "¡∂»∏µ» µ•¿Ã≈Õ∞° æ¯Ω¿¥œ¥Ÿ.";
         }
 
         protected void btnExcel_Click(object sender, EventArgs e)
@@ -233,24 +171,46 @@ namespace KShiftSmartPortalWeb
                     gridContracts.DataSource = GridData;
                     gridContracts.DataBind();
 
-                    string fileName = $"Í≥ÑÏïΩÏ†ïÎ≥¥_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+                    string fileName = $"∞Ëæ‡¡§∫∏_XPO_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
                     gridExporter.WriteXlsxToResponse(fileName);
                 }
                 else
                 {
-                    ShowMessage("ÎÇ¥Î≥¥ÎÇº Îç∞Ïù¥ÌÑ∞Í∞Ä ÏóÜÏäµÎãàÎã§. Î®ºÏ†Ä Ï°∞ÌöåÎ•º Ïã§ÌñâÌïòÏÑ∏Ïöî.");
+                    ShowMessage("≥ª∫∏≥æ µ•¿Ã≈Õ∞° æ¯Ω¿¥œ¥Ÿ. ∏’¿˙ ¡∂»∏∏¶ Ω««‡«œººø‰.");
                 }
             }
             catch (Exception ex)
             {
-                ShowMessage($"ÏóëÏÖÄ ÎÇ¥Î≥¥ÎÇ¥Í∏∞ Ïã§Ìå®: {ex.Message}");
+                ShowMessage($"ø¢ºø ≥ª∫∏≥ª±‚ Ω«∆–: {ex.Message}");
             }
         }
+        #endregion
 
+        #region Grid Events
+        protected void gridContracts_PageIndexChanged(object sender, EventArgs e) 
+        { 
+            BindGridFromSession(); 
+        }
+        protected void gridContracts_BeforeColumnSortingGrouping(object sender, ASPxGridViewBeforeColumnGroupingSortingEventArgs e) 
+        { 
+            BindGridFromSession(); 
+        }
+        protected void gridContracts_CustomCallback(object sender, ASPxGridViewCustomCallbackEventArgs e) 
+        { 
+            BindGridFromSession(); 
+        }
+
+        private void BindGridFromSession()
+        {
+            if (GridData != null)
+            {
+                gridContracts.DataSource = GridData;
+                gridContracts.DataBind();
+            }
+        }
         #endregion
 
         #region Data Methods
-
         private void LoadData()
         {
             string caseNo = cmbCase.Value?.ToString();
@@ -261,11 +221,12 @@ namespace KShiftSmartPortalWeb
 
             if (string.IsNullOrEmpty(caseNo) || string.IsNullOrEmpty(companyNo))
             {
-                ShowMessage("ÏºÄÏù¥Ïä§ÏôÄ CompanyÎ•º ÏÑ†ÌÉùÌïòÏÑ∏Ïöî.");
+                ShowMessage("ƒ…¿ÃΩ∫øÕ Company∏¶ º±≈√«œººø‰.");
                 return;
             }
 
-            List<ScmContractMaster> masterList = _controller.GetContractFullList(caseNo, companyNo, selectAll, dtStart, dtEnd);
+            List<ScmContractMaster> masterList = _xpoController.GetContractFullList(caseNo, companyNo, selectAll, dtStart, dtEnd);
+
             var viewModelList = ConvertToViewModel(masterList);
 
             GridData = viewModelList;
@@ -273,7 +234,7 @@ namespace KShiftSmartPortalWeb
             gridContracts.DataSource = viewModelList;
             gridContracts.DataBind();
 
-            lblRecordCount.Text = $"Ï¥ù <strong>{viewModelList.Count}</strong>Í±¥Ïùò Îç∞Ïù¥ÌÑ∞Í∞Ä Ï°∞ÌöåÎêòÏóàÏäµÎãàÎã§.";
+            lblRecordCount.Text = $"√— <strong>{viewModelList.Count}</strong>∞«¿« µ•¿Ã≈Õ∞° ¡∂»∏µ«æ˙Ω¿¥œ¥Ÿ.";
         }
 
         private List<ContractViewModel> ConvertToViewModel(List<ScmContractMaster> masterList)
@@ -359,89 +320,83 @@ namespace KShiftSmartPortalWeb
 
             return result;
         }
-
         #endregion
 
-        #region Helper Methods
-
+        #region Helper
         private void ShowMessage(string message)
         {
             string script = $"alert('{message.Replace("'", "\\'")}');";
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowMessage", script, true);
         }
-
         #endregion
+
+
+        [Serializable]
+        public class ContractViewModel
+        {
+            public string COMPANY_NO { get; set; }
+            public string CASE_NO { get; set; }
+            public string CONTRACT_ID { get; set; }
+            public string STD_CASE_NO { get; set; }
+            public string STD_CONTRACT_ID { get; set; }
+            public string PROP1 { get; set; }
+            public string PROP2 { get; set; }
+            public string CONTRACT_NAME { get; set; }
+            public string CONTRACT_CATEGORY { get; set; }
+            public string CONTRACT_TYPE { get; set; }
+            public string CONTRACT_NO { get; set; }
+            public string POR_NO { get; set; }
+            public string SEQ_NO { get; set; }
+            public DateTime? POR_DT { get; set; }
+            public DateTime? CNTR_DT { get; set; }
+            public DateTime? CNTR_INIT_DT { get; set; }
+            public DateTime? MP_DT { get; set; }
+            public DateTime? MP_INIT_DT { get; set; }
+            public string PRODUCT_TYPE { get; set; }
+            public string PRODUCT_DESC { get; set; }
+            public int? CNTR_EA { get; set; }
+            public decimal? CNTR_PIECE_WGT { get; set; }
+            public decimal? CNTR_WGT { get; set; }
+            public string PROJECT_NO { get; set; }
+            public string BLOCK_NO { get; set; }
+            public string MARK_NO { get; set; }
+            public string OWNER { get; set; }
+            public string TAG1 { get; set; }
+            public string OWNER_DEPT { get; set; }
+            public string MAIN_CONTRACTOR { get; set; }
+            public string SUB_CONTRACTOR { get; set; }
+            public string MS_NO { get; set; }
+            public DateTime? MS_DT { get; set; }
+            public string MS_CONTRACTOR { get; set; }
+            public string PAINT_MS_NO { get; set; }
+            public DateTime? PAINT_MS_DT { get; set; }
+            public string PAINT_MS_CONTRACTOR { get; set; }
+            public DateTime? DRAWING_DT { get; set; }
+            public DateTime? DRAWING_INIT_DT { get; set; }
+            public DateTime? MAT_LOG_DT { get; set; }
+            public string MAT_LOG_REQ_NO { get; set; }
+            public string MAT_LOG_POS_NM { get; set; }
+            public string MAT_LOG_REQ_PER { get; set; }
+            public string MAT_LOG_REQ_DEPT { get; set; }
+            public string MAT_LOG_REQ_TEL { get; set; }
+            public string MAT_LOG_PER { get; set; }
+            public DateTime? MP_RES_DT { get; set; }
+            public DateTime? MAKING_DT { get; set; }
+            public DateTime? MAKING_RES_DT { get; set; }
+            public DateTime? PAINTING_DT { get; set; }
+            public DateTime? PAINTING_RES_DT { get; set; }
+            public DateTime? INSPECTION_DT { get; set; }
+            public DateTime? INSPECTION_RES_DT { get; set; }
+            public string MPPL_PROJ { get; set; }
+            public string MPPL_NO { get; set; }
+            public string MPPL_SEQ { get; set; }
+            public DateTime? EST_ST_DT { get; set; }
+            public DateTime? EST_FI_DT { get; set; }
+            public DateTime? PLAN_ST_DT { get; set; }
+            public DateTime? PLAN_FI_DT { get; set; }
+            public DateTime? RESULT_ST_DT { get; set; }
+            public DateTime? RESULT_FI_DT { get; set; }
+            public string RMK { get; set; }
+        }
     }
-
-    #region ViewModel
-
-    [Serializable]
-    public class ContractViewModel
-    {
-        public string COMPANY_NO { get; set; }
-        public string CASE_NO { get; set; }
-        public string CONTRACT_ID { get; set; }
-        public string STD_CASE_NO { get; set; }
-        public string STD_CONTRACT_ID { get; set; }
-        public string PROP1 { get; set; }
-        public string PROP2 { get; set; }
-        public string CONTRACT_NAME { get; set; }
-        public string CONTRACT_CATEGORY { get; set; }
-        public string CONTRACT_TYPE { get; set; }
-        public string CONTRACT_NO { get; set; }
-        public string POR_NO { get; set; }
-        public string SEQ_NO { get; set; }
-        public DateTime? POR_DT { get; set; }
-        public DateTime? CNTR_DT { get; set; }
-        public DateTime? CNTR_INIT_DT { get; set; }
-        public DateTime? MP_DT { get; set; }
-        public DateTime? MP_INIT_DT { get; set; }
-        public string PRODUCT_TYPE { get; set; }
-        public string PRODUCT_DESC { get; set; }
-        public int? CNTR_EA { get; set; }
-        public decimal? CNTR_PIECE_WGT { get; set; }
-        public decimal? CNTR_WGT { get; set; }
-        public string PROJECT_NO { get; set; }
-        public string BLOCK_NO { get; set; }
-        public string MARK_NO { get; set; }
-        public string OWNER { get; set; }
-        public string TAG1 { get; set; }
-        public string OWNER_DEPT { get; set; }
-        public string MAIN_CONTRACTOR { get; set; }
-        public string SUB_CONTRACTOR { get; set; }
-        public string MS_NO { get; set; }
-        public DateTime? MS_DT { get; set; }
-        public string MS_CONTRACTOR { get; set; }
-        public string PAINT_MS_NO { get; set; }
-        public DateTime? PAINT_MS_DT { get; set; }
-        public string PAINT_MS_CONTRACTOR { get; set; }
-        public DateTime? DRAWING_DT { get; set; }
-        public DateTime? DRAWING_INIT_DT { get; set; }
-        public DateTime? MAT_LOG_DT { get; set; }
-        public string MAT_LOG_REQ_NO { get; set; }
-        public string MAT_LOG_POS_NM { get; set; }
-        public string MAT_LOG_REQ_PER { get; set; }
-        public string MAT_LOG_REQ_DEPT { get; set; }
-        public string MAT_LOG_REQ_TEL { get; set; }
-        public string MAT_LOG_PER { get; set; }
-        public DateTime? MP_RES_DT { get; set; }
-        public DateTime? MAKING_DT { get; set; }
-        public DateTime? MAKING_RES_DT { get; set; }
-        public DateTime? PAINTING_DT { get; set; }
-        public DateTime? PAINTING_RES_DT { get; set; }
-        public DateTime? INSPECTION_DT { get; set; }
-        public DateTime? INSPECTION_RES_DT { get; set; }
-        public string MPPL_PROJ { get; set; }
-        public string MPPL_NO { get; set; }
-        public string MPPL_SEQ { get; set; }
-        public DateTime? EST_ST_DT { get; set; }
-        public DateTime? EST_FI_DT { get; set; }
-        public DateTime? PLAN_ST_DT { get; set; }
-        public DateTime? PLAN_FI_DT { get; set; }
-        public DateTime? RESULT_ST_DT { get; set; }
-        public DateTime? RESULT_FI_DT { get; set; }
-        public string RMK { get; set; }
-    }
-
-    #endregion
 }
