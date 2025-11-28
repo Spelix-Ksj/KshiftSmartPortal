@@ -56,16 +56,16 @@ namespace KShiftSmartPortalWeb
             }
             catch (Exception ex)
             {
-                ShowMessage($"ÆäÀÌÁö ÃÊ±âÈ­ ½ÇÆĞ: {ex.Message}");
+                ShowMessage($"í˜ì´ì§€ ì´ˆê¸°í™” ì˜¤ë¥˜: {ex.Message}");
             }
         }
 
-        #region ComboBox ÃÊ±âÈ­ (Àç»ç¿ë)
+        #region ComboBox ì´ˆê¸°í™” (ê¸°ì¡´)
         private void LoadCompanyTypeList()
         {
             cmbCompanyType.Items.Clear();
-            cmbCompanyType.Items.Add("ÀüÃ¼", "*");
-            cmbCompanyType.Items.Add("Çù·Â»ç", "VENDOR");
+            cmbCompanyType.Items.Add("ì „ì²´", "*");
+            cmbCompanyType.Items.Add("í˜‘ë ¥ì‚¬", "VENDOR");
             cmbCompanyType.Items.Add("MASTER", "MASTER");
             cmbCompanyType.SelectedIndex = 0;
         }
@@ -95,7 +95,7 @@ namespace KShiftSmartPortalWeb
             }
             catch (Exception ex)
             {
-                ShowMessage($"Company ¸ñ·Ï ·Îµå ½ÇÆĞ: {ex.Message}");
+                ShowMessage($"Company ëª©ë¡ ë¡œë“œ ì˜¤ë¥˜: {ex.Message}");
             }
         }
 
@@ -106,7 +106,7 @@ namespace KShiftSmartPortalWeb
                 string companyNo = cmbCompany.Value?.ToString();
                 if (string.IsNullOrEmpty(companyNo)) return;
 
-                // ±âÁ¸ controllerÀÇ GetCaseList »ç¿ë (Oracle)                
+                // ì‹¤ì œ controllerì˜ GetCaseList ì‚¬ìš© (Oracle)
                 DataTable dt = _xpoController.GetCaseList(companyNo);
 
                 cmbCase.DataSource = dt;
@@ -117,7 +117,7 @@ namespace KShiftSmartPortalWeb
             }
             catch (Exception ex)
             {
-                ShowMessage($"ÄÉÀÌ½º ¸ñ·Ï ·Îµå ½ÇÆĞ: {ex.Message}");
+                ShowMessage($"ì¼€ì´ìŠ¤ ëª©ë¡ ë¡œë“œ ì˜¤ë¥˜: {ex.Message}");
             }
         }
 
@@ -142,7 +142,59 @@ namespace KShiftSmartPortalWeb
             }
             catch (Exception ex)
             {
-                ShowMessage($"µ¥ÀÌÅÍ Á¶È¸ ½ÇÆĞ: {ex.Message}");
+                ShowMessage($"ë°ì´í„° ì¡°íšŒ ì˜¤ë¥˜: {ex.Message}");
+            }
+        }
+
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                gridContracts.UpdateEdit();
+                ShowMessage("ë°ì´í„°ê°€ ì €ì¥ë˜ì—ˆìŠµë‹ˆë‹¤.");
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                ShowMessage($"ì €ì¥ ì˜¤ë¥˜: {ex.Message}");
+            }
+        }
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (gridContracts.FocusedRowIndex < 0)
+                {
+                    ShowMessage("ì‚­ì œí•  ë°ì´í„°ë¥¼ ì„ íƒí•˜ì„¸ìš”.");
+                    return;
+                }
+
+                var contractId = gridContracts.GetRowValues(gridContracts.FocusedRowIndex, "CONTRACT_ID")?.ToString();
+                var caseNo = gridContracts.GetRowValues(gridContracts.FocusedRowIndex, "CASE_NO")?.ToString();
+                var companyNo = gridContracts.GetRowValues(gridContracts.FocusedRowIndex, "COMPANY_NO")?.ToString();
+
+                if (string.IsNullOrEmpty(contractId) || string.IsNullOrEmpty(caseNo) || string.IsNullOrEmpty(companyNo))
+                {
+                    ShowMessage("í•„ìˆ˜ ì •ë³´ê°€ ì—†ìŠµë‹ˆë‹¤.");
+                    return;
+                }
+
+                bool result = _xpoController.DeleteContract(caseNo, companyNo, contractId);
+
+                if (result)
+                {
+                    ShowMessage("ë°ì´í„°ê°€ ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤.");
+                    LoadData();
+                }
+                else
+                {
+                    ShowMessage("ì‚­ì œ ì‘ì—…ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage($"ì‚­ì œ ì˜¤ë¥˜: {ex.Message}");
             }
         }
 
@@ -159,7 +211,7 @@ namespace KShiftSmartPortalWeb
             GridData = null;
             gridContracts.DataSource = null;
             gridContracts.DataBind();
-            lblRecordCount.Text = "Á¶È¸µÈ µ¥ÀÌÅÍ°¡ ¾ø½À´Ï´Ù.";
+            lblRecordCount.Text = "ì¡°íšŒëœ ë°ì´í„°ê°€ ì—†ìŠµë‹ˆë‹¤.";
         }
 
         protected void btnExcel_Click(object sender, EventArgs e)
@@ -171,33 +223,109 @@ namespace KShiftSmartPortalWeb
                     gridContracts.DataSource = GridData;
                     gridContracts.DataBind();
 
-                    string fileName = $"°è¾àÁ¤º¸_XPO_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+                    string fileName = $"ê³„ì•½ì •ë³´_XPO_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
                     gridExporter.WriteXlsxToResponse(fileName);
                 }
                 else
                 {
-                    ShowMessage("³»º¸³¾ µ¥ÀÌÅÍ°¡ ¾ø½À´Ï´Ù. ¸ÕÀú Á¶È¸¸¦ ½ÇÇàÇÏ¼¼¿ä.");
+                    ShowMessage("ë‚´ë³´ë‚¼ ë°ì´í„°ê°€ ì—†ìŠµë‹ˆë‹¤. ë¨¼ì € ì¡°íšŒë¥¼ ì‹¤í–‰í•˜ì„¸ìš”.");
                 }
             }
             catch (Exception ex)
             {
-                ShowMessage($"¿¢¼¿ ³»º¸³»±â ½ÇÆĞ: {ex.Message}");
+                ShowMessage($"ì—‘ì…€ ë‚´ë³´ë‚´ê¸° ì˜¤ë¥˜: {ex.Message}");
             }
         }
         #endregion
 
         #region Grid Events
-        protected void gridContracts_PageIndexChanged(object sender, EventArgs e) 
-        { 
-            BindGridFromSession(); 
+        protected void gridContracts_PageIndexChanged(object sender, EventArgs e)
+        {
+            BindGridFromSession();
         }
-        protected void gridContracts_BeforeColumnSortingGrouping(object sender, ASPxGridViewBeforeColumnGroupingSortingEventArgs e) 
-        { 
-            BindGridFromSession(); 
+        protected void gridContracts_BeforeColumnSortingGrouping(object sender, ASPxGridViewBeforeColumnGroupingSortingEventArgs e)
+        {
+            BindGridFromSession();
         }
-        protected void gridContracts_CustomCallback(object sender, ASPxGridViewCustomCallbackEventArgs e) 
-        { 
-            BindGridFromSession(); 
+        protected void gridContracts_CustomCallback(object sender, ASPxGridViewCustomCallbackEventArgs e)
+        {
+            BindGridFromSession();
+        }
+
+        protected void gridContracts_RowUpdating(object sender, DevExpress.Web.Data.ASPxDataUpdatingEventArgs e)
+        {
+            try
+            {
+                string userId = Session["UserID"]?.ToString() ?? "SYSTEM";
+                string contractId = e.Keys["CONTRACT_ID"]?.ToString();
+                string caseNo = e.OldValues["CASE_NO"]?.ToString();
+                string companyNo = e.OldValues["COMPANY_NO"]?.ToString();
+
+                if (string.IsNullOrEmpty(contractId) || string.IsNullOrEmpty(caseNo) || string.IsNullOrEmpty(companyNo))
+                {
+                    e.Cancel = true;
+                    ShowMessage("í•„ìˆ˜ ì •ë³´ê°€ ì—†ìŠµë‹ˆë‹¤.");
+                    return;
+                }
+
+                var contract = new ScmContractMaster
+                {
+                    CASE_NO = caseNo,
+                    COMPANY_NO = companyNo,
+                    CONTRACT_ID = contractId,
+                    CONTRACT_NAME = e.NewValues["CONTRACT_NAME"]?.ToString(),
+                    CONTRACT_NO = e.NewValues["CONTRACT_NO"]?.ToString(),
+                    STD_CASE_NO = e.NewValues["STD_CASE_NO"]?.ToString() ?? "MASTER",
+                    STD_CONTRACT_ID = e.NewValues["STD_CONTRACT_ID"]?.ToString(),
+                    PROP1 = e.NewValues["PROP1"]?.ToString(),
+                    PROP2 = e.NewValues["PROP2"]?.ToString(),
+                    CONTRACT_CATEGORY = e.NewValues["CONTRACT_CATEGORY"]?.ToString() ?? "ING",
+                    CONTRACT_TYPE = e.NewValues["CONTRACT_TYPE"]?.ToString() ?? "CONTRACTED",
+                    POR_NO = e.NewValues["POR_NO"]?.ToString(),
+                    SEQ_NO = e.NewValues["SEQ_NO"]?.ToString(),
+                    POR_DT = e.NewValues["POR_DT"] as DateTime? ?? DateTime.Now,
+                    CNTR_DT = e.NewValues["CNTR_DT"] as DateTime? ?? DateTime.Now,
+                    CNTR_INIT_DT = e.NewValues["CNTR_INIT_DT"] as DateTime?,
+                    MP_DT = e.NewValues["MP_DT"] as DateTime? ?? DateTime.Now,
+                    MP_INIT_DT = e.NewValues["MP_INIT_DT"] as DateTime?,
+                    PRODUCT_TYPE = e.NewValues["PRODUCT_TYPE"]?.ToString(),
+                    PRODUCT_DESC = e.NewValues["PRODUCT_DESC"]?.ToString(),
+                    CNTR_EA = e.NewValues["CNTR_EA"] as int? ?? 0,
+                    CNTR_PIECE_WGT = e.NewValues["CNTR_PIECE_WGT"] as decimal? ?? 0,
+                    CNTR_WGT = e.NewValues["CNTR_WGT"] as decimal? ?? 0,
+                    PROJECT_NO = e.NewValues["PROJECT_NO"]?.ToString(),
+                    BLOCK_NO = e.NewValues["BLOCK_NO"]?.ToString(),
+                    MARK_NO = e.NewValues["MARK_NO"]?.ToString(),
+                    OWNER = e.NewValues["OWNER"]?.ToString(),
+                    TAG1 = e.NewValues["TAG1"]?.ToString(),
+                    EST_ST_DT = e.NewValues["EST_ST_DT"] as DateTime?,
+                    EST_FI_DT = e.NewValues["EST_FI_DT"] as DateTime?,
+                    PLAN_ST_DT = e.NewValues["PLAN_ST_DT"] as DateTime?,
+                    PLAN_FI_DT = e.NewValues["PLAN_FI_DT"] as DateTime?,
+                    RESULT_ST_DT = e.NewValues["RESULT_ST_DT"] as DateTime?,
+                    RESULT_FI_DT = e.NewValues["RESULT_FI_DT"] as DateTime?,
+                    RMK = e.NewValues["RMK"]?.ToString()
+                };
+
+                bool result = _xpoController.SaveContract(contract, userId);
+
+                if (result)
+                {
+                    ShowMessage("ë°ì´í„°ê°€ ìˆ˜ì •ë˜ì—ˆìŠµë‹ˆë‹¤.");
+                    LoadData();
+                }
+                else
+                {
+                    ShowMessage("ìˆ˜ì •ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
+                }
+
+                e.Cancel = true;
+            }
+            catch (Exception ex)
+            {
+                e.Cancel = true;
+                ShowMessage($"ìˆ˜ì • ì˜¤ë¥˜: {ex.Message}");
+            }
         }
 
         private void BindGridFromSession()
@@ -221,7 +349,7 @@ namespace KShiftSmartPortalWeb
 
             if (string.IsNullOrEmpty(caseNo) || string.IsNullOrEmpty(companyNo))
             {
-                ShowMessage("ÄÉÀÌ½º¿Í Company¸¦ ¼±ÅÃÇÏ¼¼¿ä.");
+                ShowMessage("ì¼€ì´ìŠ¤ì™€ Companyë¥¼ ì„ íƒí•˜ì„¸ìš”.");
                 return;
             }
 
@@ -234,7 +362,7 @@ namespace KShiftSmartPortalWeb
             gridContracts.DataSource = viewModelList;
             gridContracts.DataBind();
 
-            lblRecordCount.Text = $"ÃÑ <strong>{viewModelList.Count}</strong>°ÇÀÇ µ¥ÀÌÅÍ°¡ Á¶È¸µÇ¾ú½À´Ï´Ù.";
+            lblRecordCount.Text = $"ì´ <strong>{viewModelList.Count}</strong>ê±´ì˜ ë°ì´í„°ê°€ ì¡°íšŒë˜ì—ˆìŠµë‹ˆë‹¤.";
         }
 
         private List<ContractViewModel> ConvertToViewModel(List<ScmContractMaster> masterList)
