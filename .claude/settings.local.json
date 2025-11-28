@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(powershell -Command \"Get-Content Default.aspx -Raw | Out-File -FilePath Default.aspx -Encoding UTF8\")"
+      "Bash(powershell -Command \"Get-Content Default.aspx -Raw | Out-File -FilePath Default.aspx -Encoding UTF8\")",
+      "Bash(powershell -Command:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
