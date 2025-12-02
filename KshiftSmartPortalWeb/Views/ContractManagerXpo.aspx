@@ -95,13 +95,26 @@
               OnPageIndexChanged="gridContracts_PageIndexChanged"
               OnBeforeColumnSortingGrouping="gridContracts_BeforeColumnSortingGrouping"
               OnCustomCallback="gridContracts_CustomCallback"
-              OnRowUpdating="gridContracts_RowUpdating">
-            <Settings ShowFilterRow="True" ShowFilterRowMenu="True" VerticalScrollBarMode="Visible" VerticalScrollableHeight="450" HorizontalScrollBarMode="Auto" />
+              OnRowUpdating="gridContracts_RowUpdating"
+              >
+            <Settings ShowFilterRow="True" ShowFilterRowMenu="True" VerticalScrollBarMode="Visible" VerticalScrollableHeight="450" HorizontalScrollBarMode="Auto" 
+                />
             <SettingsBehavior AllowFocusedRow="True" AllowSelectByRowClick="True" />
-            <SettingsEditing Mode="EditForm" />
+            <SettingsEditing Mode="PopupEditForm" />
+            <SettingsPopup>
+                <EditForm 
+                    HorizontalAlign="WindowCenter" 
+                    VerticalAlign="WindowCenter" 
+                    Modal="True" PopupAnimationType="Auto" /> 
+            </SettingsPopup>
+            <SettingsText CommandEdit="수정" CommandUpdate="저장" CommandCancel="취소" />            
             <SettingsPager Mode="ShowPager" PageSize="50" Position="Bottom">
                 <PageSizeItemSettings Visible="true" Items="50,100,200,500" />
             </SettingsPager>
+            <EditFormLayoutProperties ColumnCount="2">
+                <SettingsAdaptivity AdaptivityMode="SingleColumnWindowLimit" />
+                <SettingsItems HorizontalAlign="Left" VerticalAlign="Top" />
+            </EditFormLayoutProperties>
             <Columns>
                 <%-- 수정 버튼 컬럼 추가 --%>
                 <dx:GridViewCommandColumn ShowEditButton="true" Caption="수정" Width="50">
@@ -110,148 +123,58 @@
 
                 <%-- ========== 기본정보 (파란색 계열) ========== --%>
                 <dx:GridViewDataTextColumn FieldName="COMPANY_NO" Caption="회사" Width="80" ReadOnly="true">
-                    <HeaderStyle BackColor="#E3F2FD" ForeColor="#1565C0" Font-Bold="true" />
+                    <HeaderStyle BackColor="#E3F2FD" ForeColor="#1565C0" Font-Bold="true" HorizontalAlign="Center" />
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="CASE_NO" Caption="케이스" Width="100" ReadOnly="true">
-                    <HeaderStyle BackColor="#E3F2FD" ForeColor="#1565C0" Font-Bold="true" />
+                    <HeaderStyle BackColor="#E3F2FD" ForeColor="#1565C0" Font-Bold="true" HorizontalAlign="Center" />
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="CONTRACT_ID" Caption="계약ID" Width="100" ReadOnly="true">
-                    <HeaderStyle BackColor="#E3F2FD" ForeColor="#1565C0" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="STD_CASE_NO" Caption="표준케이스" Width="90">
-                    <HeaderStyle BackColor="#E3F2FD" ForeColor="#1565C0" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="STD_CONTRACT_ID" Caption="표준계약" Width="90">
-                    <HeaderStyle BackColor="#E3F2FD" ForeColor="#1565C0" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="PROP1" Caption="프로타입번호" Width="90">
-                    <HeaderStyle BackColor="#E3F2FD" ForeColor="#1565C0" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="PROP2" Caption="작업가이드" Width="90">
-                    <HeaderStyle BackColor="#E3F2FD" ForeColor="#1565C0" Font-Bold="true" />
+                    <HeaderStyle BackColor="#E3F2FD" ForeColor="#1565C0" Font-Bold="true" HorizontalAlign="Center" />
                 </dx:GridViewDataTextColumn>
 
                 <%-- ========== 계약일반 (주황색 계열) ========== --%>
                 <dx:GridViewDataTextColumn FieldName="CONTRACT_NAME" Caption="계약명" Width="200">
-                    <HeaderStyle BackColor="#FFF3E0" ForeColor="#E65100" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="CONTRACT_CATEGORY" Caption="계약카테고리" Width="100">
-                    <HeaderStyle BackColor="#FFF3E0" ForeColor="#E65100" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="CONTRACT_TYPE" Caption="계약구분" Width="80">
-                    <HeaderStyle BackColor="#FFF3E0" ForeColor="#E65100" Font-Bold="true" />
+                    <HeaderStyle BackColor="#FFF3E0" ForeColor="#E65100" Font-Bold="true" HorizontalAlign="Center" />
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="CONTRACT_NO" Caption="계약번호" Width="100">
-                    <HeaderStyle BackColor="#FFF3E0" ForeColor="#E65100" Font-Bold="true" />
+                    <HeaderStyle BackColor="#FFF3E0" ForeColor="#E65100" Font-Bold="true" HorizontalAlign="Center" />
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="POR_NO" Caption="POR" Width="80">
-                    <HeaderStyle BackColor="#FFF3E0" ForeColor="#E65100" Font-Bold="true" />
+                    <HeaderStyle BackColor="#FFF3E0" ForeColor="#E65100" Font-Bold="true" HorizontalAlign="Center" />
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="SEQ_NO" Caption="Seq" Width="60">
-                    <HeaderStyle BackColor="#FFF3E0" ForeColor="#E65100" Font-Bold="true" />
+                    <HeaderStyle BackColor="#FFF3E0" ForeColor="#E65100" Font-Bold="true" HorizontalAlign="Center" />
                 </dx:GridViewDataTextColumn>
                 
                 <%-- ========== 날짜정보 (초록색 계열) ========== --%>
-                <dx:GridViewDataDateColumn FieldName="POR_DT" Caption="POR발행일" Width="100">
-                    <HeaderStyle BackColor="#E8F5E9" ForeColor="#2E7D32" Font-Bold="true" />
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                </dx:GridViewDataDateColumn>
                 <dx:GridViewDataDateColumn FieldName="CNTR_DT" Caption="계약일" Width="100">
-                    <HeaderStyle BackColor="#E8F5E9" ForeColor="#2E7D32" Font-Bold="true" />
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                </dx:GridViewDataDateColumn>
-                <dx:GridViewDataDateColumn FieldName="CNTR_INIT_DT" Caption="초기계약일" Width="100" ReadOnly="true">
-                    <HeaderStyle BackColor="#E8F5E9" ForeColor="#2E7D32" Font-Bold="true" />
+                    <HeaderStyle BackColor="#E8F5E9" ForeColor="#2E7D32" Font-Bold="true" HorizontalAlign="Center" />
                     <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
                 </dx:GridViewDataDateColumn>
                 <dx:GridViewDataDateColumn FieldName="MP_DT" Caption="납기일" Width="100">
-                    <HeaderStyle BackColor="#E8F5E9" ForeColor="#2E7D32" Font-Bold="true" />
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                </dx:GridViewDataDateColumn>
-                <dx:GridViewDataDateColumn FieldName="MP_INIT_DT" Caption="초기납기일" Width="100" ReadOnly="true">
-                    <HeaderStyle BackColor="#E8F5E9" ForeColor="#2E7D32" Font-Bold="true" />
+                    <HeaderStyle BackColor="#E8F5E9" ForeColor="#2E7D32" Font-Bold="true" HorizontalAlign="Center" />
                     <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
                 </dx:GridViewDataDateColumn>
 
                 <%-- ========== 제품정보 (분홍색 계열) ========== --%>
                 <dx:GridViewDataTextColumn FieldName="PRODUCT_TYPE" Caption="제품타입" Width="100">
-                    <HeaderStyle BackColor="#FCE4EC" ForeColor="#C2185B" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="PRODUCT_DESC" Caption="제품설명" Width="150">
-                    <HeaderStyle BackColor="#FCE4EC" ForeColor="#C2185B" Font-Bold="true" />
+                    <HeaderStyle BackColor="#FCE4EC" ForeColor="#C2185B" Font-Bold="true" HorizontalAlign="Center" />
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataSpinEditColumn FieldName="CNTR_EA" Caption="수량" Width="70">
-                    <HeaderStyle BackColor="#FCE4EC" ForeColor="#C2185B" Font-Bold="true" />
+                    <HeaderStyle BackColor="#FCE4EC" ForeColor="#C2185B" Font-Bold="true" HorizontalAlign="Center" />
                     <PropertiesSpinEdit DisplayFormatString="N0" />
                 </dx:GridViewDataSpinEditColumn>
-                <dx:GridViewDataSpinEditColumn FieldName="CNTR_PIECE_WGT" Caption="단중" Width="80">
-                    <HeaderStyle BackColor="#FCE4EC" ForeColor="#C2185B" Font-Bold="true" />
-                    <PropertiesSpinEdit DisplayFormatString="N2" />
-                </dx:GridViewDataSpinEditColumn>
                 <dx:GridViewDataSpinEditColumn FieldName="CNTR_WGT" Caption="중량" Width="80">
-                    <HeaderStyle BackColor="#FCE4EC" ForeColor="#C2185B" Font-Bold="true" />
+                    <HeaderStyle BackColor="#FCE4EC" ForeColor="#C2185B" Font-Bold="true" HorizontalAlign="Center" />
                     <PropertiesSpinEdit DisplayFormatString="N2" />
                 </dx:GridViewDataSpinEditColumn>
-                <dx:GridViewDataTextColumn FieldName="PROJECT_NO" Caption="프로젝트번호" Width="100">
-                    <HeaderStyle BackColor="#FCE4EC" ForeColor="#C2185B" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="BLOCK_NO" Caption="블록번호" Width="80">
-                    <HeaderStyle BackColor="#FCE4EC" ForeColor="#C2185B" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="MARK_NO" Caption="마크번호" Width="80">
-                    <HeaderStyle BackColor="#FCE4EC" ForeColor="#C2185B" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
 
                 <%-- ========== 업체정보 (보라색 계열) ========== --%>
                 <dx:GridViewDataTextColumn FieldName="OWNER" Caption="발주사" Width="100">
-                    <HeaderStyle BackColor="#F3E5F5" ForeColor="#7B1FA2" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="TAG1" Caption="비고란" Width="100">
-                    <HeaderStyle BackColor="#F3E5F5" ForeColor="#7B1FA2" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="OWNER_DEPT" Caption="발주처" Width="100">
-                    <HeaderStyle BackColor="#F3E5F5" ForeColor="#7B1FA2" Font-Bold="true" />
+                    <HeaderStyle BackColor="#F3E5F5" ForeColor="#7B1FA2" Font-Bold="true" HorizontalAlign="Center" />
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="MAIN_CONTRACTOR" Caption="원청" Width="100">
-                    <HeaderStyle BackColor="#F3E5F5" ForeColor="#7B1FA2" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataTextColumn FieldName="SUB_CONTRACTOR" Caption="하청업체" Width="100">
-                    <HeaderStyle BackColor="#F3E5F5" ForeColor="#7B1FA2" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-
-                <%-- ========== 자재정보 (청록색 계열) ========== --%>
-                <dx:GridViewDataTextColumn FieldName="MS_NO" Caption="자재번호" Width="100">
-                    <HeaderStyle BackColor="#E0F7FA" ForeColor="#00838F" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-                <dx:GridViewDataDateColumn FieldName="MS_DT" Caption="자재계약일" Width="100">
-                    <HeaderStyle BackColor="#E0F7FA" ForeColor="#00838F" Font-Bold="true" />
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                </dx:GridViewDataDateColumn>
-                <dx:GridViewDataTextColumn FieldName="MS_CONTRACTOR" Caption="자재업체" Width="100">
-                    <HeaderStyle BackColor="#E0F7FA" ForeColor="#00838F" Font-Bold="true" />
-                </dx:GridViewDataTextColumn>
-
-                <%-- ========== 일정정보 (남색 계열) ========== --%>
-                <dx:GridViewDataDateColumn FieldName="MAKING_DT" Caption="제작예정일" Width="100">
-                    <HeaderStyle BackColor="#E8EAF6" ForeColor="#3949AB" Font-Bold="true" />
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                </dx:GridViewDataDateColumn>
-                <dx:GridViewDataDateColumn FieldName="MAKING_RES_DT" Caption="제작실적일" Width="100">
-                    <HeaderStyle BackColor="#E8EAF6" ForeColor="#3949AB" Font-Bold="true" />
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                </dx:GridViewDataDateColumn>
-                <dx:GridViewDataDateColumn FieldName="PAINTING_DT" Caption="도장예정일" Width="100">
-                    <HeaderStyle BackColor="#E8EAF6" ForeColor="#3949AB" Font-Bold="true" />
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                </dx:GridViewDataDateColumn>
-                <dx:GridViewDataDateColumn FieldName="PAINTING_RES_DT" Caption="도장실적일" Width="100">
-                    <HeaderStyle BackColor="#E8EAF6" ForeColor="#3949AB" Font-Bold="true" />
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                </dx:GridViewDataDateColumn>
-                
-                <%-- ========== 기타 (회색 계열) ========== --%>
-                <dx:GridViewDataTextColumn FieldName="RMK" Caption="REMARK" Width="200">
-                    <HeaderStyle BackColor="#ECEFF1" ForeColor="#455A64" Font-Bold="true" />
+                    <HeaderStyle BackColor="#F3E5F5" ForeColor="#7B1FA2" Font-Bold="true" HorizontalAlign="Center" />
                 </dx:GridViewDataTextColumn>
                 
             </Columns>
