@@ -85,7 +85,7 @@
     <Compile Include="Controllers\ContractManagerXpoController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ShortcutController.cs" />
-    <Compile Include="ORMDataModel1Code\ConnectionHelper.cs" />
+    <Compile Include="Dababase\XpoConnectionHelper.cs" />
     <Compile Include="ORMDataModel1Code\SCM_CONTRACT_DETAIL.cs" />
     <Compile Include="ORMDataModel1Code\SCM_CONTRACT_DETAIL.Designer.cs">
       <DependentUpon>SCM_CONTRACT_DETAIL.cs</DependentUpon>
@@ -94,7 +94,6 @@
     <Compile Include="ORMDataModel1Code\SCM_CONTRACT_MASTER.Designer.cs">
       <DependentUpon>SCM_CONTRACT_MASTER.cs</DependentUpon>
     </Compile>
-    <Compile Include="OrmModels\OrmToDoListCode\ConnectionHelper.cs" />
     <Compile Include="OrmModels\OrmToDoListCode\SCM_CASE_MASTER.cs" />
     <Compile Include="OrmModels\OrmToDoListCode\SCM_CASE_MASTER.Designer.cs">
       <DependentUpon>SCM_CASE_MASTER.cs</DependentUpon>

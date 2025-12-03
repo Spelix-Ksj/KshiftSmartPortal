@@ -108,10 +108,10 @@ namespace KShiftSmartPortalWeb
                 // 기본값 설정 (1002 - SPELIX)
                 if (dt.Rows.Count > 0)
                 {
-                    var defaultRow = dt.Select("COMPANY_NO = '1002'");
+                    var defaultRow = dt.Select("COMPANY_NO = '100'");
                     if (defaultRow.Length > 0)
                     {
-                        cmbCompany.Value = "1002";
+                        cmbCompany.Value = "100";
                     }
                     else
                     {

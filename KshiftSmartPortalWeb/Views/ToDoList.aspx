@@ -82,11 +82,14 @@
             font-size: 16px; 
         }
         
-        /* 그리드 컬럼 그룹별 색상 */
+        /* 그리드 컬럼 그룹별 헤더 색상 */
         .col-basic { background-color: #e3f2fd !important; }      /* 기본정보 - 파랑 */
         .col-schedule { background-color: #fff3e0 !important; }   /* 일정정보 - 주황 */
         .col-editable { background-color: #e8f5e9 !important; }   /* 수정가능 - 녹색 */
         .col-status { background-color: #fce4ec !important; }     /* 상태 - 분홍 */
+        
+        /* 수정 가능 컬럼 셀 배경색 */
+        .cell-editable { background-color: #f1f8e9 !important; }
         
         /* 상태별 셀 색상 */
         .status-complete { background-color: #c8e6c9 !important; color: #2e7d32 !important; font-weight: bold; }
@@ -144,12 +147,6 @@
                 <Image IconID="actions_refresh_16x16office2013" />
             </dx:ASPxButton>
             
-            <dx:ASPxButton ID="btnSave" runat="server" 
-                Text="저장" Width="100px" 
-                OnClick="btnSave_Click">
-                <Image IconID="actions_apply_16x16office2013" />
-            </dx:ASPxButton>
-            
             <dx:ASPxButton ID="btnDelete" runat="server" 
                 Text="삭제" Width="100px" 
                 OnClick="btnDelete_Click">
@@ -175,15 +172,14 @@
         
         <dx:ASPxGridView ID="gridToDoList" runat="server" 
             Width="100%" 
-            KeyFieldName="ORDER_NO" 
+            KeyFieldName="COMPANY_NO;CASE_NO;PROJECT_NO;ORDER_NO"
             AutoGenerateColumns="False" 
             EnableCallBacks="true"
             OnPageIndexChanged="gridToDoList_PageIndexChanged"
             OnBeforeColumnSortingGrouping="gridToDoList_BeforeColumnSortingGrouping"
             OnCustomCallback="gridToDoList_CustomCallback"
             OnRowUpdating="gridToDoList_RowUpdating"
-            OnHtmlRowPrepared="gridToDoList_HtmlRowPrepared"
-            OnBatchUpdate="gridToDoList_BatchUpdate">
+            OnHtmlRowPrepared="gridToDoList_HtmlRowPrepared">
             
             <Settings 
                 ShowFilterRow="True" 
@@ -196,113 +192,152 @@
                 AllowFocusedRow="True" 
                 AllowSelectByRowClick="True" />
             
-            <SettingsEditing Mode="Batch">
-                <BatchEditSettings EditMode="Cell" StartEditAction="Click" />
-            </SettingsEditing>
-            
+            <%-- PopupEditForm 방식 설정 --%>
+            <SettingsEditing Mode="PopupEditForm" />
+            <SettingsPopup>
+                <EditForm 
+                    HorizontalAlign="WindowCenter" 
+                    VerticalAlign="WindowCenter" 
+                    Modal="True" 
+                    PopupAnimationType="Auto" />
+            </SettingsPopup>
             <SettingsText 
                 CommandEdit="수정" 
                 CommandUpdate="저장" 
-                CommandCancel="취소" />
+                CommandCancel="취소" 
+                PopupEditFormCaption="작업지시 수정" />
             
             <SettingsPager Mode="ShowPager" PageSize="50" Position="Bottom">
                 <PageSizeItemSettings Visible="true" Items="50,100,200,500" />
             </SettingsPager>
 
-            <Columns>
-                <%-- 기본 정보 컬럼 그룹 --%>
-                <dx:GridViewDataTextColumn FieldName="PROJECT_NO" Caption="프로젝트 번호" Width="120px" 
-                    ReadOnly="true" HeaderStyle-CssClass="col-basic" />
-                <dx:GridViewDataTextColumn FieldName="PROP01" Caption="호선번호" Width="100px" 
-                    ReadOnly="true" HeaderStyle-CssClass="col-basic" />
-                <dx:GridViewDataTextColumn FieldName="ORDER_NO" Caption="지시번호" Width="120px" 
-                    ReadOnly="true" HeaderStyle-CssClass="col-basic" />
-                <dx:GridViewDataTextColumn FieldName="ORDER_NAME" Caption="지시명칭" Width="200px" 
-                    ReadOnly="true" HeaderStyle-CssClass="col-basic" />
-                <dx:GridViewDataTextColumn FieldName="PROP02" Caption="블록번호" Width="100px" 
-                    ReadOnly="true" HeaderStyle-CssClass="col-basic" />
-                <dx:GridViewDataTextColumn FieldName="WORK_LIST" Caption="작업목록" Width="150px" 
-                    ReadOnly="true" HeaderStyle-CssClass="col-basic" />
+            <%-- EditForm 레이아웃 설정 --%>
+            <EditFormLayoutProperties ColumnCount="2">
+                <SettingsAdaptivity AdaptivityMode="SingleColumnWindowLimit" SwitchToSingleColumnAtWindowInnerWidth="600" />
+            </EditFormLayoutProperties>
 
-                <%-- 일정 정보 컬럼 그룹 --%>
+            <Columns>
+                <%-- 수정 버튼 컬럼 (첫 번째 컬럼) --%>
+                <dx:GridViewCommandColumn Width="60px" ShowEditButton="True" VisibleIndex="0" Caption=" ">
+                    <HeaderStyle HorizontalAlign="Center" />
+                    <CellStyle HorizontalAlign="Center" />
+                </dx:GridViewCommandColumn>
+
+                <%-- 기본 정보 컬럼 그룹 (ReadOnly) --%>
+                <dx:GridViewDataTextColumn FieldName="PROJECT_NO" Caption="프로젝트 번호" Width="120px" 
+                    ReadOnly="true" HeaderStyle-CssClass="col-basic">
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="PROP01" Caption="호선번호" Width="100px" 
+                    ReadOnly="true" HeaderStyle-CssClass="col-basic">
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="ORDER_NO" Caption="지시번호" Width="120px" 
+                    ReadOnly="true" HeaderStyle-CssClass="col-basic">
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="ORDER_NAME" Caption="지시명칭" Width="200px" 
+                    ReadOnly="true" HeaderStyle-CssClass="col-basic">
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="PROP02" Caption="블록번호" Width="100px" 
+                    ReadOnly="true" HeaderStyle-CssClass="col-basic">
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="WORK_LIST" Caption="작업목록" Width="150px" 
+                    ReadOnly="true" HeaderStyle-CssClass="col-basic">
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataTextColumn>
+
+                <%-- 일정 정보 컬럼 그룹 (ReadOnly) --%>
                 <dx:GridViewDataDateColumn FieldName="WORK_ST" Caption="작업시작일" Width="110px" 
                     ReadOnly="true" HeaderStyle-CssClass="col-schedule">
                     <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
+                    <EditFormSettings Visible="False" />
                 </dx:GridViewDataDateColumn>
                 <dx:GridViewDataDateColumn FieldName="WORK_FI" Caption="작업종료일" Width="110px" 
                     ReadOnly="true" HeaderStyle-CssClass="col-schedule">
                     <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
+                    <EditFormSettings Visible="False" />
                 </dx:GridViewDataDateColumn>
                 <dx:GridViewDataDateColumn FieldName="DUE_DATE" Caption="마감일" Width="110px" 
                     ReadOnly="true" HeaderStyle-CssClass="col-schedule">
                     <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
+                    <EditFormSettings Visible="False" />
                 </dx:GridViewDataDateColumn>
                 <dx:GridViewDataDateColumn FieldName="QM_DATE" Caption="품질관리일" Width="110px" 
                     ReadOnly="true" HeaderStyle-CssClass="col-schedule">
                     <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
+                    <EditFormSettings Visible="False" />
                 </dx:GridViewDataDateColumn>
                 <dx:GridViewDataDateColumn FieldName="QM_COMP_DATE" Caption="QM완료일" Width="110px" 
                     ReadOnly="true" HeaderStyle-CssClass="col-schedule">
                     <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
+                    <EditFormSettings Visible="False" />
                 </dx:GridViewDataDateColumn>
 
-                <%-- 수정 가능 컬럼 그룹 (녹색 강조) --%>
+                <%-- 수정 가능 컬럼 그룹 (PopupEditForm에 표시) --%>
                 <dx:GridViewDataDateColumn FieldName="COMP_DATE" Caption="완료일" Width="120px" 
-                    HeaderStyle-CssClass="col-editable">
+                    HeaderStyle-CssClass="col-editable" CellStyle-CssClass="cell-editable">
                     <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" AllowNull="true">
                         <ValidationSettings>
                             <RequiredField IsRequired="false" />
                         </ValidationSettings>
                     </PropertiesDateEdit>
-                    <CellStyle BackColor="#e8f5e9" />
+                    <EditFormSettings Caption="완료일" VisibleIndex="0" />
                 </dx:GridViewDataDateColumn>
                 
                 <dx:GridViewDataSpinEditColumn FieldName="PLAN_MHR" Caption="계획 M/H" Width="100px" 
-                    HeaderStyle-CssClass="col-editable">
+                    HeaderStyle-CssClass="col-editable" CellStyle-CssClass="cell-editable">
                     <PropertiesSpinEdit DisplayFormatString="N1" MinValue="0" MaxValue="99999" 
                         SpinButtons-ShowIncrementButtons="false" AllowNull="true" />
-                    <CellStyle BackColor="#e8f5e9" />
+                    <EditFormSettings Caption="계획 M/H" VisibleIndex="1" />
                 </dx:GridViewDataSpinEditColumn>
                 
                 <dx:GridViewDataSpinEditColumn FieldName="REAL_MHR" Caption="실적 M/H" Width="100px" 
-                    HeaderStyle-CssClass="col-editable">
+                    HeaderStyle-CssClass="col-editable" CellStyle-CssClass="cell-editable">
                     <PropertiesSpinEdit DisplayFormatString="N1" MinValue="0" MaxValue="99999" 
                         SpinButtons-ShowIncrementButtons="false" AllowNull="true" />
-                    <CellStyle BackColor="#e8f5e9" />
+                    <EditFormSettings Caption="실적 M/H" VisibleIndex="2" />
                 </dx:GridViewDataSpinEditColumn>
                 
                 <dx:GridViewDataSpinEditColumn FieldName="PLAN_MP" Caption="계획 인원" Width="100px" 
-                    HeaderStyle-CssClass="col-editable">
+                    HeaderStyle-CssClass="col-editable" CellStyle-CssClass="cell-editable">
                     <PropertiesSpinEdit DisplayFormatString="N1" MinValue="0" MaxValue="9999" 
                         SpinButtons-ShowIncrementButtons="false" AllowNull="true" />
-                    <CellStyle BackColor="#e8f5e9" />
+                    <EditFormSettings Caption="계획 인원" VisibleIndex="3" />
                 </dx:GridViewDataSpinEditColumn>
                 
                 <dx:GridViewDataSpinEditColumn FieldName="REAL_MP" Caption="실적 인원" Width="100px" 
-                    HeaderStyle-CssClass="col-editable">
+                    HeaderStyle-CssClass="col-editable" CellStyle-CssClass="cell-editable">
                     <PropertiesSpinEdit DisplayFormatString="N1" MinValue="0" MaxValue="9999" 
                         SpinButtons-ShowIncrementButtons="false" AllowNull="true" />
-                    <CellStyle BackColor="#e8f5e9" />
+                    <EditFormSettings Caption="실적 인원" VisibleIndex="4" />
                 </dx:GridViewDataSpinEditColumn>
 
-                <%-- 계산/상태 컬럼 --%>
+                <%-- 계산/상태 컬럼 (ReadOnly) --%>
                 <dx:GridViewDataTextColumn FieldName="STATUS" Caption="상태" Width="80px" 
-                    ReadOnly="true" HeaderStyle-CssClass="col-status" />
+                    ReadOnly="true" HeaderStyle-CssClass="col-status">
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="MHR_RATE" Caption="달성률(%)" Width="90px" 
                     ReadOnly="true" HeaderStyle-CssClass="col-status">
                     <PropertiesTextEdit DisplayFormatString="N1" />
+                    <EditFormSettings Visible="False" />
                 </dx:GridViewDataTextColumn>
 
-                <%-- 숨김 Key 컬럼 --%>
-                <dx:GridViewDataTextColumn FieldName="COMPANY_NO" Visible="false" />
-                <dx:GridViewDataTextColumn FieldName="CASE_NO" Visible="false" />
-                <dx:GridViewDataTextColumn FieldName="PROJECT_NO" Visible="false" />
+                <%-- 숨김 Key 컬럼 (4개 복합키) --%>
+                <dx:GridViewDataTextColumn FieldName="COMPANY_NO" Visible="false">
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="CASE_NO" Visible="false">
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataTextColumn>
             </Columns>
             
+            <%-- Styles 섹션: 테마 색상 사용 (직접 색상 지정 제거) --%>
             <Styles>
                 <Header BackColor="#f5f5f5" Font-Bold="true" />
-                <FocusedRow BackColor="#bbdefb" />
-                <SelectedRow BackColor="#e3f2fd" />
             </Styles>
         </dx:ASPxGridView>
         

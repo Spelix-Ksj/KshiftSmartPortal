@@ -10,7 +10,8 @@ using KShiftSmartPortalWeb.Controllers;
 namespace KShiftSmartPortalWeb
 {
     /// <summary>
-    /// To-Do List 페이지 코드비하인드 (XPO 방식)
+    /// To-Do List 페이지 코드비하인드 (XPO + PopupEditForm 방식)
+    /// ContractManagerXpo와 동일한 패턴 적용
     /// </summary>
     public partial class ToDoList : System.Web.UI.Page
     {
@@ -136,20 +137,9 @@ namespace KShiftSmartPortalWeb
             lblRecordCount.Text = "조회된 데이터가 없습니다.";
         }
 
-        protected void btnSave_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                gridToDoList.UpdateEdit();
-                ShowMessage("데이터가 저장되었습니다.");
-                LoadData();
-            }
-            catch (Exception ex)
-            {
-                ShowMessage($"저장 오류: {ex.Message}");
-            }
-        }
-
+        /// <summary>
+        /// 삭제 버튼 클릭
+        /// </summary>
         protected void btnDelete_Click(object sender, EventArgs e)
         {
             try
@@ -160,11 +150,14 @@ namespace KShiftSmartPortalWeb
                     return;
                 }
 
-                // 4개 복합키
-                var orderNo = gridToDoList.GetRowValues(gridToDoList.FocusedRowIndex, "ORDER_NO")?.ToString();
-                var caseNo = gridToDoList.GetRowValues(gridToDoList.FocusedRowIndex, "CASE_NO")?.ToString();
-                var companyNo = gridToDoList.GetRowValues(gridToDoList.FocusedRowIndex, "COMPANY_NO")?.ToString();
-                var projectNo = gridToDoList.GetRowValues(gridToDoList.FocusedRowIndex, "PROJECT_NO")?.ToString();
+                // 4개 복합키 모두 가져오기
+                object[] keyValues = (object[])gridToDoList.GetRowValues(gridToDoList.FocusedRowIndex,
+                    new string[] { "COMPANY_NO", "CASE_NO", "PROJECT_NO", "ORDER_NO" });
+
+                string companyNo = keyValues[0]?.ToString();
+                string caseNo = keyValues[1]?.ToString();
+                string projectNo = keyValues[2]?.ToString();
+                string orderNo = keyValues[3]?.ToString();
 
                 if (string.IsNullOrEmpty(orderNo) || string.IsNullOrEmpty(caseNo) ||
                     string.IsNullOrEmpty(companyNo) || string.IsNullOrEmpty(projectNo))
@@ -233,25 +226,37 @@ namespace KShiftSmartPortalWeb
             BindGridFromSession();
         }
 
+        /// <summary>
+        /// PopupEditForm에서 저장 버튼 클릭 시 호출
+        /// </summary>
         protected void gridToDoList_RowUpdating(object sender, ASPxDataUpdatingEventArgs e)
         {
             try
             {
                 string userId = Session["UserID"]?.ToString() ?? "SYSTEM";
 
-                // 4개 복합키
+                // 4개 복합키 모두 e.Keys에서 가져오기 (KeyFieldName이 복합키로 설정됨)
+                string companyNo = e.Keys["COMPANY_NO"]?.ToString();
+                string caseNo = e.Keys["CASE_NO"]?.ToString();
+                string projectNo = e.Keys["PROJECT_NO"]?.ToString();
                 string orderNo = e.Keys["ORDER_NO"]?.ToString();
-                string caseNo = e.OldValues["CASE_NO"]?.ToString();
-                string companyNo = e.OldValues["COMPANY_NO"]?.ToString();
-                string projectNo = e.OldValues["PROJECT_NO"]?.ToString();
 
-                // 수정 가능 필드
+                if (string.IsNullOrEmpty(orderNo) || string.IsNullOrEmpty(caseNo) ||
+                    string.IsNullOrEmpty(companyNo) || string.IsNullOrEmpty(projectNo))
+                {
+                    e.Cancel = true;
+                    ShowMessage($"필수 정보가 없습니다. (Company:{companyNo}, Case:{caseNo}, Project:{projectNo}, Order:{orderNo})");
+                    return;
+                }
+
+                // 수정 가능 필드 값 가져오기
                 DateTime? compDate = e.NewValues["COMP_DATE"] as DateTime?;
                 decimal? planMhr = e.NewValues["PLAN_MHR"] as decimal?;
                 decimal? realMhr = e.NewValues["REAL_MHR"] as decimal?;
                 decimal? planMp = e.NewValues["PLAN_MP"] as decimal?;
                 decimal? realMp = e.NewValues["REAL_MP"] as decimal?;
 
+                // XPO 방식으로 업데이트
                 bool result = _controller.UpdateWorkOrder(
                     caseNo, companyNo, projectNo, orderNo,
                     compDate, planMhr, realMhr, planMp, realMp,
@@ -267,7 +272,7 @@ namespace KShiftSmartPortalWeb
                     ShowMessage("수정에 실패했습니다.");
                 }
 
-                e.Cancel = true;
+                // e.Cancel 설정하지 않음 (자동으로 팝업 닫힘)
             }
             catch (Exception ex)
             {
@@ -276,68 +281,41 @@ namespace KShiftSmartPortalWeb
             }
         }
 
-        protected void gridToDoList_BatchUpdate(object sender, ASPxDataBatchUpdateEventArgs e)
-        {
-            try
-            {
-                string userId = Session["UserID"]?.ToString() ?? "SYSTEM";
-                List<ToDoListViewModel> updateItems = new List<ToDoListViewModel>();
-
-                foreach (var item in e.UpdateValues)
-                {
-                    var vm = new ToDoListViewModel
-                    {
-                        ORDER_NO = item.Keys["ORDER_NO"]?.ToString(),
-                        CASE_NO = item.OldValues["CASE_NO"]?.ToString(),
-                        COMPANY_NO = item.OldValues["COMPANY_NO"]?.ToString(),
-                        PROJECT_NO = item.OldValues["PROJECT_NO"]?.ToString(),
-                        COMP_DATE = item.NewValues["COMP_DATE"] as DateTime?,
-                        PLAN_MHR = item.NewValues["PLAN_MHR"] as decimal?,
-                        REAL_MHR = item.NewValues["REAL_MHR"] as decimal?,
-                        PLAN_MP = item.NewValues["PLAN_MP"] as decimal?,
-                        REAL_MP = item.NewValues["REAL_MP"] as decimal?
-                    };
-                    updateItems.Add(vm);
-                }
-
-                if (updateItems.Count > 0)
-                {
-                    int successCount = _controller.BatchUpdateWorkOrders(updateItems, userId);
-                    ShowMessage($"{successCount}건의 데이터가 저장되었습니다.");
-                }
-
-                e.Handled = true;
-            }
-            catch (Exception ex)
-            {
-                ShowMessage($"일괄 저장 오류: {ex.Message}");
-            }
-        }
-
+        /// <summary>
+        /// 행 렌더링 시 상태에 따른 스타일 적용
+        /// </summary>
         protected void gridToDoList_HtmlRowPrepared(object sender, ASPxGridViewTableRowEventArgs e)
         {
             if (e.RowType != GridViewRowType.Data) return;
 
-            int statusIndex = gridToDoList.Columns.IndexOf(gridToDoList.Columns["STATUS"]);
-            if (statusIndex >= 0)
+            // STATUS 컬럼 찾기
+            var statusColumn = gridToDoList.Columns["STATUS"] as GridViewDataColumn;
+            if (statusColumn != null)
             {
-                string status = e.GetValue("STATUS")?.ToString();
-                switch (status)
+                int statusIndex = statusColumn.VisibleIndex;
+                if (statusIndex >= 0 && statusIndex < e.Row.Cells.Count)
                 {
-                    case "완료":
-                        e.Row.Cells[statusIndex].CssClass = "status-complete";
-                        break;
-                    case "진행중":
-                        e.Row.Cells[statusIndex].CssClass = "status-inprogress";
-                        break;
-                    case "예정":
-                    case "미정":
-                        e.Row.Cells[statusIndex].CssClass = "status-pending";
-                        break;
+                    string status = e.GetValue("STATUS")?.ToString();
+                    switch (status)
+                    {
+                        case "완료":
+                            e.Row.Cells[statusIndex].CssClass = "status-complete";
+                            break;
+                        case "진행중":
+                            e.Row.Cells[statusIndex].CssClass = "status-inprogress";
+                            break;
+                        case "예정":
+                        case "미정":
+                            e.Row.Cells[statusIndex].CssClass = "status-pending";
+                            break;
+                    }
                 }
             }
         }
 
+        /// <summary>
+        /// 세션에서 그리드 데이터 바인딩
+        /// </summary>
         private void BindGridFromSession()
         {
             if (GridData != null)
@@ -351,6 +329,9 @@ namespace KShiftSmartPortalWeb
 
         #region Data Methods
 
+        /// <summary>
+        /// 데이터 조회
+        /// </summary>
         private void LoadData()
         {
             string companyNo = cmbCompany.Value?.ToString();
