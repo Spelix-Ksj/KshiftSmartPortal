@@ -9,7 +9,6 @@
 
 <asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
     <style>
-        /* 기존 ContractManager.aspx의 스타일을 그대로 유지합니다. */
         /* 조회 조건 패널 스타일 */
         .search-panel { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .search-panel-header { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #0078d4; }
@@ -30,7 +29,6 @@
 </asp:Content>
 
 <asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">
-    <!-- UI는 기존 ContractManager.aspx를 참고하여 작성했습니다. -->
     <div class="search-panel">
         <div class="search-panel-header"><i class="fas fa-search"></i> 조회 조건</div>
         <div class="search-row">
@@ -107,7 +105,8 @@
                     VerticalAlign="WindowCenter" 
                     Modal="True" PopupAnimationType="Auto" /> 
             </SettingsPopup>
-            <SettingsText CommandEdit="수정" CommandUpdate="저장" CommandCancel="취소" />            
+            <SettingsText CommandEdit="수정" CommandUpdate="저장" CommandCancel="취소" 
+                         PopupEditFormCaption="계약 수정" />            
             <SettingsPager Mode="ShowPager" PageSize="50" Position="Bottom">
                 <PageSizeItemSettings Visible="true" Items="50,100,200,500" />
             </SettingsPager>

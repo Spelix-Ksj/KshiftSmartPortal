@@ -98,6 +98,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ContractViewModel.cs" />
     <Compile Include="Views\ContractManagerXpo.aspx.cs">
       <DependentUpon>ContractManagerXpo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
