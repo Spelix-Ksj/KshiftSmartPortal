@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Linq;
+using DevExpress.Xpo;
 using Oracle.ManagedDataAccess.Client;
+using KShiftSmartPortal.Database;
 using KShiftSmartPortalWeb.Models;
 using KShiftSmartPortalWeb.Utils;
 using KShiftSmartPortal.ViewModels;
@@ -10,8 +13,9 @@ using KShiftSmartPortal.ViewModels;
 namespace KShiftSmartPortalWeb.Controllers
 {
     /// <summary>
-    /// To-Do List 화면 컨트롤러
+    /// To-Do List 화면 컨트롤러 (XPO 방식)
     /// 작업지시 목록 조회 및 수정 기능을 제공합니다.
+    /// 4개 테이블 조인: SCM_CASE_MASTER, STD_PERSONNEL_INFO, SCM_WORK_ORDER_MASTER, SCM_WORK_ORDER_DETAIL
     /// </summary>
     public class ToDoListController
     {
@@ -20,192 +24,148 @@ namespace KShiftSmartPortalWeb.Controllers
             get { return ConfigurationManager.ConnectionStrings["OracleConnection"].ConnectionString; }
         }
 
-        #region 조회 메서드
+        #region 조회 메서드 (XPO 방식)
 
         /// <summary>
-        /// To-Do List 조회
-        /// 로그인한 사용자의 작업지시 목록을 조회합니다.
+        /// To-Do List 조회 (XPO + LINQ 방식)
         /// </summary>
-        /// <param name="companyNo">회사 번호</param>
-        /// <param name="userId">로그인 사용자 ID</param>
-        /// <param name="baseDate">기준일</param>
-        /// <returns>작업지시 목록</returns>
         public List<ToDoListViewModel> GetToDoList(string companyNo, string userId, DateTime baseDate)
         {
-            List<ToDoListViewModel> result = new List<ToDoListViewModel>();
-
             try
             {
-                using (OracleConnection conn = new OracleConnection(ConnectionString))
+                using (var uow = new UnitOfWork())
                 {
-                    conn.Open();
+                    // 1. D: SCM_CASE_MASTER - 활성화된 케이스 조회 (PROP1 = 'Y')
+                    var activeCases = new XPQuery<SCM_CASE_MASTER>(uow)
+                        .Where(d => d.CompoundKey1.COMPANY_NO == companyNo && d.PROP1 == "Y")
+                        .ToList();
 
-                    // 원본 쿼리를 기반으로 구성
-                    string query = @"
-                        SELECT 
-                            B.COMPANY_NO,
-                            B.CASE_NO,
-                            B.PROJECT_NO, 
-                            B.PROP01, 
-                            B.ORDER_NO, 
-                            B.ORDER_NAME, 
-                            B.PROP02,
-                            B.WORK_LIST, 
-                            B.WORK_ST, 
-                            B.WORK_FI, 
-                            B.DUE_DATE, 
-                            B.QM_DATE, 
-                            B.COMP_DATE, 
-                            B.QM_COMP_DATE,
-                            B.PLAN_MHR, 
-                            B.REAL_MHR, 
-                            B.PLAN_MP, 
-                            B.REAL_MP
-                        FROM SCM_WORK_ORDER_DETAIL A, 
-                             SCM_WORK_ORDER_MASTER B, 
-                             STD_PERSONNEL_INFO C, 
-                             SCM_CASE_MASTER D
-                        WHERE D.COMPANY_NO = :COMPANY_NO 
-                          AND D.PROP1 = 'Y'
-                          AND B.COMPANY_NO = D.COMPANY_NO
-                          AND B.CASE_NO = D.CASE_NO
-                          AND (B.COMP_DATE IS NULL 
-                               OR TO_DATE(:BASE_DATE,'YYYYMMDD') BETWEEN B.WORK_ST AND B.WORK_FI)
-                          AND A.COMPANY_NO(+) = D.COMPANY_NO
-                          AND A.CASE_NO(+) = D.CASE_NO    
-                          AND A.ORDER_NO(+) = B.ORDER_NO
-                          AND C.COMPANY_NO = D.COMPANY_NO    
-                          AND C.USER_ID = :USER_ID
-                          AND B.EMP_NO = C.EMP_NO    
-                        ORDER BY B.WORK_ST";
-
-                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    if (activeCases.Count == 0)
                     {
-                        cmd.Parameters.Add("COMPANY_NO", OracleDbType.Varchar2).Value = companyNo;
-                        cmd.Parameters.Add("BASE_DATE", OracleDbType.Varchar2).Value = baseDate.ToString("yyyyMMdd");
-                        cmd.Parameters.Add("USER_ID", OracleDbType.Varchar2).Value = userId;
-
-                        SqlLogger.LogCommand(cmd, "To-Do List 조회");
-
-                        using (OracleDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                result.Add(MapReaderToViewModel(reader));
-                            }
-                        }
-
-                        SqlLogger.LogResult(result.Count, "To-Do List 조회 완료");
+                        SqlLogger.LogResult(0, "활성화된 케이스 없음");
+                        return new List<ToDoListViewModel>();
                     }
-                }
 
-                return result;
+                    var activeCaseNos = activeCases.Select(d => d.CompoundKey1.CASE_NO).ToList();
+
+                    // 2. C: STD_PERSONNEL_INFO - 사용자의 EMP_NO 조회
+                    var personnel = new XPQuery<STD_PERSONNEL_INFO>(uow)
+                        .FirstOrDefault(c => c.CompoundKey1.COMPANY_NO == companyNo && c.USER_ID == userId);
+
+                    if (personnel == null)
+                    {
+                        SqlLogger.LogResult(0, $"사용자 정보 없음: {userId}");
+                        return new List<ToDoListViewModel>();
+                    }
+
+                    string empNo = personnel.CompoundKey1.EMP_NO;
+
+                    // 3. B: SCM_WORK_ORDER_MASTER 조회
+                    var baseDateOnly = baseDate.Date;
+
+                    var workOrders = new XPQuery<SCM_WORK_ORDER_MASTER>(uow)
+                        .Where(b => b.CompoundKey1.COMPANY_NO == companyNo
+                                 && activeCaseNos.Contains(b.CompoundKey1.CASE_NO)
+                                 && b.EMP_NO == empNo
+                                 && (b.COMP_DATE == DateTime.MinValue || b.COMP_DATE == null
+                                     || (b.WORK_ST <= baseDateOnly && b.WORK_FI >= baseDateOnly)))
+                        .OrderBy(b => b.WORK_ST)
+                        .ToList();
+
+                    // 4. XPO 엔티티를 ViewModel로 변환
+                    // XPO 필드가 non-nullable인 경우 처리
+                    var result = workOrders.Select(b => new ToDoListViewModel
+                    {
+                        COMPANY_NO = b.CompoundKey1.COMPANY_NO,
+                        CASE_NO = b.CompoundKey1.CASE_NO,
+                        PROJECT_NO = b.CompoundKey1.PROJECT_NO,
+                        ORDER_NO = b.CompoundKey1.ORDER_NO,
+                        PROP01 = b.PROP01,
+                        ORDER_NAME = b.ORDER_NAME,
+                        PROP02 = b.PROP02,
+                        WORK_LIST = b.WORK_LIST,
+                        // DateTime 필드: MinValue면 null로 변환
+                        WORK_ST = b.WORK_ST == DateTime.MinValue ? (DateTime?)null : b.WORK_ST,
+                        WORK_FI = b.WORK_FI == DateTime.MinValue ? (DateTime?)null : b.WORK_FI,
+                        DUE_DATE = b.DUE_DATE == DateTime.MinValue ? (DateTime?)null : b.DUE_DATE,
+                        QM_DATE = b.QM_DATE == DateTime.MinValue ? (DateTime?)null : b.QM_DATE,
+                        COMP_DATE = b.COMP_DATE == DateTime.MinValue ? (DateTime?)null : b.COMP_DATE,
+                        QM_COMP_DATE = b.QM_COMP_DATE == DateTime.MinValue ? (DateTime?)null : b.QM_COMP_DATE,
+                        // decimal 필드: 그대로 할당 (0이면 0으로)
+                        PLAN_MHR = b.PLAN_MHR,
+                        REAL_MHR = b.REAL_MHR,
+                        PLAN_MP = b.PLAN_MP,
+                        REAL_MP = b.REAL_MP
+                    }).ToList();
+
+                    SqlLogger.LogResult(result.Count, "To-Do List 조회 완료 (XPO)");
+                    return result;
+                }
             }
             catch (Exception ex)
             {
-                SqlLogger.LogError(ex, "To-Do List 조회 실패");
+                SqlLogger.LogError(ex, "To-Do List 조회 실패 (XPO)");
                 throw;
             }
         }
 
-        /// <summary>
-        /// DataReader를 ViewModel로 매핑
-        /// </summary>
-        private ToDoListViewModel MapReaderToViewModel(OracleDataReader reader)
-        {
-            return new ToDoListViewModel
-            {
-                COMPANY_NO = reader["COMPANY_NO"]?.ToString(),
-                CASE_NO = reader["CASE_NO"]?.ToString(),
-                PROJECT_NO = reader["PROJECT_NO"]?.ToString(),
-                PROP01 = reader["PROP01"]?.ToString(),
-                ORDER_NO = reader["ORDER_NO"]?.ToString(),
-                ORDER_NAME = reader["ORDER_NAME"]?.ToString(),
-                PROP02 = reader["PROP02"]?.ToString(),
-                WORK_LIST = reader["WORK_LIST"]?.ToString(),
-                WORK_ST = reader["WORK_ST"] as DateTime?,
-                WORK_FI = reader["WORK_FI"] as DateTime?,
-                DUE_DATE = reader["DUE_DATE"] as DateTime?,
-                QM_DATE = reader["QM_DATE"] as DateTime?,
-                COMP_DATE = reader["COMP_DATE"] as DateTime?,
-                QM_COMP_DATE = reader["QM_COMP_DATE"] as DateTime?,
-                PLAN_MHR = reader["PLAN_MHR"] as decimal?,
-                REAL_MHR = reader["REAL_MHR"] as decimal?,
-                PLAN_MP = reader["PLAN_MP"] as decimal?,
-                REAL_MP = reader["REAL_MP"] as decimal?
-            };
-        }
-
         #endregion
 
-        #region 저장 메서드
+        #region 저장 메서드 (XPO 방식)
 
         /// <summary>
-        /// 작업지시 수정 저장
+        /// 작업지시 수정 저장 (XPO 방식)
         /// COMP_DATE, PLAN_MHR, REAL_MHR, PLAN_MP, REAL_MP 필드만 수정 가능
         /// </summary>
-        public bool UpdateWorkOrder(string caseNo, string companyNo, string orderNo,
+        public bool UpdateWorkOrder(string caseNo, string companyNo, string projectNo, string orderNo,
             DateTime? compDate, decimal? planMhr, decimal? realMhr, decimal? planMp, decimal? realMp,
             string userId)
         {
             try
             {
-                using (OracleConnection conn = new OracleConnection(ConnectionString))
+                using (var uow = new UnitOfWork())
                 {
-                    conn.Open();
+                    // XPO로 기존 데이터 조회
+                    var workOrder = uow.Query<SCM_WORK_ORDER_MASTER>().FirstOrDefault(m =>
+                        m.CompoundKey1.COMPANY_NO == companyNo &&
+                        m.CompoundKey1.CASE_NO == caseNo &&
+                        m.CompoundKey1.PROJECT_NO == projectNo &&
+                        m.CompoundKey1.ORDER_NO == orderNo);
 
-                    string query = @"
-                        UPDATE SCM_WORK_ORDER_MASTER 
-                        SET COMP_DATE = :COMP_DATE,
-                            PLAN_MHR = :PLAN_MHR,
-                            REAL_MHR = :REAL_MHR,
-                            PLAN_MP = :PLAN_MP,
-                            REAL_MP = :REAL_MP,
-                            UP_USER = :UP_USER,
-                            UP_DATE = SYSDATE
-                        WHERE CASE_NO = :CASE_NO
-                          AND COMPANY_NO = :COMPANY_NO
-                          AND ORDER_NO = :ORDER_NO";
-
-                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    if (workOrder == null)
                     {
-                        // 수정 가능 필드
-                        cmd.Parameters.Add("COMP_DATE", OracleDbType.Date).Value =
-                            compDate.HasValue ? (object)compDate.Value : DBNull.Value;
-                        cmd.Parameters.Add("PLAN_MHR", OracleDbType.Decimal).Value =
-                            planMhr.HasValue ? (object)planMhr.Value : DBNull.Value;
-                        cmd.Parameters.Add("REAL_MHR", OracleDbType.Decimal).Value =
-                            realMhr.HasValue ? (object)realMhr.Value : DBNull.Value;
-                        cmd.Parameters.Add("PLAN_MP", OracleDbType.Decimal).Value =
-                            planMp.HasValue ? (object)planMp.Value : DBNull.Value;
-                        cmd.Parameters.Add("REAL_MP", OracleDbType.Decimal).Value =
-                            realMp.HasValue ? (object)realMp.Value : DBNull.Value;
-                        cmd.Parameters.Add("UP_USER", OracleDbType.Varchar2).Value = userId;
-
-                        // Key 필드
-                        cmd.Parameters.Add("CASE_NO", OracleDbType.Varchar2).Value = caseNo;
-                        cmd.Parameters.Add("COMPANY_NO", OracleDbType.Varchar2).Value = companyNo;
-                        cmd.Parameters.Add("ORDER_NO", OracleDbType.Varchar2).Value = orderNo;
-
-                        SqlLogger.LogCommand(cmd, "작업지시 수정");
-
-                        int rowsAffected = cmd.ExecuteNonQuery();
-
-                        SqlLogger.LogResult(rowsAffected, "작업지시 수정 완료");
-
-                        return rowsAffected > 0;
+                        SqlLogger.LogResult(0, "수정 대상 없음");
+                        return false;
                     }
+
+                    // 수정 가능 필드만 업데이트
+                    // nullable -> non-nullable 변환: null이면 MinValue 또는 0 사용
+                    workOrder.COMP_DATE = compDate ?? DateTime.MinValue;
+                    workOrder.PLAN_MHR = planMhr ?? 0;
+                    workOrder.REAL_MHR = realMhr ?? 0;
+                    workOrder.PLAN_MP = planMp ?? 0;
+                    workOrder.REAL_MP = realMp ?? 0;
+
+                    // 감사 필드
+                    workOrder.UP_USER = userId;
+                    workOrder.UP_DATE = DateTime.Now;
+
+                    // 커밋
+                    uow.CommitChanges();
+
+                    SqlLogger.LogResult(1, "작업지시 수정 완료 (XPO)");
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                SqlLogger.LogError(ex, "작업지시 수정 실패");
+                SqlLogger.LogError(ex, "작업지시 수정 실패 (XPO)");
                 throw;
             }
         }
 
         /// <summary>
-        /// 일괄 저장 (BatchEdit 모드용)
+        /// 일괄 저장 (BatchEdit 모드용 - XPO 방식)
         /// </summary>
         public int BatchUpdateWorkOrders(List<ToDoListViewModel> items, string userId)
         {
@@ -213,140 +173,98 @@ namespace KShiftSmartPortalWeb.Controllers
 
             try
             {
-                using (OracleConnection conn = new OracleConnection(ConnectionString))
+                using (var uow = new UnitOfWork())
                 {
-                    conn.Open();
-
-                    using (OracleTransaction trans = conn.BeginTransaction())
+                    foreach (var item in items)
                     {
-                        try
+                        // XPO로 기존 데이터 조회
+                        var workOrder = uow.Query<SCM_WORK_ORDER_MASTER>().FirstOrDefault(m =>
+                            m.CompoundKey1.COMPANY_NO == item.COMPANY_NO &&
+                            m.CompoundKey1.CASE_NO == item.CASE_NO &&
+                            m.CompoundKey1.PROJECT_NO == item.PROJECT_NO &&
+                            m.CompoundKey1.ORDER_NO == item.ORDER_NO);
+
+                        if (workOrder != null)
                         {
-                            foreach (var item in items)
-                            {
-                                string query = @"
-                                    UPDATE SCM_WORK_ORDER_MASTER 
-                                    SET COMP_DATE = :COMP_DATE,
-                                        PLAN_MHR = :PLAN_MHR,
-                                        REAL_MHR = :REAL_MHR,
-                                        PLAN_MP = :PLAN_MP,
-                                        REAL_MP = :REAL_MP,
-                                        UP_USER = :UP_USER,
-                                        UP_DATE = SYSDATE
-                                    WHERE CASE_NO = :CASE_NO
-                                      AND COMPANY_NO = :COMPANY_NO
-                                      AND ORDER_NO = :ORDER_NO";
+                            // 수정 가능 필드만 업데이트
+                            // nullable -> non-nullable 변환
+                            workOrder.COMP_DATE = item.COMP_DATE ?? DateTime.MinValue;
+                            workOrder.PLAN_MHR = item.PLAN_MHR ?? 0;
+                            workOrder.REAL_MHR = item.REAL_MHR ?? 0;
+                            workOrder.PLAN_MP = item.PLAN_MP ?? 0;
+                            workOrder.REAL_MP = item.REAL_MP ?? 0;
 
-                                using (OracleCommand cmd = new OracleCommand(query, conn))
-                                {
-                                    cmd.Transaction = trans;
+                            // 감사 필드
+                            workOrder.UP_USER = userId;
+                            workOrder.UP_DATE = DateTime.Now;
 
-                                    cmd.Parameters.Add("COMP_DATE", OracleDbType.Date).Value =
-                                        item.COMP_DATE.HasValue ? (object)item.COMP_DATE.Value : DBNull.Value;
-                                    cmd.Parameters.Add("PLAN_MHR", OracleDbType.Decimal).Value =
-                                        item.PLAN_MHR.HasValue ? (object)item.PLAN_MHR.Value : DBNull.Value;
-                                    cmd.Parameters.Add("REAL_MHR", OracleDbType.Decimal).Value =
-                                        item.REAL_MHR.HasValue ? (object)item.REAL_MHR.Value : DBNull.Value;
-                                    cmd.Parameters.Add("PLAN_MP", OracleDbType.Decimal).Value =
-                                        item.PLAN_MP.HasValue ? (object)item.PLAN_MP.Value : DBNull.Value;
-                                    cmd.Parameters.Add("REAL_MP", OracleDbType.Decimal).Value =
-                                        item.REAL_MP.HasValue ? (object)item.REAL_MP.Value : DBNull.Value;
-                                    cmd.Parameters.Add("UP_USER", OracleDbType.Varchar2).Value = userId;
-                                    cmd.Parameters.Add("CASE_NO", OracleDbType.Varchar2).Value = item.CASE_NO;
-                                    cmd.Parameters.Add("COMPANY_NO", OracleDbType.Varchar2).Value = item.COMPANY_NO;
-                                    cmd.Parameters.Add("ORDER_NO", OracleDbType.Varchar2).Value = item.ORDER_NO;
-
-                                    if (cmd.ExecuteNonQuery() > 0)
-                                        successCount++;
-                                }
-                            }
-
-                            trans.Commit();
-                            SqlLogger.LogResult(successCount, "일괄 저장 완료");
-                        }
-                        catch
-                        {
-                            trans.Rollback();
-                            throw;
+                            successCount++;
                         }
                     }
+
+                    // 일괄 커밋
+                    uow.CommitChanges();
+
+                    SqlLogger.LogResult(successCount, "일괄 저장 완료 (XPO)");
                 }
 
                 return successCount;
             }
             catch (Exception ex)
             {
-                SqlLogger.LogError(ex, "일괄 저장 실패");
+                SqlLogger.LogError(ex, "일괄 저장 실패 (XPO)");
                 throw;
             }
         }
 
         #endregion
 
-        #region 삭제 메서드
+        #region 삭제 메서드 (XPO 방식)
 
         /// <summary>
-        /// 작업지시 삭제
+        /// 작업지시 삭제 (XPO 방식)
         /// </summary>
-        public bool DeleteWorkOrder(string caseNo, string companyNo, string orderNo)
+        public bool DeleteWorkOrder(string caseNo, string companyNo, string projectNo, string orderNo)
         {
             try
             {
-                using (OracleConnection conn = new OracleConnection(ConnectionString))
+                using (var uow = new UnitOfWork())
                 {
-                    conn.Open();
+                    // 상세 조회 및 삭제
+                    var detail = uow.Query<SCM_WORK_ORDER_DETAIL>().FirstOrDefault(d =>
+                        d.CompoundKey1.COMPANY_NO == companyNo &&
+                        d.CompoundKey1.CASE_NO == caseNo &&
+                        d.CompoundKey1.PROJECT_NO == projectNo &&
+                        d.CompoundKey1.ORDER_NO == orderNo);
 
-                    using (OracleTransaction trans = conn.BeginTransaction())
+                    if (detail != null)
                     {
-                        try
-                        {
-                            // 상세 먼저 삭제
-                            string deleteDetailQuery = @"
-                                DELETE FROM SCM_WORK_ORDER_DETAIL 
-                                WHERE CASE_NO = :CASE_NO
-                                  AND COMPANY_NO = :COMPANY_NO
-                                  AND ORDER_NO = :ORDER_NO";
-
-                            using (OracleCommand cmd = new OracleCommand(deleteDetailQuery, conn))
-                            {
-                                cmd.Transaction = trans;
-                                cmd.Parameters.Add("CASE_NO", OracleDbType.Varchar2).Value = caseNo;
-                                cmd.Parameters.Add("COMPANY_NO", OracleDbType.Varchar2).Value = companyNo;
-                                cmd.Parameters.Add("ORDER_NO", OracleDbType.Varchar2).Value = orderNo;
-                                cmd.ExecuteNonQuery();
-                            }
-
-                            // 마스터 삭제
-                            string deleteMasterQuery = @"
-                                DELETE FROM SCM_WORK_ORDER_MASTER 
-                                WHERE CASE_NO = :CASE_NO
-                                  AND COMPANY_NO = :COMPANY_NO
-                                  AND ORDER_NO = :ORDER_NO";
-
-                            using (OracleCommand cmd = new OracleCommand(deleteMasterQuery, conn))
-                            {
-                                cmd.Transaction = trans;
-                                cmd.Parameters.Add("CASE_NO", OracleDbType.Varchar2).Value = caseNo;
-                                cmd.Parameters.Add("COMPANY_NO", OracleDbType.Varchar2).Value = companyNo;
-                                cmd.Parameters.Add("ORDER_NO", OracleDbType.Varchar2).Value = orderNo;
-
-                                int rowsAffected = cmd.ExecuteNonQuery();
-                                trans.Commit();
-
-                                SqlLogger.LogResult(rowsAffected, "작업지시 삭제 완료");
-                                return rowsAffected > 0;
-                            }
-                        }
-                        catch
-                        {
-                            trans.Rollback();
-                            throw;
-                        }
+                        uow.Delete(detail);
                     }
+
+                    // 마스터 조회 및 삭제
+                    var master = uow.Query<SCM_WORK_ORDER_MASTER>().FirstOrDefault(m =>
+                        m.CompoundKey1.COMPANY_NO == companyNo &&
+                        m.CompoundKey1.CASE_NO == caseNo &&
+                        m.CompoundKey1.PROJECT_NO == projectNo &&
+                        m.CompoundKey1.ORDER_NO == orderNo);
+
+                    if (master == null)
+                    {
+                        SqlLogger.LogResult(0, "삭제 대상 없음");
+                        return false;
+                    }
+
+                    uow.Delete(master);
+                    uow.CommitChanges();
+
+                    SqlLogger.LogResult(1, "작업지시 삭제 완료 (XPO)");
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                SqlLogger.LogError(ex, "작업지시 삭제 실패");
+                SqlLogger.LogError(ex, "작업지시 삭제 실패 (XPO)");
                 throw;
             }
         }
@@ -356,7 +274,7 @@ namespace KShiftSmartPortalWeb.Controllers
         #region 공통 메서드
 
         /// <summary>
-        /// 회사별 Company 목록 조회
+        /// Company 목록 조회 (Oracle 직접 조회)
         /// </summary>
         public DataTable GetCompanyList()
         {
@@ -368,7 +286,7 @@ namespace KShiftSmartPortalWeb.Controllers
 
                     string query = @"
                         SELECT COMPANY_NO, COMPANY_NAME, COMPANY_TYPE
-                        FROM STD_COMPANY_INFO
+                        FROM STD_COMPANY_MASTER
                         WHERE USE_YN = 'Y'
                         ORDER BY COMPANY_NO";
 

@@ -10,21 +10,15 @@ using KShiftSmartPortalWeb.Controllers;
 namespace KShiftSmartPortalWeb
 {
     /// <summary>
-    /// To-Do List 페이지 코드비하인드
-    /// 작업지시 목록 조회 및 수정 기능을 제공합니다.
+    /// To-Do List 페이지 코드비하인드 (XPO 방식)
     /// </summary>
     public partial class ToDoList : System.Web.UI.Page
     {
-        // 컨트롤러 인스턴스
         private ToDoListController _controller = new ToDoListController();
         private LoginController _loginController = new LoginController();
 
-        // 세션 키
         private const string SESSION_KEY_DATA = "ToDoList_Data";
 
-        /// <summary>
-        /// 그리드 데이터 세션 관리
-        /// </summary>
         private List<ToDoListViewModel> GridData
         {
             get { return Session[SESSION_KEY_DATA] as List<ToDoListViewModel>; }
@@ -35,7 +29,6 @@ namespace KShiftSmartPortalWeb
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // 로그인 체크
             if (Session["UserID"] == null)
             {
                 Response.Redirect("Login.aspx", false);
@@ -53,21 +46,13 @@ namespace KShiftSmartPortalWeb
             }
         }
 
-        /// <summary>
-        /// 페이지 초기화
-        /// </summary>
         private void InitializePage()
         {
             try
             {
-                // 콤보박스 초기화
                 LoadCompanyTypeList();
                 LoadCompanyList();
-
-                // 기준일 기본값 (오늘)
                 dtBaseDate.Value = DateTime.Today;
-
-                // 그리드 데이터 초기화
                 GridData = null;
             }
             catch (Exception ex)
@@ -80,9 +65,6 @@ namespace KShiftSmartPortalWeb
 
         #region ComboBox 초기화
 
-        /// <summary>
-        /// Company 유형 콤보박스 초기화
-        /// </summary>
         private void LoadCompanyTypeList()
         {
             cmbCompanyType.Items.Clear();
@@ -92,9 +74,6 @@ namespace KShiftSmartPortalWeb
             cmbCompanyType.SelectedIndex = 0;
         }
 
-        /// <summary>
-        /// Company 콤보박스 로드
-        /// </summary>
         private void LoadCompanyList()
         {
             try
@@ -106,7 +85,6 @@ namespace KShiftSmartPortalWeb
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    // 유형 필터링
                     if (companyType == "*" || row["COMPANY_TYPE"]?.ToString() == companyType)
                     {
                         string text = $"{row["COMPANY_NO"]} - {row["COMPANY_NAME"]}";
@@ -114,7 +92,6 @@ namespace KShiftSmartPortalWeb
                     }
                 }
 
-                // 기본값 설정 (100 또는 첫번째 항목)
                 if (cmbCompany.Items.FindByValue("100") != null)
                     cmbCompany.Value = "100";
                 else if (cmbCompany.Items.Count > 0)
@@ -135,9 +112,6 @@ namespace KShiftSmartPortalWeb
 
         #region Button Events
 
-        /// <summary>
-        /// 조회 버튼 클릭
-        /// </summary>
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             try
@@ -150,33 +124,22 @@ namespace KShiftSmartPortalWeb
             }
         }
 
-        /// <summary>
-        /// 초기화 버튼 클릭
-        /// </summary>
         protected void btnReset_Click(object sender, EventArgs e)
         {
-            // 콤보박스 초기화
             cmbCompanyType.SelectedIndex = 0;
             LoadCompanyList();
-
-            // 기준일 초기화
             dtBaseDate.Value = DateTime.Today;
 
-            // 그리드 초기화
             GridData = null;
             gridToDoList.DataSource = null;
             gridToDoList.DataBind();
             lblRecordCount.Text = "조회된 데이터가 없습니다.";
         }
 
-        /// <summary>
-        /// 저장 버튼 클릭 (BatchEdit 저장)
-        /// </summary>
         protected void btnSave_Click(object sender, EventArgs e)
         {
             try
             {
-                // BatchEdit 모드에서 UpdateEdit 호출하여 변경사항 서버로 전송
                 gridToDoList.UpdateEdit();
                 ShowMessage("데이터가 저장되었습니다.");
                 LoadData();
@@ -187,9 +150,6 @@ namespace KShiftSmartPortalWeb
             }
         }
 
-        /// <summary>
-        /// 삭제 버튼 클릭
-        /// </summary>
         protected void btnDelete_Click(object sender, EventArgs e)
         {
             try
@@ -200,18 +160,20 @@ namespace KShiftSmartPortalWeb
                     return;
                 }
 
-                // Key 값 가져오기
+                // 4개 복합키
                 var orderNo = gridToDoList.GetRowValues(gridToDoList.FocusedRowIndex, "ORDER_NO")?.ToString();
                 var caseNo = gridToDoList.GetRowValues(gridToDoList.FocusedRowIndex, "CASE_NO")?.ToString();
                 var companyNo = gridToDoList.GetRowValues(gridToDoList.FocusedRowIndex, "COMPANY_NO")?.ToString();
+                var projectNo = gridToDoList.GetRowValues(gridToDoList.FocusedRowIndex, "PROJECT_NO")?.ToString();
 
-                if (string.IsNullOrEmpty(orderNo) || string.IsNullOrEmpty(caseNo) || string.IsNullOrEmpty(companyNo))
+                if (string.IsNullOrEmpty(orderNo) || string.IsNullOrEmpty(caseNo) ||
+                    string.IsNullOrEmpty(companyNo) || string.IsNullOrEmpty(projectNo))
                 {
                     ShowMessage("필수 정보가 없습니다.");
                     return;
                 }
 
-                bool result = _controller.DeleteWorkOrder(caseNo, companyNo, orderNo);
+                bool result = _controller.DeleteWorkOrder(caseNo, companyNo, projectNo, orderNo);
 
                 if (result)
                 {
@@ -229,9 +191,6 @@ namespace KShiftSmartPortalWeb
             }
         }
 
-        /// <summary>
-        /// 엑셀 다운로드 버튼 클릭
-        /// </summary>
         protected void btnExcel_Click(object sender, EventArgs e)
         {
             try
@@ -274,19 +233,19 @@ namespace KShiftSmartPortalWeb
             BindGridFromSession();
         }
 
-        /// <summary>
-        /// 행 업데이트 이벤트 (단일 행 수정 시)
-        /// </summary>
         protected void gridToDoList_RowUpdating(object sender, ASPxDataUpdatingEventArgs e)
         {
             try
             {
                 string userId = Session["UserID"]?.ToString() ?? "SYSTEM";
+
+                // 4개 복합키
                 string orderNo = e.Keys["ORDER_NO"]?.ToString();
                 string caseNo = e.OldValues["CASE_NO"]?.ToString();
                 string companyNo = e.OldValues["COMPANY_NO"]?.ToString();
+                string projectNo = e.OldValues["PROJECT_NO"]?.ToString();
 
-                // 수정 가능 필드 값 가져오기
+                // 수정 가능 필드
                 DateTime? compDate = e.NewValues["COMP_DATE"] as DateTime?;
                 decimal? planMhr = e.NewValues["PLAN_MHR"] as decimal?;
                 decimal? realMhr = e.NewValues["REAL_MHR"] as decimal?;
@@ -294,7 +253,7 @@ namespace KShiftSmartPortalWeb
                 decimal? realMp = e.NewValues["REAL_MP"] as decimal?;
 
                 bool result = _controller.UpdateWorkOrder(
-                    caseNo, companyNo, orderNo,
+                    caseNo, companyNo, projectNo, orderNo,
                     compDate, planMhr, realMhr, planMp, realMp,
                     userId);
 
@@ -317,9 +276,6 @@ namespace KShiftSmartPortalWeb
             }
         }
 
-        /// <summary>
-        /// BatchEdit 일괄 업데이트 이벤트
-        /// </summary>
         protected void gridToDoList_BatchUpdate(object sender, ASPxDataBatchUpdateEventArgs e)
         {
             try
@@ -327,7 +283,6 @@ namespace KShiftSmartPortalWeb
                 string userId = Session["UserID"]?.ToString() ?? "SYSTEM";
                 List<ToDoListViewModel> updateItems = new List<ToDoListViewModel>();
 
-                // 수정된 행 처리
                 foreach (var item in e.UpdateValues)
                 {
                     var vm = new ToDoListViewModel
@@ -335,6 +290,7 @@ namespace KShiftSmartPortalWeb
                         ORDER_NO = item.Keys["ORDER_NO"]?.ToString(),
                         CASE_NO = item.OldValues["CASE_NO"]?.ToString(),
                         COMPANY_NO = item.OldValues["COMPANY_NO"]?.ToString(),
+                        PROJECT_NO = item.OldValues["PROJECT_NO"]?.ToString(),
                         COMP_DATE = item.NewValues["COMP_DATE"] as DateTime?,
                         PLAN_MHR = item.NewValues["PLAN_MHR"] as decimal?,
                         REAL_MHR = item.NewValues["REAL_MHR"] as decimal?,
@@ -358,14 +314,10 @@ namespace KShiftSmartPortalWeb
             }
         }
 
-        /// <summary>
-        /// 행 렌더링 시 상태에 따른 스타일 적용
-        /// </summary>
         protected void gridToDoList_HtmlRowPrepared(object sender, ASPxGridViewTableRowEventArgs e)
         {
             if (e.RowType != GridViewRowType.Data) return;
 
-            // 상태 컬럼 인덱스 찾기
             int statusIndex = gridToDoList.Columns.IndexOf(gridToDoList.Columns["STATUS"]);
             if (statusIndex >= 0)
             {
@@ -386,9 +338,6 @@ namespace KShiftSmartPortalWeb
             }
         }
 
-        /// <summary>
-        /// 세션에서 그리드 데이터 바인딩
-        /// </summary>
         private void BindGridFromSession()
         {
             if (GridData != null)
@@ -402,9 +351,6 @@ namespace KShiftSmartPortalWeb
 
         #region Data Methods
 
-        /// <summary>
-        /// 데이터 조회
-        /// </summary>
         private void LoadData()
         {
             string companyNo = cmbCompany.Value?.ToString();
@@ -423,17 +369,13 @@ namespace KShiftSmartPortalWeb
                 return;
             }
 
-            // 컨트롤러에서 데이터 조회
+            // XPO 방식 조회
             List<ToDoListViewModel> dataList = _controller.GetToDoList(companyNo, userId, baseDate);
 
-            // 세션에 저장
             GridData = dataList;
-
-            // 그리드 바인딩
             gridToDoList.DataSource = dataList;
             gridToDoList.DataBind();
 
-            // 건수 표시
             lblRecordCount.Text = $"총 <strong>{dataList.Count}</strong>건의 데이터가 조회되었습니다.";
         }
 
@@ -441,9 +383,6 @@ namespace KShiftSmartPortalWeb
 
         #region Helper Methods
 
-        /// <summary>
-        /// 메시지 표시 (클라이언트 Alert)
-        /// </summary>
         private void ShowMessage(string message)
         {
             string script = $"alert('{message.Replace("'", "\\'")}');";

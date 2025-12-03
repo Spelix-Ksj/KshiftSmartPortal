@@ -70,7 +70,7 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Views\ContractManagerXpo.aspx" />
-	<Content Include="Views\ToDoList.aspx" />
+    <Content Include="Views\ToDoList.aspx" />
     <Content Include="Views\Default.aspx" />
     <Content Include="Views\Home.aspx" />
     <Content Include="Views\Login.aspx" />
@@ -94,28 +94,45 @@
     <Compile Include="ORMDataModel1Code\SCM_CONTRACT_MASTER.Designer.cs">
       <DependentUpon>SCM_CONTRACT_MASTER.cs</DependentUpon>
     </Compile>
+    <Compile Include="OrmModels\OrmToDoListCode\ConnectionHelper.cs" />
+    <Compile Include="OrmModels\OrmToDoListCode\SCM_CASE_MASTER.cs" />
+    <Compile Include="OrmModels\OrmToDoListCode\SCM_CASE_MASTER.Designer.cs">
+      <DependentUpon>SCM_CASE_MASTER.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrmModels\OrmToDoListCode\SCM_WORK_ORDER_DETAIL.cs" />
+    <Compile Include="OrmModels\OrmToDoListCode\SCM_WORK_ORDER_DETAIL.Designer.cs">
+      <DependentUpon>SCM_WORK_ORDER_DETAIL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrmModels\OrmToDoListCode\SCM_WORK_ORDER_MASTER.cs" />
+    <Compile Include="OrmModels\OrmToDoListCode\SCM_WORK_ORDER_MASTER.Designer.cs">
+      <DependentUpon>SCM_WORK_ORDER_MASTER.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrmModels\OrmToDoListCode\STD_PERSONNEL_INFO.cs" />
+    <Compile Include="OrmModels\OrmToDoListCode\STD_PERSONNEL_INFO.Designer.cs">
+      <DependentUpon>STD_PERSONNEL_INFO.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\UserShortcutRepository.cs" />
     <Compile Include="Services\ShortcutService.cs" />
     <Compile Include="Utils\SqlLogger.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-	<Compile Include="ViewModels\ToDoListViewModel.cs" />
+    <Compile Include="ViewModels\ToDoListViewModel.cs" />
     <Compile Include="ViewModels\ContractViewModel.cs" />
     <Compile Include="Views\ContractManagerXpo.aspx.cs">
       <DependentUpon>ContractManagerXpo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-	<Compile Include="Views\ContractManagerXpo.aspx.designer.cs">
+    <Compile Include="Views\ContractManagerXpo.aspx.designer.cs">
       <DependentUpon>ContractManagerXpo.aspx</DependentUpon>
     </Compile>
-	<Compile Include="Views\ToDoList.aspx.cs">
-	  <DependentUpon>ToDoList.aspx</DependentUpon>
-	  <SubType>ASPXCodeBehind</SubType>
-	</Compile>
+    <Compile Include="Views\ToDoList.aspx.cs">
+      <DependentUpon>ToDoList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Views\ToDoList.aspx.designer.cs">
-	  <DependentUpon>ToDoList.aspx</DependentUpon>
-	</Compile>
+      <DependentUpon>ToDoList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -141,7 +158,7 @@
       <DependentUpon>Logout.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-	<Compile Include="Models\ScmWorkOrderMaster.cs" />
+    <Compile Include="Models\ScmWorkOrderMaster.cs" />
     <Compile Include="Models\ScmContractMaster.cs" />
     <Compile Include="Models\ScmContractDetail.cs" />
     <Compile Include="Models\UserShortcut.cs" />
@@ -161,6 +178,10 @@
     <None Include="ORMDataModel1.xpo" />
     <None Include="ORMDataModel1.xpo.diagram">
       <DependentUpon>ORMDataModel1.xpo</DependentUpon>
+    </None>
+    <None Include="OrmModels\OrmToDoList.xpo" />
+    <None Include="OrmModels\OrmToDoList.xpo.diagram">
+      <DependentUpon>OrmToDoList.xpo</DependentUpon>
     </None>
     <None Include="README.md" />
     <None Include="INSTALLATION_GUIDE.md" />

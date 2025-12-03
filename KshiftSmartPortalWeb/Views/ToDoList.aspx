@@ -296,6 +296,7 @@
                 <%-- 숨김 Key 컬럼 --%>
                 <dx:GridViewDataTextColumn FieldName="COMPANY_NO" Visible="false" />
                 <dx:GridViewDataTextColumn FieldName="CASE_NO" Visible="false" />
+                <dx:GridViewDataTextColumn FieldName="PROJECT_NO" Visible="false" />
             </Columns>
             
             <Styles>

@@ -8,7 +8,7 @@ namespace KShiftSmartPortal.ViewModels
     /// </summary>
     public class ToDoListViewModel
     {
-        #region Key 필드
+        #region Key 필드 (4개 복합키: COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO)
 
         /// <summary>
         /// 회사 번호
@@ -21,18 +21,18 @@ namespace KShiftSmartPortal.ViewModels
         public string CASE_NO { get; set; }
 
         /// <summary>
-        /// 지시 번호 (Key)
+        /// 프로젝트 번호
+        /// </summary>
+        public string PROJECT_NO { get; set; }
+
+        /// <summary>
+        /// 지시 번호
         /// </summary>
         public string ORDER_NO { get; set; }
 
         #endregion
 
         #region 기본 정보
-
-        /// <summary>
-        /// 프로젝트 번호
-        /// </summary>
-        public string PROJECT_NO { get; set; }
 
         /// <summary>
         /// 속성1 (호선번호)
@@ -117,7 +117,7 @@ namespace KShiftSmartPortal.ViewModels
         #region 계산 필드 (표시용)
 
         /// <summary>
-        /// 상태 표시 (완료/진행중/예정)
+        /// 상태 표시 (완료/진행중/예정/미정)
         /// </summary>
         public string STATUS
         {
