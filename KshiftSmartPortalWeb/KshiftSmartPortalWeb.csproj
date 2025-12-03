@@ -70,6 +70,7 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Views\ContractManagerXpo.aspx" />
+	<Content Include="Views\ToDoList.aspx" />
     <Content Include="Views\Default.aspx" />
     <Content Include="Views\Home.aspx" />
     <Content Include="Views\Login.aspx" />
@@ -78,6 +79,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ToDoListController.cs" />
     <Compile Include="Controllers\ContractManagerController.cs" />
     <Compile Include="Controllers\ContractController.cs" />
     <Compile Include="Controllers\ContractManagerXpoController.cs" />
@@ -98,14 +100,22 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+	<Compile Include="ViewModels\ToDoListViewModel.cs" />
     <Compile Include="ViewModels\ContractViewModel.cs" />
     <Compile Include="Views\ContractManagerXpo.aspx.cs">
       <DependentUpon>ContractManagerXpo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Views\ContractManagerXpo.aspx.designer.cs">
+	<Compile Include="Views\ContractManagerXpo.aspx.designer.cs">
       <DependentUpon>ContractManagerXpo.aspx</DependentUpon>
     </Compile>
+	<Compile Include="Views\ToDoList.aspx.cs">
+	  <DependentUpon>ToDoList.aspx</DependentUpon>
+	  <SubType>ASPXCodeBehind</SubType>
+	</Compile>
+    <Compile Include="Views\ToDoList.aspx.designer.cs">
+	  <DependentUpon>ToDoList.aspx</DependentUpon>
+	</Compile>
     <Compile Include="Views\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -131,6 +141,7 @@
       <DependentUpon>Logout.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+	<Compile Include="Models\ScmWorkOrderMaster.cs" />
     <Compile Include="Models\ScmContractMaster.cs" />
     <Compile Include="Models\ScmContractDetail.cs" />
     <Compile Include="Models\UserShortcut.cs" />
