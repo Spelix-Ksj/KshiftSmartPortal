@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "mcp-server-oracle": {
+      "command": "uvx",
+      "args": ["mcp-server-oracle"],
+      "env": {
+        "ORACLE_CONNECTION_STRING": "amisys/amisys1101@HQ.SPELIX.CO.KR:7744/SPELIXDB"
+      }
+    }
+  }
+}

@@ -5,9 +5,17 @@
       "Bash(powershell -Command:*)",
       "Bash(git checkout:*)",
       "Bash(git restore:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(claude mcp add-from-claude-desktop)",
+      "mcp__mcp-server-oracle__describe_table",
+      "mcp__mcp-server-oracle__reqd_query",
+      "mcp__mcp-server-oracle__list_tables"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "mcp-server-oracle"
+  ]
 }

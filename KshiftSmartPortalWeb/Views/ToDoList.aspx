@@ -390,31 +390,6 @@
                 </dx:BootstrapGridViewCommandColumn>
 
                 
-                <%-- 수정 가능 컬럼 - 녹색 #4caf50 --%>
-                <dx:BootstrapGridViewDateColumn FieldName="COMP_DATE" Caption="완료일" Width="120px" VisibleIndex="7">
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" AllowNull="true" />
-                    <CssClasses HeaderCell="header-editable text-center" />
-                </dx:BootstrapGridViewDateColumn>
-
-                <dx:BootstrapGridViewSpinEditColumn FieldName="PLAN_MHR" Caption="계획 M/H" Width="100px" VisibleIndex="8">
-                    <PropertiesSpinEdit DisplayFormatString="N1" MinValue="0" MaxValue="99999" AllowNull="true" />
-                    <CssClasses HeaderCell="header-editable text-center" />
-                </dx:BootstrapGridViewSpinEditColumn>
-
-                <dx:BootstrapGridViewSpinEditColumn FieldName="REAL_MHR" Caption="실적 M/H" Width="100px" VisibleIndex="9">
-                    <PropertiesSpinEdit DisplayFormatString="N1" MinValue="0" MaxValue="99999" AllowNull="true" />
-                    <CssClasses HeaderCell="header-editable text-center" />
-                </dx:BootstrapGridViewSpinEditColumn>
-
-                <dx:BootstrapGridViewSpinEditColumn FieldName="PLAN_MP" Caption="계획 인원" Width="100px" VisibleIndex="10">
-                    <PropertiesSpinEdit DisplayFormatString="N1" MinValue="0" MaxValue="9999" AllowNull="true" />
-                    <CssClasses HeaderCell="header-editable text-center" />
-                </dx:BootstrapGridViewSpinEditColumn>
-
-                <dx:BootstrapGridViewSpinEditColumn FieldName="REAL_MP" Caption="실적 인원" Width="100px" VisibleIndex="11">
-                    <PropertiesSpinEdit DisplayFormatString="N1" MinValue="0" MaxValue="9999" AllowNull="true" />
-                    <CssClasses HeaderCell="header-editable text-center" />
-                </dx:BootstrapGridViewSpinEditColumn>
 
                 <%-- 기본 정보 컬럼 (ReadOnly) - 파란색 #2196f3 --%>
                 <dx:BootstrapGridViewTextColumn FieldName="PROJECT_NO" Caption="프로젝트 번호" Width="120px" ReadOnly="true" VisibleIndex="1">
@@ -423,16 +398,44 @@
                 <dx:BootstrapGridViewTextColumn FieldName="PROP01" Caption="호선번호" Width="100px" ReadOnly="true" VisibleIndex="2">
                     <CssClasses HeaderCell="header-basic text-center" />
                 </dx:BootstrapGridViewTextColumn>
-                <dx:BootstrapGridViewTextColumn FieldName="ORDER_NO" Caption="지시번호" Width="120px" ReadOnly="true" VisibleIndex="3">
+                <dx:BootstrapGridViewTextColumn FieldName="ORDER_NAME" Caption="지시명칭" Width="200px" ReadOnly="true" VisibleIndex="3">
                     <CssClasses HeaderCell="header-basic text-center" />
                 </dx:BootstrapGridViewTextColumn>
-                <dx:BootstrapGridViewTextColumn FieldName="ORDER_NAME" Caption="지시명칭" Width="200px" ReadOnly="true" VisibleIndex="4">
+                
+                <%-- 수정 가능 컬럼 - 녹색 #4caf50 --%>
+                <dx:BootstrapGridViewDateColumn FieldName="COMP_DATE" Caption="완료일" Width="120px" VisibleIndex="4">
+                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" AllowNull="true" />
+                    <CssClasses HeaderCell="header-editable text-center" />
+                </dx:BootstrapGridViewDateColumn>
+
+                <dx:BootstrapGridViewSpinEditColumn FieldName="PLAN_MHR" Caption="계획 M/H" Width="100px" VisibleIndex="5">
+                    <PropertiesSpinEdit DisplayFormatString="N1" MinValue="0" MaxValue="99999" AllowNull="true" />
+                    <CssClasses HeaderCell="header-editable text-center" />
+                </dx:BootstrapGridViewSpinEditColumn>
+
+                <dx:BootstrapGridViewSpinEditColumn FieldName="REAL_MHR" Caption="실적 M/H" Width="100px" VisibleIndex="6">
+                    <PropertiesSpinEdit DisplayFormatString="N1" MinValue="0" MaxValue="99999" AllowNull="true" />
+                    <CssClasses HeaderCell="header-editable text-center" />
+                </dx:BootstrapGridViewSpinEditColumn>
+
+                <dx:BootstrapGridViewSpinEditColumn FieldName="PLAN_MP" Caption="계획 인원" Width="100px" VisibleIndex="7">
+                    <PropertiesSpinEdit DisplayFormatString="N1" MinValue="0" MaxValue="9999" AllowNull="true" />
+                    <CssClasses HeaderCell="header-editable text-center" />
+                </dx:BootstrapGridViewSpinEditColumn>
+
+                <dx:BootstrapGridViewSpinEditColumn FieldName="REAL_MP" Caption="실적 인원" Width="100px" VisibleIndex="8">
+                    <PropertiesSpinEdit DisplayFormatString="N1" MinValue="0" MaxValue="9999" AllowNull="true" />
+                    <CssClasses HeaderCell="header-editable text-center" />
+                </dx:BootstrapGridViewSpinEditColumn>
+
+                 <%-- 기본 정보 컬럼 (ReadOnly) - 파란색 #2196f3 --%>
+                <dx:BootstrapGridViewTextColumn FieldName="ORDER_NO" Caption="지시번호" Width="120px" ReadOnly="true" VisibleIndex="9">
+                    <CssClasses HeaderCell="header-basic text-center" />
+                </dx:BootstrapGridViewTextColumn>                
+                <dx:BootstrapGridViewTextColumn FieldName="PROP02" Caption="블록번호" Width="100px" ReadOnly="true" VisibleIndex="10">
                     <CssClasses HeaderCell="header-basic text-center" />
                 </dx:BootstrapGridViewTextColumn>
-                <dx:BootstrapGridViewTextColumn FieldName="PROP02" Caption="블록번호" Width="100px" ReadOnly="true" VisibleIndex="5">
-                    <CssClasses HeaderCell="header-basic text-center" />
-                </dx:BootstrapGridViewTextColumn>
-                <dx:BootstrapGridViewTextColumn FieldName="WORK_LIST" Caption="작업목록" Width="150px" ReadOnly="true" VisibleIndex="6">
+                <dx:BootstrapGridViewTextColumn FieldName="WORK_LIST" Caption="작업목록" Width="150px" ReadOnly="true" VisibleIndex="11">
                     <CssClasses HeaderCell="header-basic text-center" />
                 </dx:BootstrapGridViewTextColumn>
 
