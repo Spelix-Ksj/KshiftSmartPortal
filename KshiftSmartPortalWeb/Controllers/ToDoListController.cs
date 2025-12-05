@@ -36,6 +36,11 @@ namespace KShiftSmartPortalWeb.Controllers
                 using (var uow = new UnitOfWork())
                 {
                     // 1. D: SCM_CASE_MASTER - 활성화된 케이스 조회 (PROP1 = 'Y')
+                    SqlLogger.LogXpoQuery("SCM_CASE_MASTER", "SELECT",
+                        "COMPANY_NO = :companyNo AND PROP1 = 'Y'",
+                        new Dictionary<string, object> { { "companyNo", companyNo } },
+                        "활성화된 케이스 조회");
+
                     var activeCases = new XPQuery<SCM_CASE_MASTER>(uow)
                         .Where(d => d.CompoundKey1.COMPANY_NO == companyNo && d.PROP1 == "Y")
                         .ToList();
@@ -49,6 +54,11 @@ namespace KShiftSmartPortalWeb.Controllers
                     var activeCaseNos = activeCases.Select(d => d.CompoundKey1.CASE_NO).ToList();
 
                     // 2. C: STD_PERSONNEL_INFO - 사용자의 EMP_NO 조회
+                    SqlLogger.LogXpoQuery("STD_PERSONNEL_INFO", "SELECT",
+                        "COMPANY_NO = :companyNo AND USER_ID = :userId",
+                        new Dictionary<string, object> { { "companyNo", companyNo }, { "userId", userId } },
+                        "사용자 EMP_NO 조회");
+
                     var personnel = new XPQuery<STD_PERSONNEL_INFO>(uow)
                         .FirstOrDefault(c => c.CompoundKey1.COMPANY_NO == companyNo && c.USER_ID == userId);
 
@@ -62,6 +72,11 @@ namespace KShiftSmartPortalWeb.Controllers
 
                     // 3. B: SCM_WORK_ORDER_MASTER 조회
                     var baseDateOnly = baseDate.Date;
+
+                    SqlLogger.LogXpoQuery("SCM_WORK_ORDER_MASTER", "SELECT",
+                        "COMPANY_NO = :companyNo AND CASE_NO IN (...) AND EMP_NO = :empNo AND (COMP_DATE IS NULL OR (WORK_ST <= :baseDate AND WORK_FI >= :baseDate))",
+                        new Dictionary<string, object> { { "companyNo", companyNo }, { "empNo", empNo }, { "baseDate", baseDateOnly } },
+                        "작업지시 목록 조회");
 
                     var workOrders = new XPQuery<SCM_WORK_ORDER_MASTER>(uow)
                         .Where(b => b.CompoundKey1.COMPANY_NO == companyNo
@@ -126,6 +141,14 @@ namespace KShiftSmartPortalWeb.Controllers
                 using (var uow = new UnitOfWork())
                 {
                     // XPO로 기존 데이터 조회
+                    SqlLogger.LogXpoQuery("SCM_WORK_ORDER_MASTER", "SELECT",
+                        "COMPANY_NO = :companyNo AND CASE_NO = :caseNo AND PROJECT_NO = :projectNo AND ORDER_NO = :orderNo",
+                        new Dictionary<string, object> {
+                            { "companyNo", companyNo }, { "caseNo", caseNo },
+                            { "projectNo", projectNo }, { "orderNo", orderNo }
+                        },
+                        "작업지시 수정 대상 조회");
+
                     var workOrder = uow.Query<SCM_WORK_ORDER_MASTER>().FirstOrDefault(m =>
                         m.CompoundKey1.COMPANY_NO == companyNo &&
                         m.CompoundKey1.CASE_NO == caseNo &&
@@ -149,6 +172,16 @@ namespace KShiftSmartPortalWeb.Controllers
                     // 감사 필드
                     workOrder.UP_USER = userId;
                     workOrder.UP_DATE = DateTime.Now;
+
+                    SqlLogger.LogXpoQuery("SCM_WORK_ORDER_MASTER", "UPDATE",
+                        "COMPANY_NO = :companyNo AND CASE_NO = :caseNo AND PROJECT_NO = :projectNo AND ORDER_NO = :orderNo",
+                        new Dictionary<string, object> {
+                            { "companyNo", companyNo }, { "caseNo", caseNo },
+                            { "projectNo", projectNo }, { "orderNo", orderNo },
+                            { "COMP_DATE", compDate }, { "PLAN_MHR", planMhr },
+                            { "REAL_MHR", realMhr }, { "PLAN_MP", planMp }, { "REAL_MP", realMp }
+                        },
+                        "작업지시 수정");
 
                     // 커밋
                     uow.CommitChanges();
@@ -230,7 +263,16 @@ namespace KShiftSmartPortalWeb.Controllers
             {
                 using (var uow = new UnitOfWork())
                 {
+                    var whereParams = new Dictionary<string, object> {
+                        { "companyNo", companyNo }, { "caseNo", caseNo },
+                        { "projectNo", projectNo }, { "orderNo", orderNo }
+                    };
+
                     // 상세 조회 및 삭제
+                    SqlLogger.LogXpoQuery("SCM_WORK_ORDER_DETAIL", "SELECT",
+                        "COMPANY_NO = :companyNo AND CASE_NO = :caseNo AND PROJECT_NO = :projectNo AND ORDER_NO = :orderNo",
+                        whereParams, "작업지시 상세 조회 (삭제용)");
+
                     var detail = uow.Query<SCM_WORK_ORDER_DETAIL>().FirstOrDefault(d =>
                         d.CompoundKey1.COMPANY_NO == companyNo &&
                         d.CompoundKey1.CASE_NO == caseNo &&
@@ -239,10 +281,17 @@ namespace KShiftSmartPortalWeb.Controllers
 
                     if (detail != null)
                     {
+                        SqlLogger.LogXpoQuery("SCM_WORK_ORDER_DETAIL", "DELETE",
+                            "COMPANY_NO = :companyNo AND CASE_NO = :caseNo AND PROJECT_NO = :projectNo AND ORDER_NO = :orderNo",
+                            whereParams, "작업지시 상세 삭제");
                         uow.Delete(detail);
                     }
 
                     // 마스터 조회 및 삭제
+                    SqlLogger.LogXpoQuery("SCM_WORK_ORDER_MASTER", "SELECT",
+                        "COMPANY_NO = :companyNo AND CASE_NO = :caseNo AND PROJECT_NO = :projectNo AND ORDER_NO = :orderNo",
+                        whereParams, "작업지시 마스터 조회 (삭제용)");
+
                     var master = uow.Query<SCM_WORK_ORDER_MASTER>().FirstOrDefault(m =>
                         m.CompoundKey1.COMPANY_NO == companyNo &&
                         m.CompoundKey1.CASE_NO == caseNo &&
@@ -254,6 +303,10 @@ namespace KShiftSmartPortalWeb.Controllers
                         SqlLogger.LogResult(0, "삭제 대상 없음");
                         return false;
                     }
+
+                    SqlLogger.LogXpoQuery("SCM_WORK_ORDER_MASTER", "DELETE",
+                        "COMPANY_NO = :companyNo AND CASE_NO = :caseNo AND PROJECT_NO = :projectNo AND ORDER_NO = :orderNo",
+                        whereParams, "작업지시 마스터 삭제");
 
                     uow.Delete(master);
                     uow.CommitChanges();
@@ -290,11 +343,16 @@ namespace KShiftSmartPortalWeb.Controllers
                         WHERE USE_YN = 'Y'
                         ORDER BY COMPANY_NO";
 
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(query, conn))
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
                     {
-                        DataTable dt = new DataTable();
-                        adapter.Fill(dt);
-                        return dt;
+                        SqlLogger.LogCommand(cmd, "Company 목록 조회");
+
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+                            return dt;
+                        }
                     }
                 }
             }

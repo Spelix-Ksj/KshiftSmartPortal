@@ -90,7 +90,16 @@
         
         /* 수정 가능 컬럼 셀 배경색 */
         .cell-editable { background-color: #f1f8e9 !important; }
-        
+
+        /* 선택된 행에서 수정 가능 셀 스타일 - 글자가 보이도록 */
+        .dxgvFocusedRow .cell-editable,
+        .dxgvSelectedRow .cell-editable,
+        .dxgvFocusedRow_Office2003Blue .cell-editable,
+        .dxgvSelectedRow_Office2003Blue .cell-editable {
+            background-color: #1976d2 !important;
+            color: #fff !important;
+        }
+
         /* 상태별 셀 색상 */
         .status-complete { background-color: #c8e6c9 !important; color: #2e7d32 !important; font-weight: bold; }
         .status-inprogress { background-color: #fff9c4 !important; color: #f9a825 !important; font-weight: bold; }
@@ -188,9 +197,16 @@
                 VerticalScrollableHeight="450" 
                 HorizontalScrollBarMode="Auto" />
             
-            <SettingsBehavior 
-                AllowFocusedRow="True" 
+            <SettingsBehavior
+                AllowFocusedRow="True"
                 AllowSelectByRowClick="True" />
+
+            <ClientSideEvents EndCallback="function(s, e) {
+                if (s.cpMessage) {
+                    alert(s.cpMessage);
+                    s.cpMessage = null;
+                }
+            }" />
             
             <%-- PopupEditForm 방식 설정 --%>
             <SettingsEditing Mode="PopupEditForm" />
@@ -248,34 +264,7 @@
                     ReadOnly="true" HeaderStyle-CssClass="col-basic">
                     <EditFormSettings Visible="False" />
                 </dx:GridViewDataTextColumn>
-
-                <%-- 일정 정보 컬럼 그룹 (ReadOnly) --%>
-                <dx:GridViewDataDateColumn FieldName="WORK_ST" Caption="작업시작일" Width="110px" 
-                    ReadOnly="true" HeaderStyle-CssClass="col-schedule">
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                    <EditFormSettings Visible="False" />
-                </dx:GridViewDataDateColumn>
-                <dx:GridViewDataDateColumn FieldName="WORK_FI" Caption="작업종료일" Width="110px" 
-                    ReadOnly="true" HeaderStyle-CssClass="col-schedule">
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                    <EditFormSettings Visible="False" />
-                </dx:GridViewDataDateColumn>
-                <dx:GridViewDataDateColumn FieldName="DUE_DATE" Caption="마감일" Width="110px" 
-                    ReadOnly="true" HeaderStyle-CssClass="col-schedule">
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                    <EditFormSettings Visible="False" />
-                </dx:GridViewDataDateColumn>
-                <dx:GridViewDataDateColumn FieldName="QM_DATE" Caption="품질관리일" Width="110px" 
-                    ReadOnly="true" HeaderStyle-CssClass="col-schedule">
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                    <EditFormSettings Visible="False" />
-                </dx:GridViewDataDateColumn>
-                <dx:GridViewDataDateColumn FieldName="QM_COMP_DATE" Caption="QM완료일" Width="110px" 
-                    ReadOnly="true" HeaderStyle-CssClass="col-schedule">
-                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
-                    <EditFormSettings Visible="False" />
-                </dx:GridViewDataDateColumn>
-
+                
                 <%-- 수정 가능 컬럼 그룹 (PopupEditForm에 표시) --%>
                 <dx:GridViewDataDateColumn FieldName="COMP_DATE" Caption="완료일" Width="120px" 
                     HeaderStyle-CssClass="col-editable" CellStyle-CssClass="cell-editable">
@@ -314,6 +303,34 @@
                         SpinButtons-ShowIncrementButtons="false" AllowNull="true" />
                     <EditFormSettings Caption="실적 인원" VisibleIndex="4" />
                 </dx:GridViewDataSpinEditColumn>
+
+                <%-- 일정 정보 컬럼 그룹 (ReadOnly) --%>
+                <dx:GridViewDataDateColumn FieldName="WORK_ST" Caption="작업시작일" Width="110px" 
+                    ReadOnly="true" HeaderStyle-CssClass="col-schedule">
+                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataDateColumn>
+                <dx:GridViewDataDateColumn FieldName="WORK_FI" Caption="작업종료일" Width="110px" 
+                    ReadOnly="true" HeaderStyle-CssClass="col-schedule">
+                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataDateColumn>
+                <dx:GridViewDataDateColumn FieldName="DUE_DATE" Caption="마감일" Width="110px" 
+                    ReadOnly="true" HeaderStyle-CssClass="col-schedule">
+                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataDateColumn>
+                <dx:GridViewDataDateColumn FieldName="QM_DATE" Caption="품질관리일" Width="110px" 
+                    ReadOnly="true" HeaderStyle-CssClass="col-schedule">
+                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataDateColumn>
+                <dx:GridViewDataDateColumn FieldName="QM_COMP_DATE" Caption="QM완료일" Width="110px" 
+                    ReadOnly="true" HeaderStyle-CssClass="col-schedule">
+                    <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
+                    <EditFormSettings Visible="False" />
+                </dx:GridViewDataDateColumn>
+                
 
                 <%-- 계산/상태 컬럼 (ReadOnly) --%>
                 <dx:GridViewDataTextColumn FieldName="STATUS" Caption="상태" Width="80px" 

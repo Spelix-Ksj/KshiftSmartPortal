@@ -231,6 +231,9 @@ namespace KShiftSmartPortalWeb
         /// </summary>
         protected void gridToDoList_RowUpdating(object sender, ASPxDataUpdatingEventArgs e)
         {
+            // List<T> 데이터소스는 기본 업데이트를 지원하지 않으므로 항상 Cancel
+            e.Cancel = true;
+
             try
             {
                 string userId = Session["UserID"]?.ToString() ?? "SYSTEM";
@@ -244,8 +247,7 @@ namespace KShiftSmartPortalWeb
                 if (string.IsNullOrEmpty(orderNo) || string.IsNullOrEmpty(caseNo) ||
                     string.IsNullOrEmpty(companyNo) || string.IsNullOrEmpty(projectNo))
                 {
-                    e.Cancel = true;
-                    ShowMessage($"필수 정보가 없습니다. (Company:{companyNo}, Case:{caseNo}, Project:{projectNo}, Order:{orderNo})");
+                    ShowMessageCallback("필수 정보가 없습니다.");
                     return;
                 }
 
@@ -264,20 +266,19 @@ namespace KShiftSmartPortalWeb
 
                 if (result)
                 {
-                    ShowMessage("데이터가 수정되었습니다.");
+                    // 저장 성공: 팝업 닫기 및 데이터 새로고침
+                    gridToDoList.CancelEdit();
                     LoadData();
+                    ShowMessageCallback("데이터가 수정되었습니다.");
                 }
                 else
                 {
-                    ShowMessage("수정에 실패했습니다.");
+                    ShowMessageCallback("수정에 실패했습니다.");
                 }
-
-                // e.Cancel 설정하지 않음 (자동으로 팝업 닫힘)
             }
             catch (Exception ex)
             {
-                e.Cancel = true;
-                ShowMessage($"수정 오류: {ex.Message}");
+                ShowMessageCallback($"수정 오류: {ex.Message}");
             }
         }
 
@@ -368,6 +369,14 @@ namespace KShiftSmartPortalWeb
         {
             string script = $"alert('{message.Replace("'", "\\'")}');";
             ScriptManager.RegisterStartupScript(this, GetType(), "alertScript", script, true);
+        }
+
+        /// <summary>
+        /// 콜백 모드에서 메시지 표시 (JSProperties 사용)
+        /// </summary>
+        private void ShowMessageCallback(string message)
+        {
+            gridToDoList.JSProperties["cpMessage"] = message;
         }
 
         #endregion
