@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Web.UI;
 using DevExpress.Web;
+using DevExpress.Web.Bootstrap;
 using DevExpress.Web.Data;
 using KShiftSmartPortal.ViewModels;
 using KShiftSmartPortalWeb.Controllers;
@@ -10,8 +11,8 @@ using KShiftSmartPortalWeb.Controllers;
 namespace KShiftSmartPortalWeb
 {
     /// <summary>
-    /// To-Do List 페이지 코드비하인드 (XPO + PopupEditForm 방식)
-    /// ContractManagerXpo와 동일한 패턴 적용
+    /// To-Do List 페이지 코드비하인드 (Bootstrap + XPO + PopupEditForm 방식)
+    /// 모바일 최적화 버전
     /// </summary>
     public partial class ToDoList : System.Web.UI.Page
     {
@@ -216,11 +217,6 @@ namespace KShiftSmartPortalWeb
             BindGridFromSession();
         }
 
-        protected void gridToDoList_BeforeColumnSortingGrouping(object sender, ASPxGridViewBeforeColumnGroupingSortingEventArgs e)
-        {
-            BindGridFromSession();
-        }
-
         protected void gridToDoList_CustomCallback(object sender, ASPxGridViewCustomCallbackEventArgs e)
         {
             BindGridFromSession();
@@ -289,28 +285,22 @@ namespace KShiftSmartPortalWeb
         {
             if (e.RowType != GridViewRowType.Data) return;
 
-            // STATUS 컬럼 찾기
-            var statusColumn = gridToDoList.Columns["STATUS"] as GridViewDataColumn;
-            if (statusColumn != null)
+            // STATUS 값 가져오기
+            string status = e.GetValue("STATUS")?.ToString();
+
+            // 상태에 따른 행 스타일 적용
+            switch (status)
             {
-                int statusIndex = statusColumn.VisibleIndex;
-                if (statusIndex >= 0 && statusIndex < e.Row.Cells.Count)
-                {
-                    string status = e.GetValue("STATUS")?.ToString();
-                    switch (status)
-                    {
-                        case "완료":
-                            e.Row.Cells[statusIndex].CssClass = "status-complete";
-                            break;
-                        case "진행중":
-                            e.Row.Cells[statusIndex].CssClass = "status-inprogress";
-                            break;
-                        case "예정":
-                        case "미정":
-                            e.Row.Cells[statusIndex].CssClass = "status-pending";
-                            break;
-                    }
-                }
+                case "완료":
+                    e.Row.BackColor = System.Drawing.ColorTranslator.FromHtml("#d4edda");
+                    break;
+                case "진행중":
+                    e.Row.BackColor = System.Drawing.ColorTranslator.FromHtml("#fff3cd");
+                    break;
+                case "예정":
+                case "미정":
+                    e.Row.BackColor = System.Drawing.ColorTranslator.FromHtml("#f8d7da");
+                    break;
             }
         }
 

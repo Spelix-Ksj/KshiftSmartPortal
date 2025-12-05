@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // <자동 생성됨>
 //     이 코드는 도구를 사용하여 생성되었습니다.
 //
@@ -21,7 +21,7 @@ namespace KShiftSmartPortalWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxComboBox cmbCompanyType;
+        protected global::DevExpress.Web.Bootstrap.BootstrapComboBox cmbCompanyType;
 
         /// <summary>
         /// cmbCompany 컨트롤입니다.
@@ -30,7 +30,7 @@ namespace KShiftSmartPortalWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxComboBox cmbCompany;
+        protected global::DevExpress.Web.Bootstrap.BootstrapComboBox cmbCompany;
 
         /// <summary>
         /// dtBaseDate 컨트롤입니다.
@@ -39,7 +39,7 @@ namespace KShiftSmartPortalWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxDateEdit dtBaseDate;
+        protected global::DevExpress.Web.Bootstrap.BootstrapDateEdit dtBaseDate;
 
         /// <summary>
         /// btnSearch 컨트롤입니다.
@@ -48,7 +48,7 @@ namespace KShiftSmartPortalWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxButton btnSearch;
+        protected global::DevExpress.Web.Bootstrap.BootstrapButton btnSearch;
 
         /// <summary>
         /// btnReset 컨트롤입니다.
@@ -57,7 +57,7 @@ namespace KShiftSmartPortalWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxButton btnReset;
+        protected global::DevExpress.Web.Bootstrap.BootstrapButton btnReset;
 
         /// <summary>
         /// btnDelete 컨트롤입니다.
@@ -66,7 +66,7 @@ namespace KShiftSmartPortalWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxButton btnDelete;
+        protected global::DevExpress.Web.Bootstrap.BootstrapButton btnDelete;
 
         /// <summary>
         /// btnExcel 컨트롤입니다.
@@ -75,7 +75,7 @@ namespace KShiftSmartPortalWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxButton btnExcel;
+        protected global::DevExpress.Web.Bootstrap.BootstrapButton btnExcel;
 
         /// <summary>
         /// gridToDoList 컨트롤입니다.
@@ -84,7 +84,7 @@ namespace KShiftSmartPortalWeb
         /// 자동 생성 필드입니다.
         /// 수정하려면 디자이너 파일에서 코드 숨김 파일로 필드 선언을 이동하세요.
         /// </remarks>
-        protected global::DevExpress.Web.ASPxGridView gridToDoList;
+        protected global::DevExpress.Web.Bootstrap.BootstrapGridView gridToDoList;
 
         /// <summary>
         /// gridExporter 컨트롤입니다.
