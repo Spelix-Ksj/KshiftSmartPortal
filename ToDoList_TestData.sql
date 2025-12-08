@@ -1,0 +1,407 @@
+-- ToDoList 테스트 데이터 (직원당 3개, 총 36개)
+-- 조건: COMP_DATE IS NULL, WORK_ST <= 오늘 <= WORK_FI
+-- 실행일: 2025-12-05
+
+-- ========================================
+-- E000001 박상훈 (3건)
+-- ========================================
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000001_01', '시스템 정기 점검', '서버 상태 모니터링 및 점검',
+    'E000001', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-10', 'YYYY-MM-DD'), TO_DATE('2025-12-10', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '박상훈(E000001)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000001_02', '주간 회의 준비', '팀 미팅 자료 작성 및 준비',
+    'E000001', TO_DATE('2025-12-03', 'YYYY-MM-DD'), TO_DATE('2025-12-08', 'YYYY-MM-DD'), TO_DATE('2025-12-07', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '박상훈(E000001)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000001_03', '코드 리뷰', '신규 기능 코드 리뷰 진행',
+    'E000001', TO_DATE('2025-12-04', 'YYYY-MM-DD'), TO_DATE('2025-12-12', 'YYYY-MM-DD'), TO_DATE('2025-12-11', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '박상훈(E000001)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+-- ========================================
+-- E000002 김성주 (3건)
+-- ========================================
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000002_01', '신규 기능 개발', 'ToDoList 기능 개발 및 테스트',
+    'E000002', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-15', 'YYYY-MM-DD'), TO_DATE('2025-12-12', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '김성주(E000002)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000002_02', '버그 수정', '화면 로딩 속도 개선',
+    'E000002', TO_DATE('2025-12-02', 'YYYY-MM-DD'), TO_DATE('2025-12-09', 'YYYY-MM-DD'), TO_DATE('2025-12-08', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '김성주(E000002)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000002_03', 'DB 쿼리 최적화', '성능 저하 쿼리 튜닝',
+    'E000002', TO_DATE('2025-12-05', 'YYYY-MM-DD'), TO_DATE('2025-12-14', 'YYYY-MM-DD'), TO_DATE('2025-12-13', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '김성주(E000002)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+-- ========================================
+-- E000003 박성진 (3건)
+-- ========================================
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000003_01', '기술 문서 작성', '시스템 아키텍처 문서화',
+    'E000003', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-20', 'YYYY-MM-DD'), TO_DATE('2025-12-18', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '박성진(E000003)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000003_02', '사용자 매뉴얼 업데이트', '신규 기능 매뉴얼 추가',
+    'E000003', TO_DATE('2025-12-03', 'YYYY-MM-DD'), TO_DATE('2025-12-11', 'YYYY-MM-DD'), TO_DATE('2025-12-10', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '박성진(E000003)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000003_03', 'API 문서 정리', 'REST API 명세서 작성',
+    'E000003', TO_DATE('2025-12-04', 'YYYY-MM-DD'), TO_DATE('2025-12-13', 'YYYY-MM-DD'), TO_DATE('2025-12-12', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '박성진(E000003)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+-- ========================================
+-- E000004 윤다솜 (3건)
+-- ========================================
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000004_01', 'UI 디자인 검토', '메인 화면 UI/UX 개선안 검토',
+    'E000004', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-08', 'YYYY-MM-DD'), TO_DATE('2025-12-08', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '윤다솜(E000004)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000004_02', '아이콘 디자인', '신규 메뉴 아이콘 제작',
+    'E000004', TO_DATE('2025-12-02', 'YYYY-MM-DD'), TO_DATE('2025-12-10', 'YYYY-MM-DD'), TO_DATE('2025-12-09', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '윤다솜(E000004)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000004_03', '반응형 레이아웃', '모바일 대응 CSS 수정',
+    'E000004', TO_DATE('2025-12-05', 'YYYY-MM-DD'), TO_DATE('2025-12-15', 'YYYY-MM-DD'), TO_DATE('2025-12-14', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '윤다솜(E000004)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+-- ========================================
+-- E000005 이창근 (3건)
+-- ========================================
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000005_01', '데이터 분석 리포트', '월간 시스템 사용 현황 분석',
+    'E000005', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-12', 'YYYY-MM-DD'), TO_DATE('2025-12-10', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '이창근(E000005)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000005_02', '로그 분석', '에러 로그 패턴 분석',
+    'E000005', TO_DATE('2025-12-03', 'YYYY-MM-DD'), TO_DATE('2025-12-09', 'YYYY-MM-DD'), TO_DATE('2025-12-08', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '이창근(E000005)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000005_03', '대시보드 개발', '실시간 모니터링 대시보드 구현',
+    'E000005', TO_DATE('2025-12-04', 'YYYY-MM-DD'), TO_DATE('2025-12-18', 'YYYY-MM-DD'), TO_DATE('2025-12-16', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '이창근(E000005)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+-- ========================================
+-- E000006 선우진성 (3건)
+-- ========================================
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000006_01', 'API 연동 개발', '외부 ERP 시스템 연동',
+    'E000006', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-18', 'YYYY-MM-DD'), TO_DATE('2025-12-15', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '선우진성(E000006)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000006_02', '인증 모듈 개발', 'SSO 인증 연동 구현',
+    'E000006', TO_DATE('2025-12-02', 'YYYY-MM-DD'), TO_DATE('2025-12-11', 'YYYY-MM-DD'), TO_DATE('2025-12-10', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '선우진성(E000006)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000006_03', '웹서비스 테스트', 'SOAP/REST 웹서비스 테스트',
+    'E000006', TO_DATE('2025-12-05', 'YYYY-MM-DD'), TO_DATE('2025-12-13', 'YYYY-MM-DD'), TO_DATE('2025-12-12', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '선우진성(E000006)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+-- ========================================
+-- E000007 김태영 (3건)
+-- ========================================
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000007_01', '보안 점검', '시스템 보안 취약점 점검',
+    'E000007', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-14', 'YYYY-MM-DD'), TO_DATE('2025-12-12', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '김태영(E000007)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000007_02', '방화벽 설정', '네트워크 방화벽 규칙 검토',
+    'E000007', TO_DATE('2025-12-03', 'YYYY-MM-DD'), TO_DATE('2025-12-10', 'YYYY-MM-DD'), TO_DATE('2025-12-09', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '김태영(E000007)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000007_03', '접근 권한 감사', '사용자 권한 현황 점검',
+    'E000007', TO_DATE('2025-12-04', 'YYYY-MM-DD'), TO_DATE('2025-12-16', 'YYYY-MM-DD'), TO_DATE('2025-12-15', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '김태영(E000007)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+-- ========================================
+-- E000008 윤찬후 (3건)
+-- ========================================
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000008_01', '성능 최적화', 'DB 쿼리 성능 튜닝',
+    'E000008', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-16', 'YYYY-MM-DD'), TO_DATE('2025-12-14', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '윤찬후(E000008)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000008_02', '인덱스 최적화', '테이블 인덱스 재설계',
+    'E000008', TO_DATE('2025-12-02', 'YYYY-MM-DD'), TO_DATE('2025-12-09', 'YYYY-MM-DD'), TO_DATE('2025-12-08', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '윤찬후(E000008)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000008_03', '캐시 구현', '데이터 캐싱 로직 개발',
+    'E000008', TO_DATE('2025-12-05', 'YYYY-MM-DD'), TO_DATE('2025-12-19', 'YYYY-MM-DD'), TO_DATE('2025-12-17', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '윤찬후(E000008)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+-- ========================================
+-- E000009 김종수 (3건)
+-- ========================================
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000009_01', '단위 테스트 작성', '핵심 모듈 테스트 케이스 작성',
+    'E000009', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-11', 'YYYY-MM-DD'), TO_DATE('2025-12-09', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '김종수(E000009)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000009_02', '통합 테스트', '시스템 통합 테스트 수행',
+    'E000009', TO_DATE('2025-12-03', 'YYYY-MM-DD'), TO_DATE('2025-12-12', 'YYYY-MM-DD'), TO_DATE('2025-12-11', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '김종수(E000009)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000009_03', '버그 리포트 정리', '테스트 결과 버그 리포트 작성',
+    'E000009', TO_DATE('2025-12-04', 'YYYY-MM-DD'), TO_DATE('2025-12-10', 'YYYY-MM-DD'), TO_DATE('2025-12-09', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '김종수(E000009)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+-- ========================================
+-- E000010 박상은 (3건)
+-- ========================================
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000010_01', '배포 준비', '운영 환경 배포 체크리스트 작성',
+    'E000010', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-19', 'YYYY-MM-DD'), TO_DATE('2025-12-17', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '박상은(E000010)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000010_02', '서버 설정', '운영 서버 환경 설정',
+    'E000010', TO_DATE('2025-12-02', 'YYYY-MM-DD'), TO_DATE('2025-12-08', 'YYYY-MM-DD'), TO_DATE('2025-12-07', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '박상은(E000010)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000010_03', '롤백 계획 수립', '배포 실패 시 롤백 절차 문서화',
+    'E000010', TO_DATE('2025-12-05', 'YYYY-MM-DD'), TO_DATE('2025-12-14', 'YYYY-MM-DD'), TO_DATE('2025-12-13', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '박상은(E000010)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+-- ========================================
+-- E000011 권수현 (3건)
+-- ========================================
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000011_01', '고객 문의 대응', '사용자 문의 사항 처리',
+    'E000011', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-13', 'YYYY-MM-DD'), TO_DATE('2025-12-11', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '권수현(E000011)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000011_02', 'FAQ 업데이트', '자주 묻는 질문 콘텐츠 갱신',
+    'E000011', TO_DATE('2025-12-03', 'YYYY-MM-DD'), TO_DATE('2025-12-09', 'YYYY-MM-DD'), TO_DATE('2025-12-08', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '권수현(E000011)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000011_03', '교육 자료 준비', '신규 사용자 교육 자료 작성',
+    'E000011', TO_DATE('2025-12-04', 'YYYY-MM-DD'), TO_DATE('2025-12-15', 'YYYY-MM-DD'), TO_DATE('2025-12-14', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '권수현(E000011)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+-- ========================================
+-- E000012 이순영 (3건)
+-- ========================================
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000012_01', '프로젝트 일정 관리', '전체 프로젝트 일정 조율',
+    'E000012', TO_DATE('2025-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-22', 'YYYY-MM-DD'), TO_DATE('2025-12-20', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '이순영(E000012)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000012_02', '리소스 배분', '팀원 업무 분배 및 조정',
+    'E000012', TO_DATE('2025-12-02', 'YYYY-MM-DD'), TO_DATE('2025-12-10', 'YYYY-MM-DD'), TO_DATE('2025-12-09', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '이순영(E000012)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+INSERT INTO SCM_WORK_ORDER_MASTER (
+    COMPANY_NO, CASE_NO, PROJECT_NO, ORDER_NO, ORDER_NAME, WORK_LIST,
+    EMP_NO, WORK_ST, WORK_FI, DUE_DATE, REV_NO,
+    PROP01, PROP02, PROP03, IN_USER, IN_DATE, IN_PID
+) VALUES (
+    '100', 'CASE_IMG', 'TEST_TODO', 'WoTODO_E000012_03', '진행 상황 보고', '주간 프로젝트 진행 보고서 작성',
+    'E000012', TO_DATE('2025-12-05', 'YYYY-MM-DD'), TO_DATE('2025-12-12', 'YYYY-MM-DD'), TO_DATE('2025-12-11', 'YYYY-MM-DD'), 0,
+    '테스트 프로젝트(TEST_TODO)', '박상훈(E000001)', '이순영(E000012)', 'Spelix', SYSDATE, 'ToDoList_Test'
+);
+
+COMMIT;
+
+-- ========================================
+-- 데이터 삭제 쿼리 (테스트 후 정리용)
+-- ========================================
+-- DELETE FROM SCM_WORK_ORDER_MASTER WHERE PROJECT_NO = 'TEST_TODO' AND COMPANY_NO = '100';
+-- COMMIT;

@@ -1,0 +1,6 @@
+{
+  "enabledMcpjsonServers": [
+    "mcp-server-oracle"
+  ],
+  "enableAllProjectMcpServers": true
+}
