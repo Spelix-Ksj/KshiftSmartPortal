@@ -16,7 +16,7 @@ namespace KShiftSmartPortalWeb
                 // 이미 로그인되어 있으면 메인 페이지로 리디렉션
                 if (Session["UserID"] != null)
                 {
-                    Response.Redirect("Home.aspx", false);
+                    Response.Redirect("~/Views/Home.aspx", false);
                     Context.ApplicationInstance.CompleteRequest();
                     return;
                 }
@@ -88,7 +88,7 @@ namespace KShiftSmartPortalWeb
                     Session.Timeout = 30; // 30분
 
                     // 메인 바로가기 페이지로 리디렉션
-                    Response.Redirect("Home.aspx", false);
+                    Response.Redirect("~/Views/Home.aspx", false);
                     Context.ApplicationInstance.CompleteRequest();
                 }
                 else

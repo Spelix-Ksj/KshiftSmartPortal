@@ -6,6 +6,29 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Google Analytics 4 -->
+    <!-- TODO: G-XXXXXXXXXX를 실제 측정 ID로 교체하세요 -->
+    <!-- https://analytics.google.com 에서 생성 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <!-- Microsoft Clarity -->
+    <!-- TODO: XXXXXXXXXX를 실제 프로젝트 ID로 교체하세요 -->
+    <!-- https://clarity.microsoft.com 에서 생성 -->
+    <script>
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "XXXXXXXXXX");
+    </script>
+
     <title>
         <asp:ContentPlaceHolder ID="TitleContent" runat="server">
             K-SHIFT Contract Manager

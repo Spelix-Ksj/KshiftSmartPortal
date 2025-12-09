@@ -26,7 +26,7 @@ namespace KShiftSmartPortalWeb
         {
             if (Session["UserID"] == null)
             {
-                Response.Redirect("Login.aspx", false);
+                Response.Redirect("~/Views/Login.aspx", false);
                 Context.ApplicationInstance.CompleteRequest();
                 return;
             }

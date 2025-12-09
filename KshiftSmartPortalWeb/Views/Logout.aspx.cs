@@ -19,7 +19,7 @@ namespace KShiftSmartPortalWeb
             }
 
             // 로그인 페이지로 리디렉션
-            Response.Redirect("Login.aspx", false);
+            Response.Redirect("~/Views/Login.aspx", false);
             Context.ApplicationInstance.CompleteRequest();
         }
     }
