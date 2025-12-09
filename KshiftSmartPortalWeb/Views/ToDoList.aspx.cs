@@ -81,7 +81,7 @@ namespace KShiftSmartPortalWeb
             try
             {
                 DataTable dt = _loginController.GetCompanyList();
-                string companyType = cmbCompanyType.Value?.ToString() ?? "*";
+                string companyType = cmbCompanyType.Value != null ? cmbCompanyType.Value.ToString() : "*";
 
                 cmbCompany.Items.Clear();
 
@@ -135,6 +135,13 @@ namespace KShiftSmartPortalWeb
             GridData = null;
             gridToDoList.DataSource = null;
             gridToDoList.DataBind();
+
+            // 모바일 카드 뷰도 초기화
+            rptMobileCards.DataSource = null;
+            rptMobileCards.DataBind();
+            pnlNoData.Visible = true;
+            lblMobilePageInfo.Text = "0 / 0";
+
             lblRecordCount.Text = "조회된 데이터가 없습니다.";
         }
 
@@ -220,6 +227,35 @@ namespace KShiftSmartPortalWeb
         protected void gridToDoList_CustomCallback(object sender, ASPxGridViewCustomCallbackEventArgs e)
         {
             BindGridFromSession();
+
+            // 모바일 카드에서 수정 버튼 클릭 시 처리
+            if (!string.IsNullOrEmpty(e.Parameters) && e.Parameters.StartsWith("EDIT:"))
+            {
+                string keyData = e.Parameters.Substring(5); // "EDIT:" 제거
+                string[] keys = keyData.Split('|');
+                if (keys.Length == 4)
+                {
+                    string companyNo = keys[0];
+                    string caseNo = keys[1];
+                    string projectNo = keys[2];
+                    string orderNo = keys[3];
+
+                    // GridData에서 해당 행의 인덱스 찾기
+                    if (GridData != null)
+                    {
+                        for (int i = 0; i < GridData.Count; i++)
+                        {
+                            var item = GridData[i];
+                            if (item.COMPANY_NO == companyNo && item.CASE_NO == caseNo &&
+                                item.PROJECT_NO == projectNo && item.ORDER_NO == orderNo)
+                            {
+                                gridToDoList.StartEdit(i);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -232,13 +268,13 @@ namespace KShiftSmartPortalWeb
 
             try
             {
-                string userId = Session["UserID"]?.ToString() ?? "SYSTEM";
+                string userId = Session["UserID"] != null ? Session["UserID"].ToString() : "SYSTEM";
 
                 // 4개 복합키 모두 e.Keys에서 가져오기 (KeyFieldName이 복합키로 설정됨)
-                string companyNo = e.Keys["COMPANY_NO"]?.ToString();
-                string caseNo = e.Keys["CASE_NO"]?.ToString();
-                string projectNo = e.Keys["PROJECT_NO"]?.ToString();
-                string orderNo = e.Keys["ORDER_NO"]?.ToString();
+                string companyNo = e.Keys["COMPANY_NO"] != null ? e.Keys["COMPANY_NO"].ToString() : null;
+                string caseNo = e.Keys["CASE_NO"] != null ? e.Keys["CASE_NO"].ToString() : null;
+                string projectNo = e.Keys["PROJECT_NO"] != null ? e.Keys["PROJECT_NO"].ToString() : null;
+                string orderNo = e.Keys["ORDER_NO"] != null ? e.Keys["ORDER_NO"].ToString() : null;
 
                 if (string.IsNullOrEmpty(orderNo) || string.IsNullOrEmpty(caseNo) ||
                     string.IsNullOrEmpty(companyNo) || string.IsNullOrEmpty(projectNo))
@@ -266,6 +302,8 @@ namespace KShiftSmartPortalWeb
                     gridToDoList.CancelEdit();
                     LoadData();
                     ShowMessageCallback("데이터가 수정되었습니다.");
+                    // 모바일 뷰에서 새로고침 필요 플래그
+                    gridToDoList.JSProperties["cpNeedRefresh"] = true;
                 }
                 else
                 {
@@ -286,7 +324,8 @@ namespace KShiftSmartPortalWeb
             if (e.RowType != GridViewRowType.Data) return;
 
             // STATUS 값 가져오기
-            string status = e.GetValue("STATUS")?.ToString();
+            object statusObj = e.GetValue("STATUS");
+            string status = statusObj != null ? statusObj.ToString() : null;
 
             // 상태에 따른 행 스타일 적용
             switch (status)
@@ -313,6 +352,35 @@ namespace KShiftSmartPortalWeb
             {
                 gridToDoList.DataSource = GridData;
                 gridToDoList.DataBind();
+
+                // 모바일 카드 뷰도 바인딩
+                BindMobileCards();
+            }
+        }
+
+        /// <summary>
+        /// 모바일 카드 뷰 바인딩
+        /// </summary>
+        private void BindMobileCards()
+        {
+            if (GridData != null && GridData.Count > 0)
+            {
+                rptMobileCards.DataSource = GridData;
+                rptMobileCards.DataBind();
+                pnlNoData.Visible = false;
+
+                // 페이지 정보 업데이트
+                int pageSize = gridToDoList.SettingsPager.PageSize;
+                int totalPages = (int)Math.Ceiling((double)GridData.Count / pageSize);
+                int currentPage = gridToDoList.PageIndex + 1;
+                lblMobilePageInfo.Text = $"{currentPage} / {totalPages}";
+            }
+            else
+            {
+                rptMobileCards.DataSource = null;
+                rptMobileCards.DataBind();
+                pnlNoData.Visible = true;
+                lblMobilePageInfo.Text = "0 / 0";
             }
         }
 
@@ -325,8 +393,8 @@ namespace KShiftSmartPortalWeb
         /// </summary>
         private void LoadData()
         {
-            string companyNo = cmbCompany.Value?.ToString();
-            string userId = Session["UserID"]?.ToString();
+            string companyNo = cmbCompany.Value != null ? cmbCompany.Value.ToString() : null;
+            string userId = Session["UserID"] != null ? Session["UserID"].ToString() : null;
             DateTime baseDate = dtBaseDate.Value != null ? (DateTime)dtBaseDate.Value : DateTime.Today;
 
             if (string.IsNullOrEmpty(companyNo))
@@ -348,6 +416,9 @@ namespace KShiftSmartPortalWeb
             gridToDoList.DataSource = dataList;
             gridToDoList.DataBind();
 
+            // 모바일 카드 뷰 바인딩
+            BindMobileCards();
+
             lblRecordCount.Text = $"총 <strong>{dataList.Count}</strong>건의 데이터가 조회되었습니다.";
         }
 
@@ -367,6 +438,24 @@ namespace KShiftSmartPortalWeb
         private void ShowMessageCallback(string message)
         {
             gridToDoList.JSProperties["cpMessage"] = message;
+        }
+
+        /// <summary>
+        /// 모바일 카드 상태 배지 CSS 클래스 반환
+        /// </summary>
+        protected string GetStatusBadgeClass(string status)
+        {
+            switch (status)
+            {
+                case "완료":
+                    return "badge-complete";
+                case "진행중":
+                    return "badge-inprogress";
+                case "예정":
+                case "미정":
+                default:
+                    return "badge-pending";
+            }
         }
 
         #endregion

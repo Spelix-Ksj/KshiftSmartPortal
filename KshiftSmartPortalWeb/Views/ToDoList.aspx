@@ -37,6 +37,7 @@
             display: flex;
             flex-direction: column;
             gap: 3px;
+            min-width: 150px;
         }
         .search-item label {
             font-size: 12px;
@@ -45,6 +46,7 @@
         }
         .button-group {
             display: flex;
+            flex-wrap: wrap;
             gap: 8px;
             margin-top: 12px;
             padding-top: 12px;
@@ -101,8 +103,8 @@
         /* 버튼 크기 조정 */
         .button-group .btn {
             padding: 5px 14px !important;
-            width: 120px !important;
             font-size: 13px !important;
+            min-width: 100px;
         }
 
         /* BootstrapGridView 스타일 */
@@ -176,7 +178,252 @@
             font-size: 12px !important;
         }
 
+        /* ===== 모바일 Card 스타일 ===== */
+        .mobile-cards {
+            display: none;
+        }
+        .todo-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #2196f3;
+        }
+        .todo-card.selected {
+            border-left-color: #ff9800;
+            background: #fff8e1;
+        }
+        .todo-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .todo-card-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+        .todo-card-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-complete { background: #c8e6c9; color: #2e7d32; }
+        .badge-inprogress { background: #fff9c4; color: #f9a825; }
+        .badge-pending { background: #ffccbc; color: #e64a19; }
+        .todo-card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            font-size: 12px;
+        }
+        .todo-card-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .todo-card-item.full-width {
+            grid-column: 1 / -1;
+        }
+        .todo-card-label {
+            color: #666;
+            font-size: 11px;
+        }
+        .todo-card-value {
+            color: #333;
+            font-weight: 500;
+        }
+        .todo-card-value.editable {
+            color: #4caf50;
+        }
+        .todo-card-footer {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            text-align: right;
+        }
+        .btn-card-edit {
+            padding: 6px 16px;
+            font-size: 12px;
+            background: #2196f3;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-card-edit:hover {
+            background: #1976d2;
+        }
+
+        /* 모바일 페이징 */
+        .mobile-pager {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        .mobile-pager button {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .mobile-pager button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .mobile-pager .page-info {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* ===== 모바일 반응형 ===== */
+        @media (max-width: 768px) {
+            .search-panel {
+                padding: 12px;
+            }
+            .search-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .search-item {
+                width: 100%;
+                min-width: unset;
+            }
+            .search-item .dxbs-combobox,
+            .search-item .dxbs-date-edit {
+                width: 100% !important;
+            }
+            .button-group {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .button-group .btn {
+                width: 100% !important;
+                min-width: unset;
+            }
+
+            /* 데스크탑 그리드 숨기고 모바일 카드 표시 */
+            /* 그리드를 화면 밖으로 이동하되 렌더링은 유지 (팝업이 정상 동작하도록) */
+            .desktop-grid {
+                position: absolute;
+                left: -9999px;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+            }
+            .mobile-cards {
+                display: block;
+            }
+            .mobile-pager {
+                display: flex;
+            }
+
+            /* Bootstrap 모달 팝업 강제 표시 */
+            body.modal-open {
+                overflow: auto !important;
+                padding-right: 0 !important;
+            }
+            .modal {
+                display: block !important;
+                position: fixed !important;
+                left: 0 !important;
+                top: 0 !important;
+                z-index: 1050 !important;
+            }
+            .modal.show .modal-dialog {
+                transform: none !important;
+            }
+            .modal-backdrop {
+                z-index: 1040 !important;
+            }
+
+            /* 상태 바 모바일 */
+            .status-bar {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+            .status-bar > div:last-child {
+                font-size: 11px;
+            }
+            .status-bar > div:last-child span {
+                margin: 0 5px !important;
+            }
+        }
+
+        /* 데스크탑에서는 그리드 표시 */
+        @media (min-width: 769px) {
+            .desktop-grid {
+                display: block;
+            }
+            .mobile-cards {
+                display: none;
+            }
+            .mobile-pager {
+                display: none;
+            }
+        }
     </style>
+    <script type="text/javascript">
+        // 모바일 뷰 여부 확인
+        function isMobileView() {
+            return window.innerWidth <= 768;
+        }
+
+        // 모바일 카드에서 수정 버튼 클릭 시
+        function openMobileEdit(companyNo, caseNo, projectNo, orderNo) {
+            // CustomCallback을 통해 서버에서 해당 행 편집 처리
+            var grid = gridToDoList;
+            if (grid) {
+                var param = 'EDIT:' + companyNo + '|' + caseNo + '|' + projectNo + '|' + orderNo;
+                grid.PerformCallback(param);
+            }
+        }
+
+        // 모바일 이전 페이지
+        function mobilePrevPage() {
+            var grid = gridToDoList;
+            if (grid && grid.GetPageIndex() > 0) {
+                grid.PrevPage();
+            }
+        }
+
+        // 모바일 다음 페이지
+        function mobileNextPage() {
+            var grid = gridToDoList;
+            if (grid && grid.GetPageIndex() < grid.GetPageCount() - 1) {
+                grid.NextPage();
+            }
+        }
+
+        // 그리드 콜백 완료 후 처리
+        function onGridEndCallback(s, e) {
+            if (s.cpMessage) {
+                alert(s.cpMessage);
+                s.cpMessage = null;
+
+                // 모바일 뷰에서 데이터 수정 완료 시 조회 버튼 클릭으로 새로고침
+                if (isMobileView() && s.cpNeedRefresh) {
+                    s.cpNeedRefresh = null;
+                    // DevExpress 버튼의 DoClick 메서드로 전체 페이지 갱신
+                    if (typeof btnSearch !== 'undefined' && btnSearch) {
+                        btnSearch.DoClick();
+                    }
+                }
+            }
+        }
+    </script>
 </asp:Content>
 
 <asp:Content ID="PageTitleContent" ContentPlaceHolderID="PageTitleContent" runat="server">
@@ -217,6 +464,7 @@
         <!-- 버튼 그룹 -->
         <div class="button-group">
             <dx:BootstrapButton ID="btnSearch" runat="server"
+                ClientInstanceName="btnSearch"
                 Text="<i class='fas fa-search'></i> 조회"
                 EncodeHtml="false"
                 OnClick="btnSearch_Click">
@@ -254,7 +502,9 @@
         <div class="grid-header">
             <i class="fas fa-tasks"></i> 작업 목록
         </div>
-        
+
+        <%-- 데스크탑용 그리드 --%>
+        <div class="desktop-grid">
         <dx:BootstrapGridView ID="gridToDoList" runat="server"
             ClientInstanceName="gridToDoList"
             Width="100%"
@@ -282,12 +532,7 @@
                 AllowInsert="False"
                 AllowDelete="False" />
 
-            <ClientSideEvents EndCallback="function(s, e) {
-                    if (s.cpMessage) {
-                        alert(s.cpMessage);
-                        s.cpMessage = null;
-                    }
-                }" />
+            <ClientSideEvents EndCallback="onGridEndCallback" />
             
             <%-- PopupEditForm 방식 설정 --%>
             <SettingsEditing Mode="PopupEditForm" />
@@ -474,10 +719,88 @@
                 <dx:BootstrapGridViewTextColumn FieldName="CASE_NO" Visible="false" />
             </Columns>
         </dx:BootstrapGridView>
-        
+        </div>
+        <%-- // 데스크탑용 그리드 끝 --%>
+
         <%-- 엑셀 Exporter --%>
         <dx:ASPxGridViewExporter ID="gridExporter" runat="server" GridViewID="gridToDoList" />
-        
+
+        <%-- 모바일용 카드 뷰 --%>
+        <div class="mobile-cards">
+            <asp:Repeater ID="rptMobileCards" runat="server">
+                <ItemTemplate>
+                    <div class="todo-card" data-keys='<%# Eval("COMPANY_NO") + ";" + Eval("CASE_NO") + ";" + Eval("PROJECT_NO") + ";" + Eval("ORDER_NO") %>'>
+                        <div class="todo-card-header">
+                            <span class="todo-card-title"><%# Eval("ORDER_NAME") %></span>
+                            <span class='todo-card-badge <%# GetStatusBadgeClass(Eval("STATUS") == null ? "" : Eval("STATUS").ToString()) %>'>
+                                <%# Eval("STATUS") %>
+                            </span>
+                        </div>
+                        <div class="todo-card-body">
+                            <div class="todo-card-item">
+                                <span class="todo-card-label">프로젝트</span>
+                                <span class="todo-card-value"><%# Eval("PROJECT_NO") %></span>
+                            </div>
+                            <div class="todo-card-item">
+                                <span class="todo-card-label">호선번호</span>
+                                <span class="todo-card-value"><%# Eval("PROP01") %></span>
+                            </div>
+                            <div class="todo-card-item">
+                                <span class="todo-card-label">완료일</span>
+                                <span class="todo-card-value editable"><%# Eval("COMP_DATE", "{0:yyyy-MM-dd}") %></span>
+                            </div>
+                            <div class="todo-card-item">
+                                <span class="todo-card-label">마감일</span>
+                                <span class="todo-card-value"><%# Eval("DUE_DATE", "{0:yyyy-MM-dd}") %></span>
+                            </div>
+                            <div class="todo-card-item">
+                                <span class="todo-card-label">계획 M/H</span>
+                                <span class="todo-card-value editable"><%# Eval("PLAN_MHR", "{0:N1}") %></span>
+                            </div>
+                            <div class="todo-card-item">
+                                <span class="todo-card-label">실적 M/H</span>
+                                <span class="todo-card-value editable"><%# Eval("REAL_MHR", "{0:N1}") %></span>
+                            </div>
+                            <div class="todo-card-item">
+                                <span class="todo-card-label">달성률</span>
+                                <span class="todo-card-value"><%# Eval("MHR_RATE") %>%</span>
+                            </div>
+                            <div class="todo-card-item">
+                                <span class="todo-card-label">작업기간</span>
+                                <span class="todo-card-value"><%# Eval("WORK_ST", "{0:MM-dd}") %> ~ <%# Eval("WORK_FI", "{0:MM-dd}") %></span>
+                            </div>
+                        </div>
+                        <div class="todo-card-footer">
+                            <button type="button" class="btn-card-edit"
+                                onclick="openMobileEdit('<%# Eval("COMPANY_NO") %>', '<%# Eval("CASE_NO") %>', '<%# Eval("PROJECT_NO") %>', '<%# Eval("ORDER_NO") %>')">
+                                <i class="fas fa-edit"></i> 수정
+                            </button>
+                        </div>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+
+            <%-- 데이터 없음 메시지 --%>
+            <asp:Panel ID="pnlNoData" runat="server" Visible="false" CssClass="text-center py-4 text-muted">
+                <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+                조회된 데이터가 없습니다.
+            </asp:Panel>
+        </div>
+        <%-- // 모바일용 카드 뷰 끝 --%>
+
+        <%-- 모바일용 간소화 페이징 --%>
+        <div class="mobile-pager">
+            <button type="button" onclick="mobilePrevPage()" id="btnMobilePrev">
+                <i class="fas fa-chevron-left"></i> 이전
+            </button>
+            <span class="page-info">
+                <asp:Label ID="lblMobilePageInfo" runat="server" Text="1 / 1" />
+            </span>
+            <button type="button" onclick="mobileNextPage()" id="btnMobileNext">
+                다음 <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
         <%-- 상태 바 --%>
         <div class="status-bar">
             <div class="record-count">

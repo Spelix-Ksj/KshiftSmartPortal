@@ -9,7 +9,9 @@
       "Bash(claude mcp add-from-claude-desktop)",
       "mcp__mcp-server-oracle__describe_table",
       "mcp__mcp-server-oracle__reqd_query",
-      "mcp__mcp-server-oracle__list_tables"
+      "mcp__mcp-server-oracle__list_tables",
+      "Skill(dev-asp-net)",
+      "Bash(del \"D:\\Dev\\KshiftSmartPortalWeb\\KshiftSmartPortalWeb\\KshiftSmartPortalWeb.wpp.targets\")"
     ],
     "deny": [],
     "ask": []

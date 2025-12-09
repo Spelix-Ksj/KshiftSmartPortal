@@ -113,10 +113,15 @@
 
         /* 반응형 처리 */
         @media (max-width: 768px) {
+            .page-container {
+                padding: 10px;
+            }
+
             .page-header {
                 flex-direction: column;
-                gap: 15px;
+                gap: 10px;
                 text-align: center;
+                padding: 15px;
             }
 
             .page-header-left {
@@ -124,7 +129,28 @@
             }
 
             .page-header h1 {
-                font-size: 20px;
+                font-size: 18px;
+            }
+
+            /* 모바일 버튼 그룹 - 동일한 크기로 정렬 */
+            .user-info {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+                width: 100%;
+            }
+
+            .user-info .username,
+            .user-info .btn-home,
+            .user-info .btn-logout {
+                flex: 0 0 auto;
+                min-width: 90px;
+                padding: 8px 12px;
+                font-size: 13px;
+                text-align: center;
+                justify-content: center;
+                white-space: nowrap;
             }
         }
     </style>
