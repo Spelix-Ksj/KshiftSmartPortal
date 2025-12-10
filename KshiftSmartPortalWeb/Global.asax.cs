@@ -38,7 +38,7 @@ namespace KShiftSmartPortalWeb
             // 기본 테마
             if (string.IsNullOrEmpty(theme))
             {
-                theme = "Office365";
+                theme = "Moderno";
             }
 
             // DevExpress 전역 테마 설정

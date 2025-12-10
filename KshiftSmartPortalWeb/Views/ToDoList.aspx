@@ -547,7 +547,7 @@
                 CommandEdit="수정"
                 CommandUpdate="저장"
                 CommandCancel="취소"
-                PopupEditFormCaption="작업지시 수정" />
+                PopupEditFormCaption="작업지시 수정" />            
 
             <%-- EditForm 템플릿 - 수정 가능한 필드만 표시 --%>
             <Templates>

@@ -69,7 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Views\Birthday.aspx" />
     <Content Include="Views\ContractManagerXpo.aspx" />
     <Content Include="Views\ToDoList.aspx" />
     <Content Include="Views\Default.aspx" />
@@ -119,10 +118,6 @@
     </Compile>
     <Compile Include="ViewModels\ToDoListViewModel.cs" />
     <Compile Include="ViewModels\ContractViewModel.cs" />
-    <Compile Include="Views\Birthday.aspx.cs">
-      <SubType>ASPXCodeBehind</SubType>
-      <DependentUpon>Birthday.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Views\Birthday.aspx.designer.cs" />
     <Compile Include="Views\ContractManagerXpo.aspx.cs">
       <DependentUpon>ContractManagerXpo.aspx</DependentUpon>

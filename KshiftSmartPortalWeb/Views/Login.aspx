@@ -199,6 +199,45 @@
             box-shadow: none !important;
         }
 
+        /* DevExpress Moderno Theme Override - 파란색 하단 보더 제거 */
+        .input-wrapper .dxeTextBox_Moderno,
+        .input-wrapper .dxeTextBoxSys_Moderno,
+        .input-wrapper .dxeButtonEdit_Moderno,
+        .input-wrapper .dxeButtonEditSys_Moderno,
+        .input-wrapper .dxeComboBox_Moderno {
+            border: none !important;
+            border-bottom: none !important;
+            background: transparent !important;
+        }
+        .input-wrapper .dxeTextBox_Moderno::after,
+        .input-wrapper .dxeTextBox_Moderno::before,
+        .input-wrapper .dxeButtonEdit_Moderno::after,
+        .input-wrapper .dxeButtonEdit_Moderno::before {
+            display: none !important;
+            border: none !important;
+        }
+        .input-wrapper .dxeTextBox_Moderno .dxeEditArea_Moderno,
+        .input-wrapper .dxeButtonEdit_Moderno .dxeEditArea_Moderno {
+            border: none !important;
+            background: transparent !important;
+        }
+        .input-wrapper .dxeTextBox_Moderno.dxeControlsCell_Moderno,
+        .input-wrapper td.dxeControlsCell_Moderno {
+            border: none !important;
+            background: transparent !important;
+        }
+        /* Moderno 테마 포커스 라인 제거 */
+        .input-wrapper .dxeFocused_Moderno,
+        .input-wrapper .dxeTextBox_Moderno.dxeFocused_Moderno,
+        .input-wrapper .dxeButtonEdit_Moderno.dxeFocused_Moderno {
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .input-wrapper [class*="_Moderno"] {
+            border: none !important;
+            border-bottom: none !important;
+        }
+
         /* Password toggle */
         .pwd-toggle {
             cursor: pointer;
@@ -352,7 +391,7 @@
                 </div>
 
                 <div class="login-footer">
-                    Copyright 2025 SPELIX. All rights reserved.
+                    Copyright 2025.12ㄴ SPELIX. All rights reserved.
                 </div>
             </div>
         </div>
