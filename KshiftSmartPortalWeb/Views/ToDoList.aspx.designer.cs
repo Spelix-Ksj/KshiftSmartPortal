@@ -78,6 +78,81 @@ namespace KShiftSmartPortalWeb
         protected global::DevExpress.Web.Bootstrap.BootstrapButton btnExcel;
 
         /// <summary>
+        /// btnAdd 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapButton btnAdd;
+
+        /// <summary>
+        /// cmbAddCase 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapComboBox cmbAddCase;
+
+        /// <summary>
+        /// cmbAddProject 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapComboBox cmbAddProject;
+
+        /// <summary>
+        /// txtAddOrderName 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapTextBox txtAddOrderName;
+
+        /// <summary>
+        /// txtAddWorkList 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapMemo txtAddWorkList;
+
+        /// <summary>
+        /// dtAddWorkSt 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapDateEdit dtAddWorkSt;
+
+        /// <summary>
+        /// dtAddWorkFi 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapDateEdit dtAddWorkFi;
+
+        /// <summary>
+        /// spnAddPlanMhr 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapSpinEdit spnAddPlanMhr;
+
+        /// <summary>
+        /// spnAddRealMhr 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapSpinEdit spnAddRealMhr;
+
+        /// <summary>
+        /// spnAddPlanMp 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapSpinEdit spnAddPlanMp;
+
+        /// <summary>
+        /// spnAddRealMp 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapSpinEdit spnAddRealMp;
+
+        /// <summary>
+        /// dtAddCompDate 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapDateEdit dtAddCompDate;
+
+        /// <summary>
+        /// txtAddRmk 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapTextBox txtAddRmk;
+
+        /// <summary>
+        /// btnAddSave 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapButton btnAddSave;
+
+        /// <summary>
+        /// btnAddCancel 컨트롤입니다.
+        /// </summary>
+        protected global::DevExpress.Web.Bootstrap.BootstrapButton btnAddCancel;
+
+        /// <summary>
         /// gridToDoList 컨트롤입니다.
         /// </summary>
         /// <remarks>

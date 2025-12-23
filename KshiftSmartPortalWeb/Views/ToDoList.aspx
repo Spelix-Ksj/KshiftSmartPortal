@@ -259,6 +259,80 @@
             background: #1976d2;
         }
 
+        /* ===== 등록 폼 스타일 ===== */
+        .add-form-container {
+            display: none;
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border-left: 4px solid #4caf50;
+        }
+        .add-form-container.show {
+            display: block;
+        }
+        .add-form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4caf50;
+        }
+        .add-form-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        .add-form-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+            padding: 0 5px;
+        }
+        .add-form-close:hover {
+            color: #e53935;
+        }
+        .add-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .add-form-row.full {
+            grid-template-columns: 1fr;
+        }
+        .add-form-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .add-form-item label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+        }
+        .add-form-item label .required {
+            color: #e53935;
+            margin-left: 2px;
+        }
+        .add-form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            margin-top: 15px;
+        }
+        .add-form-actions .btn {
+            min-width: 120px;
+            padding: 10px 20px !important;
+            font-size: 14px !important;
+        }
+
         /* 모바일 페이징 */
         .mobile-pager {
             display: none;
@@ -423,6 +497,76 @@
                 }
             }
         }
+
+        // 등록 폼 토글
+        function toggleAddForm(show) {
+            var form = document.getElementById('addFormContainer');
+            if (show) {
+                form.classList.add('show');
+                // 기본값 설정
+                if (typeof dtAddWorkSt !== 'undefined') {
+                    dtAddWorkSt.SetValue(new Date());
+                }
+                if (typeof dtAddWorkFi !== 'undefined') {
+                    dtAddWorkFi.SetValue(new Date());
+                }
+                // 폼으로 스크롤
+                form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                form.classList.remove('show');
+                clearAddForm();
+            }
+        }
+
+        // 등록 폼 초기화
+        function clearAddForm() {
+            if (typeof cmbAddCase !== 'undefined') cmbAddCase.SetValue(null);
+            if (typeof cmbAddProject !== 'undefined') cmbAddProject.SetValue(null);
+            if (typeof txtAddOrderName !== 'undefined') txtAddOrderName.SetValue('');
+            if (typeof txtAddWorkList !== 'undefined') txtAddWorkList.SetValue('');
+            if (typeof dtAddWorkSt !== 'undefined') dtAddWorkSt.SetValue(new Date());
+            if (typeof dtAddWorkFi !== 'undefined') dtAddWorkFi.SetValue(new Date());
+            if (typeof spnAddPlanMhr !== 'undefined') spnAddPlanMhr.SetValue(0);
+            if (typeof spnAddRealMhr !== 'undefined') spnAddRealMhr.SetValue(0);
+            if (typeof spnAddPlanMp !== 'undefined') spnAddPlanMp.SetValue(0);
+            if (typeof spnAddRealMp !== 'undefined') spnAddRealMp.SetValue(0);
+            if (typeof dtAddCompDate !== 'undefined') dtAddCompDate.SetValue(null);
+            if (typeof txtAddRmk !== 'undefined') txtAddRmk.SetValue('');
+        }
+
+        // 등록 유효성 검사
+        function validateAddForm() {
+            var caseNo = cmbAddCase.GetValue();
+            var projectNo = cmbAddProject.GetValue();
+            var orderName = txtAddOrderName.GetValue();
+
+            if (!caseNo) {
+                alert('케이스를 선택하세요.');
+                cmbAddCase.Focus();
+                return false;
+            }
+            if (!projectNo) {
+                alert('프로젝트를 선택하세요.');
+                cmbAddProject.Focus();
+                return false;
+            }
+            if (!orderName || orderName.trim() === '') {
+                alert('작업 내용을 입력하세요.');
+                txtAddOrderName.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        // 등록 확인
+        function confirmAdd() {
+            if (!validateAddForm()) return;
+            if (confirm('입력한 내용으로 작업 실적을 등록하시겠습니까?')) {
+                // 서버로 포스트백
+                return true;
+            }
+            return false;
+        }
     </script>
 </asp:Content>
 
@@ -493,6 +637,159 @@
                 EncodeHtml="false"
                 OnClick="btnExcel_Click">
                 <SettingsBootstrap RenderOption="Success" />
+            </dx:BootstrapButton>
+
+            <dx:BootstrapButton ID="btnAdd" runat="server"
+                Text="<i class='fas fa-plus'></i> 실적 등록"
+                EncodeHtml="false"
+                AutoPostBack="false">
+                <SettingsBootstrap RenderOption="Info" />
+                <ClientSideEvents Click="function(s, e) { toggleAddForm(true); }" />
+            </dx:BootstrapButton>
+        </div>
+    </div>
+
+    <!-- 실적 등록 폼 (모바일 최적화) -->
+    <div id="addFormContainer" class="add-form-container">
+        <div class="add-form-header">
+            <span class="add-form-title"><i class="fas fa-plus-circle"></i> 작업 실적 등록</span>
+            <button type="button" class="add-form-close" onclick="toggleAddForm(false)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="add-form-row">
+            <div class="add-form-item">
+                <label>케이스 <span class="required">*</span></label>
+                <dx:BootstrapComboBox ID="cmbAddCase" runat="server"
+                    ClientInstanceName="cmbAddCase"
+                    Width="100%"
+                    NullText="케이스 선택" />
+            </div>
+            <div class="add-form-item">
+                <label>프로젝트 <span class="required">*</span></label>
+                <dx:BootstrapComboBox ID="cmbAddProject" runat="server"
+                    ClientInstanceName="cmbAddProject"
+                    Width="100%"
+                    NullText="프로젝트 선택" />
+            </div>
+        </div>
+
+        <div class="add-form-row full">
+            <div class="add-form-item">
+                <label>작업 내용 <span class="required">*</span></label>
+                <dx:BootstrapTextBox ID="txtAddOrderName" runat="server"
+                    ClientInstanceName="txtAddOrderName"
+                    Width="100%"
+                    NullText="오늘 수행한 작업 내용을 입력하세요" />
+            </div>
+        </div>
+
+        <div class="add-form-row full">
+            <div class="add-form-item">
+                <label>작업 목록 (상세)</label>
+                <dx:BootstrapMemo ID="txtAddWorkList" runat="server"
+                    ClientInstanceName="txtAddWorkList"
+                    Width="100%"
+                    Rows="3"
+                    NullText="상세 작업 내용이나 특이사항" />
+            </div>
+        </div>
+
+        <div class="add-form-row">
+            <div class="add-form-item">
+                <label>작업 시작일</label>
+                <dx:BootstrapDateEdit ID="dtAddWorkSt" runat="server"
+                    ClientInstanceName="dtAddWorkSt"
+                    Width="100%"
+                    DisplayFormatString="yyyy-MM-dd"
+                    EditFormat="Date" />
+            </div>
+            <div class="add-form-item">
+                <label>작업 종료일</label>
+                <dx:BootstrapDateEdit ID="dtAddWorkFi" runat="server"
+                    ClientInstanceName="dtAddWorkFi"
+                    Width="100%"
+                    DisplayFormatString="yyyy-MM-dd"
+                    EditFormat="Date" />
+            </div>
+        </div>
+
+        <div class="add-form-row">
+            <div class="add-form-item">
+                <label>계획 M/H</label>
+                <dx:BootstrapSpinEdit ID="spnAddPlanMhr" runat="server"
+                    ClientInstanceName="spnAddPlanMhr"
+                    Width="100%"
+                    DisplayFormatString="N1"
+                    MinValue="0" MaxValue="99999"
+                    Number="0" />
+            </div>
+            <div class="add-form-item">
+                <label>실적 M/H</label>
+                <dx:BootstrapSpinEdit ID="spnAddRealMhr" runat="server"
+                    ClientInstanceName="spnAddRealMhr"
+                    Width="100%"
+                    DisplayFormatString="N1"
+                    MinValue="0" MaxValue="99999"
+                    Number="0" />
+            </div>
+        </div>
+
+        <div class="add-form-row">
+            <div class="add-form-item">
+                <label>계획 인원</label>
+                <dx:BootstrapSpinEdit ID="spnAddPlanMp" runat="server"
+                    ClientInstanceName="spnAddPlanMp"
+                    Width="100%"
+                    DisplayFormatString="N1"
+                    MinValue="0" MaxValue="9999"
+                    Number="0" />
+            </div>
+            <div class="add-form-item">
+                <label>실적 인원</label>
+                <dx:BootstrapSpinEdit ID="spnAddRealMp" runat="server"
+                    ClientInstanceName="spnAddRealMp"
+                    Width="100%"
+                    DisplayFormatString="N1"
+                    MinValue="0" MaxValue="9999"
+                    Number="0" />
+            </div>
+        </div>
+
+        <div class="add-form-row">
+            <div class="add-form-item">
+                <label>완료일 (완료 시 입력)</label>
+                <dx:BootstrapDateEdit ID="dtAddCompDate" runat="server"
+                    ClientInstanceName="dtAddCompDate"
+                    Width="100%"
+                    DisplayFormatString="yyyy-MM-dd"
+                    EditFormat="Date"
+                    AllowNull="true" />
+            </div>
+            <div class="add-form-item">
+                <label>비고</label>
+                <dx:BootstrapTextBox ID="txtAddRmk" runat="server"
+                    ClientInstanceName="txtAddRmk"
+                    Width="100%"
+                    NullText="비고사항" />
+            </div>
+        </div>
+
+        <div class="add-form-actions">
+            <dx:BootstrapButton ID="btnAddSave" runat="server"
+                Text="<i class='fas fa-save'></i> 등록"
+                EncodeHtml="false"
+                OnClick="btnAddSave_Click">
+                <SettingsBootstrap RenderOption="Primary" />
+                <ClientSideEvents Click="function(s, e) { e.processOnServer = confirmAdd(); }" />
+            </dx:BootstrapButton>
+            <dx:BootstrapButton ID="btnAddCancel" runat="server"
+                Text="<i class='fas fa-times'></i> 취소"
+                EncodeHtml="false"
+                AutoPostBack="false">
+                <SettingsBootstrap RenderOption="Secondary" />
+                <ClientSideEvents Click="function(s, e) { toggleAddForm(false); }" />
             </dx:BootstrapButton>
         </div>
     </div>

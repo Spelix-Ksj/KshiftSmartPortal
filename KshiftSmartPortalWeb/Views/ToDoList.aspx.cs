@@ -56,10 +56,56 @@ namespace KShiftSmartPortalWeb
                 LoadCompanyList();
                 dtBaseDate.Value = DateTime.Today;
                 GridData = null;
+
+                // 등록 폼 초기화
+                InitializeAddForm();
             }
             catch (Exception ex)
             {
                 ShowMessage($"페이지 초기화 오류: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 등록 폼 콤보박스 초기화
+        /// </summary>
+        private void InitializeAddForm()
+        {
+            try
+            {
+                string companyNo = cmbCompany.Value != null ? cmbCompany.Value.ToString() : "100";
+
+                // 케이스 목록 로드
+                DataTable dtCase = _controller.GetActiveCaseList(companyNo);
+                cmbAddCase.Items.Clear();
+                foreach (DataRow row in dtCase.Rows)
+                {
+                    string text = $"{row["CASE_NO"]} - {row["CASE_NAME"]}";
+                    cmbAddCase.Items.Add(text, row["CASE_NO"].ToString());
+                }
+                if (cmbAddCase.Items.Count > 0)
+                    cmbAddCase.SelectedIndex = 0;
+
+                // 프로젝트 목록 로드
+                DataTable dtProject = _controller.GetProjectList(companyNo);
+                cmbAddProject.Items.Clear();
+                foreach (DataRow row in dtProject.Rows)
+                {
+                    string text = $"{row["PROJECT_NO"]}";
+                    if (row["PROJECT_NAME"] != DBNull.Value && !string.IsNullOrEmpty(row["PROJECT_NAME"].ToString()))
+                        text += $" ({row["PROJECT_NAME"]})";
+                    cmbAddProject.Items.Add(text, row["PROJECT_NO"].ToString());
+                }
+                if (cmbAddProject.Items.Count > 0)
+                    cmbAddProject.SelectedIndex = 0;
+
+                // 날짜 기본값 설정
+                dtAddWorkSt.Value = DateTime.Today;
+                dtAddWorkFi.Value = DateTime.Today;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"등록 폼 초기화 오류: {ex.Message}");
             }
         }
 
@@ -213,6 +259,102 @@ namespace KShiftSmartPortalWeb
             {
                 ShowMessage($"엑셀 내보내기 오류: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// 작업 실적 등록 버튼 클릭
+        /// </summary>
+        protected void btnAddSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string companyNo = cmbCompany.Value != null ? cmbCompany.Value.ToString() : null;
+                string caseNo = cmbAddCase.Value != null ? cmbAddCase.Value.ToString() : null;
+                string projectNo = cmbAddProject.Value != null ? cmbAddProject.Value.ToString() : null;
+                string orderName = txtAddOrderName.Text?.Trim();
+                string workList = txtAddWorkList.Text?.Trim();
+                string rmk = txtAddRmk.Text?.Trim();
+                string userId = Session["UserID"] != null ? Session["UserID"].ToString() : null;
+
+                // 유효성 검사
+                if (string.IsNullOrEmpty(companyNo))
+                {
+                    ShowMessage("Company를 선택하세요.");
+                    return;
+                }
+                if (string.IsNullOrEmpty(caseNo))
+                {
+                    ShowMessage("케이스를 선택하세요.");
+                    return;
+                }
+                if (string.IsNullOrEmpty(projectNo))
+                {
+                    ShowMessage("프로젝트를 선택하세요.");
+                    return;
+                }
+                if (string.IsNullOrEmpty(orderName))
+                {
+                    ShowMessage("작업 내용을 입력하세요.");
+                    return;
+                }
+                if (string.IsNullOrEmpty(userId))
+                {
+                    ShowMessage("로그인 정보가 없습니다.");
+                    return;
+                }
+
+                // 날짜 및 숫자 값 가져오기
+                DateTime? workSt = dtAddWorkSt.Value as DateTime?;
+                DateTime? workFi = dtAddWorkFi.Value as DateTime?;
+                DateTime? compDate = dtAddCompDate.Value as DateTime?;
+                decimal? planMhr = spnAddPlanMhr.Number as decimal?;
+                decimal? realMhr = spnAddRealMhr.Number as decimal?;
+                decimal? planMp = spnAddPlanMp.Number as decimal?;
+                decimal? realMp = spnAddRealMp.Number as decimal?;
+
+                // 등록 처리
+                bool result = _controller.InsertWorkOrder(
+                    companyNo, caseNo, projectNo,
+                    orderName, workList,
+                    workSt, workFi,
+                    planMhr, realMhr, planMp, realMp,
+                    compDate, rmk,
+                    userId);
+
+                if (result)
+                {
+                    ShowMessage("작업 실적이 등록되었습니다.");
+
+                    // 폼 초기화 및 데이터 새로고침
+                    ClearAddForm();
+                    LoadData();
+                }
+                else
+                {
+                    ShowMessage("등록에 실패했습니다.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage($"등록 오류: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 등록 폼 필드 초기화
+        /// </summary>
+        private void ClearAddForm()
+        {
+            txtAddOrderName.Text = "";
+            txtAddWorkList.Text = "";
+            txtAddRmk.Text = "";
+            dtAddWorkSt.Value = DateTime.Today;
+            dtAddWorkFi.Value = DateTime.Today;
+            dtAddCompDate.Value = null;
+            spnAddPlanMhr.Number = 0;
+            spnAddRealMhr.Number = 0;
+            spnAddPlanMp.Number = 0;
+            spnAddRealMp.Number = 0;
         }
 
         #endregion

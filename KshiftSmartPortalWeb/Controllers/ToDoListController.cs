@@ -72,10 +72,12 @@ namespace KShiftSmartPortalWeb.Controllers
 
                     // 3. B: SCM_WORK_ORDER_MASTER 조회
                     var baseDateOnly = baseDate.Date;
+                    // 기준일 기준 7일 전부터 조회 (최근 등록 데이터도 보이도록)
+                    var weekAgo = baseDateOnly.AddDays(-7);
 
                     SqlLogger.LogXpoQuery("SCM_WORK_ORDER_MASTER", "SELECT",
-                        "COMPANY_NO = :companyNo AND CASE_NO IN (...) AND EMP_NO = :empNo AND (COMP_DATE IS NULL OR (WORK_ST <= :baseDate AND WORK_FI >= :baseDate))",
-                        new Dictionary<string, object> { { "companyNo", companyNo }, { "empNo", empNo }, { "baseDate", baseDateOnly } },
+                        "COMPANY_NO = :companyNo AND CASE_NO IN (...) AND EMP_NO = :empNo AND (COMP_DATE IS NULL/MinValue OR WORK_ST >= :weekAgo OR (WORK_ST <= :baseDate AND WORK_FI >= :baseDate))",
+                        new Dictionary<string, object> { { "companyNo", companyNo }, { "empNo", empNo }, { "baseDate", baseDateOnly }, { "weekAgo", weekAgo } },
                         "작업지시 목록 조회");
 
                     var workOrders = new XPQuery<SCM_WORK_ORDER_MASTER>(uow)
@@ -83,8 +85,10 @@ namespace KShiftSmartPortalWeb.Controllers
                                  && activeCaseNos.Contains(b.CompoundKey1.CASE_NO)
                                  && b.EMP_NO == empNo
                                  && (b.COMP_DATE == DateTime.MinValue || b.COMP_DATE == null
+                                     || b.WORK_ST >= weekAgo
                                      || (b.WORK_ST <= baseDateOnly && b.WORK_FI >= baseDateOnly)))
-                        .OrderBy(b => b.WORK_ST)
+                        .OrderByDescending(b => b.IN_DATE)
+                        .ThenBy(b => b.WORK_ST)
                         .ToList();
 
                     // 4. XPO 엔티티를 ViewModel로 변환
@@ -246,6 +250,221 @@ namespace KShiftSmartPortalWeb.Controllers
             catch (Exception ex)
             {
                 SqlLogger.LogError(ex, "일괄 저장 실패 (XPO)");
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region 등록 메서드 (XPO 방식)
+
+        /// <summary>
+        /// 작업지시 신규 등록 (XPO 방식)
+        /// SCM_WORK_ORDER_MASTER와 SCM_WORK_ORDER_DETAIL 동시 Insert
+        /// </summary>
+        public bool InsertWorkOrder(
+            string companyNo, string caseNo, string projectNo,
+            string orderName, string workList,
+            DateTime? workSt, DateTime? workFi,
+            decimal? planMhr, decimal? realMhr, decimal? planMp, decimal? realMp,
+            DateTime? compDate, string rmk,
+            string userId)
+        {
+            try
+            {
+                using (var uow = new UnitOfWork())
+                {
+                    // 1. ORDER_NO 자동 생성 (날짜 + 시퀀스)
+                    string orderNo = GenerateOrderNo(uow, companyNo, caseNo, projectNo);
+
+                    // 2. 사용자 EMP_NO 조회
+                    var personnel = new XPQuery<STD_PERSONNEL_INFO>(uow)
+                        .FirstOrDefault(c => c.CompoundKey1.COMPANY_NO == companyNo && c.USER_ID == userId);
+                    string empNo = personnel?.CompoundKey1.EMP_NO ?? userId;
+
+                    SqlLogger.LogXpoQuery("SCM_WORK_ORDER_MASTER", "INSERT",
+                        "신규 작업지시 등록",
+                        new Dictionary<string, object> {
+                            { "companyNo", companyNo }, { "caseNo", caseNo },
+                            { "projectNo", projectNo }, { "orderNo", orderNo },
+                            { "orderName", orderName }
+                        },
+                        "작업지시 마스터 등록");
+
+                    // 3. SCM_WORK_ORDER_MASTER 등록
+                    var master = new SCM_WORK_ORDER_MASTER(uow);
+                    master.CompoundKey1 = new SCM_WORK_ORDER_MASTER.CompoundKey1Struct
+                    {
+                        COMPANY_NO = companyNo,
+                        CASE_NO = caseNo,
+                        PROJECT_NO = projectNo,
+                        ORDER_NO = orderNo
+                    };
+                    master.ORDER_NAME = orderName ?? "";
+                    master.WORK_LIST = workList ?? "";
+                    master.EMP_NO = empNo;
+                    master.WORK_ST = workSt ?? DateTime.Today;
+                    master.WORK_FI = workFi ?? DateTime.Today;
+                    master.DUE_DATE = workFi ?? DateTime.Today;
+                    master.PLAN_MHR = planMhr ?? 0;
+                    master.REAL_MHR = realMhr ?? 0;
+                    master.PLAN_MP = planMp ?? 0;
+                    master.REAL_MP = realMp ?? 0;
+                    master.COMP_DATE = compDate ?? DateTime.MinValue;
+                    master.RMK = rmk ?? "";
+                    // 감사 필드
+                    master.IN_USER = userId;
+                    master.IN_DATE = DateTime.Now;
+                    master.UP_USER = userId;
+                    master.UP_DATE = DateTime.Now;
+
+                    SqlLogger.LogXpoQuery("SCM_WORK_ORDER_DETAIL", "INSERT",
+                        "신규 작업지시 상세 등록",
+                        new Dictionary<string, object> {
+                            { "companyNo", companyNo }, { "caseNo", caseNo },
+                            { "projectNo", projectNo }, { "orderNo", orderNo }
+                        },
+                        "작업지시 상세 등록");
+
+                    // 4. SCM_WORK_ORDER_DETAIL 등록 (동일 Key)
+                    var detail = new SCM_WORK_ORDER_DETAIL(uow);
+                    detail.CompoundKey1 = new SCM_WORK_ORDER_DETAIL.CompoundKey1Struct
+                    {
+                        COMPANY_NO = companyNo,
+                        CASE_NO = caseNo,
+                        PROJECT_NO = projectNo,
+                        ORDER_NO = orderNo
+                    };
+                    // 감사 필드
+                    detail.IN_USER = userId;
+                    detail.IN_DATE = DateTime.Now;
+                    detail.UP_USER = userId;
+                    detail.UP_DATE = DateTime.Now;
+
+                    // 5. 커밋
+                    uow.CommitChanges();
+
+                    SqlLogger.LogResult(1, $"작업지시 등록 완료 - ORDER_NO: {orderNo}");
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                SqlLogger.LogError(ex, "작업지시 등록 실패 (XPO)");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// ORDER_NO 자동 생성 (yyyyMMdd + 3자리 시퀀스)
+        /// </summary>
+        private string GenerateOrderNo(UnitOfWork uow, string companyNo, string caseNo, string projectNo)
+        {
+            string datePrefix = DateTime.Today.ToString("yyyyMMdd");
+            string pattern = datePrefix + "%";
+
+            // 오늘 날짜로 시작하는 ORDER_NO 중 최대값 조회
+            var existingOrders = new XPQuery<SCM_WORK_ORDER_MASTER>(uow)
+                .Where(m => m.CompoundKey1.COMPANY_NO == companyNo
+                         && m.CompoundKey1.CASE_NO == caseNo
+                         && m.CompoundKey1.PROJECT_NO == projectNo
+                         && m.CompoundKey1.ORDER_NO.StartsWith(datePrefix))
+                .Select(m => m.CompoundKey1.ORDER_NO)
+                .ToList();
+
+            int nextSeq = 1;
+            if (existingOrders.Any())
+            {
+                // 기존 시퀀스 중 최대값 + 1
+                var maxSeq = existingOrders
+                    .Select(o => {
+                        if (o.Length > 8 && int.TryParse(o.Substring(8), out int seq))
+                            return seq;
+                        return 0;
+                    })
+                    .Max();
+                nextSeq = maxSeq + 1;
+            }
+
+            return $"{datePrefix}{nextSeq:D3}";
+        }
+
+        /// <summary>
+        /// 프로젝트 목록 조회 (활성화된 케이스 기반)
+        /// </summary>
+        public DataTable GetProjectList(string companyNo)
+        {
+            try
+            {
+                using (OracleConnection conn = new OracleConnection(ConnectionString))
+                {
+                    conn.Open();
+
+                    string query = @"
+                        SELECT DISTINCT M.PROJECT_NO, M.PROP01 AS PROJECT_NAME
+                        FROM SCM_WORK_ORDER_MASTER M
+                        INNER JOIN SCM_CASE_MASTER C
+                            ON M.COMPANY_NO = C.COMPANY_NO AND M.CASE_NO = C.CASE_NO
+                        WHERE M.COMPANY_NO = :companyNo
+                          AND C.PROP1 = 'Y'
+                        ORDER BY M.PROJECT_NO";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    {
+                        cmd.Parameters.Add(":companyNo", companyNo);
+                        SqlLogger.LogCommand(cmd, "프로젝트 목록 조회");
+
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+                            return dt;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SqlLogger.LogError(ex, "프로젝트 목록 조회 실패");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 활성화된 케이스 목록 조회
+        /// </summary>
+        public DataTable GetActiveCaseList(string companyNo)
+        {
+            try
+            {
+                using (OracleConnection conn = new OracleConnection(ConnectionString))
+                {
+                    conn.Open();
+
+                    string query = @"
+                        SELECT CASE_NO, CASE_NAME
+                        FROM SCM_CASE_MASTER
+                        WHERE COMPANY_NO = :companyNo
+                          AND PROP1 = 'Y'
+                        ORDER BY CASE_NO";
+
+                    using (OracleCommand cmd = new OracleCommand(query, conn))
+                    {
+                        cmd.Parameters.Add(":companyNo", companyNo);
+                        SqlLogger.LogCommand(cmd, "활성 케이스 목록 조회");
+
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
+                        {
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+                            return dt;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SqlLogger.LogError(ex, "활성 케이스 목록 조회 실패");
                 throw;
             }
         }
