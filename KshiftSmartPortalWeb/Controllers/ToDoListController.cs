@@ -277,10 +277,63 @@ namespace KShiftSmartPortalWeb.Controllers
                     // 1. ORDER_NO 자동 생성 (날짜 + 시퀀스)
                     string orderNo = GenerateOrderNo(uow, companyNo, caseNo, projectNo);
 
-                    // 2. 사용자 EMP_NO 조회
+                    // 2. 사용자 EMP_NO 및 EMP_NAME 조회
                     var personnel = new XPQuery<STD_PERSONNEL_INFO>(uow)
                         .FirstOrDefault(c => c.CompoundKey1.COMPANY_NO == companyNo && c.USER_ID == userId);
                     string empNo = personnel?.CompoundKey1.EMP_NO ?? userId;
+                    string empName = personnel?.EMP_NAME ?? userId;
+
+                    // 3. PROP01: 프로젝트명, PROP02: PM정보 조회 (Oracle 직접 쿼리)
+                    string prop01 = "";
+                    string prop02 = "";
+                    string prop03 = $"{empName}({empNo})";
+
+                    using (OracleConnection conn = new OracleConnection(ConnectionString))
+                    {
+                        conn.Open();
+
+                        // SCM_PROJECT_MASTER에서 프로젝트명 조회
+                        string projQuery = @"
+                            SELECT PROJECT_NAME
+                            FROM SCM_PROJECT_MASTER
+                            WHERE COMPANY_NO = :companyNo
+                              AND CASE_NO = :caseNo
+                              AND PROJECT_NO = :projectNo";
+
+                        using (OracleCommand cmd = new OracleCommand(projQuery, conn))
+                        {
+                            cmd.Parameters.Add(":companyNo", companyNo);
+                            cmd.Parameters.Add(":caseNo", caseNo);
+                            cmd.Parameters.Add(":projectNo", projectNo);
+                            object result = cmd.ExecuteScalar();
+                            if (result != null && result != DBNull.Value)
+                            {
+                                prop01 = $"{result}({projectNo})";
+                            }
+                        }
+
+                        // 동일 프로젝트의 기존 작업지시에서 PM 정보(PROP02) 가져오기
+                        string pmQuery = @"
+                            SELECT PROP02
+                            FROM SCM_WORK_ORDER_MASTER
+                            WHERE COMPANY_NO = :companyNo
+                              AND CASE_NO = :caseNo
+                              AND PROJECT_NO = :projectNo
+                              AND PROP02 IS NOT NULL
+                              AND ROWNUM = 1";
+
+                        using (OracleCommand cmd = new OracleCommand(pmQuery, conn))
+                        {
+                            cmd.Parameters.Add(":companyNo", companyNo);
+                            cmd.Parameters.Add(":caseNo", caseNo);
+                            cmd.Parameters.Add(":projectNo", projectNo);
+                            object result = cmd.ExecuteScalar();
+                            if (result != null && result != DBNull.Value)
+                            {
+                                prop02 = result.ToString();
+                            }
+                        }
+                    }
 
                     SqlLogger.LogXpoQuery("SCM_WORK_ORDER_MASTER", "INSERT",
                         "신규 작업지시 등록",
@@ -291,7 +344,7 @@ namespace KShiftSmartPortalWeb.Controllers
                         },
                         "작업지시 마스터 등록");
 
-                    // 3. SCM_WORK_ORDER_MASTER 등록
+                    // 6. SCM_WORK_ORDER_MASTER 등록
                     var master = new SCM_WORK_ORDER_MASTER(uow);
                     master.CompoundKey1 = new SCM_WORK_ORDER_MASTER.CompoundKey1Struct
                     {
@@ -312,9 +365,14 @@ namespace KShiftSmartPortalWeb.Controllers
                     master.REAL_MP = realMp ?? 0;
                     master.COMP_DATE = compDate ?? DateTime.MinValue;
                     master.RMK = rmk ?? "";
+                    // WPF 연동 필드 (PROP01: 프로젝트명, PROP02: PM정보, PROP03: 담당자정보)
+                    master.PROP01 = prop01;
+                    master.PROP02 = prop02;
+                    master.PROP03 = prop03;
                     // 감사 필드
                     master.IN_USER = userId;
                     master.IN_DATE = DateTime.Now;
+                    master.IN_PID = "KshiftSmartPortalWeb_ToDoList";
                     master.UP_USER = userId;
                     master.UP_DATE = DateTime.Now;
 
@@ -326,7 +384,7 @@ namespace KShiftSmartPortalWeb.Controllers
                         },
                         "작업지시 상세 등록");
 
-                    // 4. SCM_WORK_ORDER_DETAIL 등록 (동일 Key)
+                    // 7. SCM_WORK_ORDER_DETAIL 등록 (동일 Key)
                     var detail = new SCM_WORK_ORDER_DETAIL(uow);
                     detail.CompoundKey1 = new SCM_WORK_ORDER_DETAIL.CompoundKey1Struct
                     {
@@ -341,7 +399,7 @@ namespace KShiftSmartPortalWeb.Controllers
                     detail.UP_USER = userId;
                     detail.UP_DATE = DateTime.Now;
 
-                    // 5. 커밋
+                    // 8. 커밋
                     uow.CommitChanges();
 
                     SqlLogger.LogResult(1, $"작업지시 등록 완료 - ORDER_NO: {orderNo}");

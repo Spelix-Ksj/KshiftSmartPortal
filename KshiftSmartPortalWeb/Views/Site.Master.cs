@@ -1,5 +1,6 @@
 using System;
 using System.Web.UI;
+using DevExpress.Web;
 
 namespace KShiftSmartPortalWeb.Views
 {
@@ -10,8 +11,16 @@ namespace KShiftSmartPortalWeb.Views
             // 세션 체크
             if (Session["UserID"] == null)
             {
-                Response.Redirect("~/Views/Login.aspx", false);
-                Context.ApplicationInstance.CompleteRequest();
+                // 콜백 요청 중에는 Response.Redirect 사용 불가
+                if (Page is ICallbackEventHandler || Request["__CALLBACKID"] != null)
+                {
+                    ASPxWebControl.RedirectOnCallback("~/Views/Login.aspx");
+                }
+                else
+                {
+                    Response.Redirect("~/Views/Login.aspx", false);
+                    Context.ApplicationInstance.CompleteRequest();
+                }
                 return;
             }
 

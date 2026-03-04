@@ -33,8 +33,16 @@ namespace KShiftSmartPortalWeb
         {
             if (Session["UserID"] == null)
             {
-                Response.Redirect("~/Views/Login.aspx", false);
-                Context.ApplicationInstance.CompleteRequest();
+                // 콜백 요청 중에는 Response.Redirect 사용 불가
+                if (IsCallback)
+                {
+                    ASPxWebControl.RedirectOnCallback("~/Views/Login.aspx");
+                }
+                else
+                {
+                    Response.Redirect("~/Views/Login.aspx", false);
+                    Context.ApplicationInstance.CompleteRequest();
+                }
                 return;
             }
 
@@ -198,20 +206,33 @@ namespace KShiftSmartPortalWeb
         {
             try
             {
-                if (gridToDoList.FocusedRowIndex < 0)
+                string companyNo = null, caseNo = null, projectNo = null, orderNo = null;
+
+                // 모바일 카드 선택 확인 (hidden fields 우선)
+                string hdnOrderNo = Request.Form["hdnSelOrderNo"];
+                if (!string.IsNullOrEmpty(hdnOrderNo))
+                {
+                    companyNo = Request.Form["hdnSelCompanyNo"];
+                    caseNo = Request.Form["hdnSelCaseNo"];
+                    projectNo = Request.Form["hdnSelProjectNo"];
+                    orderNo = hdnOrderNo;
+                }
+                else if (gridToDoList.FocusedRowIndex >= 0)
+                {
+                    // 데스크탑 그리드에서 선택된 행
+                    object[] keyValues = (object[])gridToDoList.GetRowValues(gridToDoList.FocusedRowIndex,
+                        new string[] { "COMPANY_NO", "CASE_NO", "PROJECT_NO", "ORDER_NO" });
+
+                    companyNo = keyValues[0]?.ToString();
+                    caseNo = keyValues[1]?.ToString();
+                    projectNo = keyValues[2]?.ToString();
+                    orderNo = keyValues[3]?.ToString();
+                }
+                else
                 {
                     ShowMessage("삭제할 데이터를 선택하세요.");
                     return;
                 }
-
-                // 4개 복합키 모두 가져오기
-                object[] keyValues = (object[])gridToDoList.GetRowValues(gridToDoList.FocusedRowIndex,
-                    new string[] { "COMPANY_NO", "CASE_NO", "PROJECT_NO", "ORDER_NO" });
-
-                string companyNo = keyValues[0]?.ToString();
-                string caseNo = keyValues[1]?.ToString();
-                string projectNo = keyValues[2]?.ToString();
-                string orderNo = keyValues[3]?.ToString();
 
                 if (string.IsNullOrEmpty(orderNo) || string.IsNullOrEmpty(caseNo) ||
                     string.IsNullOrEmpty(companyNo) || string.IsNullOrEmpty(projectNo))

@@ -567,6 +567,62 @@
             }
             return false;
         }
+
+        // ===== 선택 항목 추적 (삭제 확인용) =====
+        var _selectedOrderName = '';
+
+        // 데스크탑 그리드 행 포커스 변경 시 ORDER_NAME 추적
+        function onFocusedRowChanged(s, e) {
+            // 데스크탑 선택 시 모바일 hidden fields 초기화
+            document.getElementById('hdnSelCompanyNo').value = '';
+            document.getElementById('hdnSelCaseNo').value = '';
+            document.getElementById('hdnSelProjectNo').value = '';
+            document.getElementById('hdnSelOrderNo').value = '';
+
+            var rowIndex = s.GetFocusedRowIndex();
+            if (rowIndex >= 0) {
+                s.GetRowValues(rowIndex, 'ORDER_NAME', function(value) {
+                    _selectedOrderName = value || '';
+                });
+            } else {
+                _selectedOrderName = '';
+            }
+        }
+
+        // 모바일 카드 선택
+        function selectCard(element, companyNo, caseNo, projectNo, orderNo, orderName) {
+            document.querySelectorAll('.todo-card.selected').forEach(function(card) {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            _selectedOrderName = orderName;
+
+            document.getElementById('hdnSelCompanyNo').value = companyNo;
+            document.getElementById('hdnSelCaseNo').value = caseNo;
+            document.getElementById('hdnSelProjectNo').value = projectNo;
+            document.getElementById('hdnSelOrderNo').value = orderNo;
+        }
+
+        // 삭제 확인 (데스크탑/모바일 공용)
+        function confirmDelete(s, e) {
+            if (isMobileView()) {
+                var hdnOrder = document.getElementById('hdnSelOrderNo');
+                if (!hdnOrder || !hdnOrder.value) {
+                    alert('삭제할 카드를 선택하세요.');
+                    e.processOnServer = false;
+                    return;
+                }
+            } else {
+                var grid = gridToDoList;
+                if (!grid || grid.GetFocusedRowIndex() < 0) {
+                    alert('삭제할 데이터를 선택하세요.');
+                    e.processOnServer = false;
+                    return;
+                }
+            }
+            var name = _selectedOrderName || '';
+            e.processOnServer = confirm('[' + name + ']\n이 데이터를 삭제하시겠습니까?');
+        }
     </script>
 </asp:Content>
 
@@ -575,6 +631,12 @@
 </asp:Content>
 
 <asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">
+    <%-- 모바일 카드 선택 키 전달용 --%>
+    <input type="hidden" id="hdnSelCompanyNo" name="hdnSelCompanyNo" />
+    <input type="hidden" id="hdnSelCaseNo" name="hdnSelCaseNo" />
+    <input type="hidden" id="hdnSelProjectNo" name="hdnSelProjectNo" />
+    <input type="hidden" id="hdnSelOrderNo" name="hdnSelOrderNo" />
+
     <!-- 조회 조건 패널 -->
     <div class="search-panel">
         <div class="search-panel-header">
@@ -627,9 +689,7 @@
                 EncodeHtml="false"
                 OnClick="btnDelete_Click">
                 <SettingsBootstrap RenderOption="Danger" />
-                <ClientSideEvents Click="function(s, e) {
-                    e.processOnServer = confirm('선택한 데이터를 삭제하시겠습니까?');
-                }" />
+                <ClientSideEvents Click="function(s, e) { confirmDelete(s, e); }" />
             </dx:BootstrapButton>
 
             <dx:BootstrapButton ID="btnExcel" runat="server"
@@ -829,7 +889,7 @@
                 AllowInsert="False"
                 AllowDelete="False" />
 
-            <ClientSideEvents EndCallback="onGridEndCallback" />
+            <ClientSideEvents EndCallback="onGridEndCallback" FocusedRowChanged="onFocusedRowChanged" />
             
             <%-- PopupEditForm 방식 설정 --%>
             <SettingsEditing Mode="PopupEditForm" />
@@ -1026,7 +1086,9 @@
         <div class="mobile-cards">
             <asp:Repeater ID="rptMobileCards" runat="server">
                 <ItemTemplate>
-                    <div class="todo-card" data-keys='<%# Eval("COMPANY_NO") + ";" + Eval("CASE_NO") + ";" + Eval("PROJECT_NO") + ";" + Eval("ORDER_NO") %>'>
+                    <div class="todo-card"
+                        data-keys='<%# Eval("COMPANY_NO") + ";" + Eval("CASE_NO") + ";" + Eval("PROJECT_NO") + ";" + Eval("ORDER_NO") %>'
+                        onclick="selectCard(this, '<%# Eval("COMPANY_NO") %>', '<%# Eval("CASE_NO") %>', '<%# Eval("PROJECT_NO") %>', '<%# Eval("ORDER_NO") %>', '<%# Eval("ORDER_NAME").ToString().Replace("'", "\\'") %>')">
                         <div class="todo-card-header">
                             <span class="todo-card-title"><%# Eval("ORDER_NAME") %></span>
                             <span class='todo-card-badge <%# GetStatusBadgeClass(Eval("STATUS") == null ? "" : Eval("STATUS").ToString()) %>'>
