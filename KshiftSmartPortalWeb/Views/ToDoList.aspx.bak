@@ -1,5 +1,6 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Views/Site.Master"
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Views/Site.Master" 
     CodeBehind="ToDoList.aspx.cs" Inherits="KShiftSmartPortalWeb.ToDoList" %>
+<%@ Register Assembly="DevExpress.Web.Bootstrap.v25.1, Version=25.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web.Bootstrap" TagPrefix="dx" %>
 
 <asp:Content ID="TitleContent" ContentPlaceHolderID="TitleContent" runat="server">
     To-Do List - K-SHIFT Portal

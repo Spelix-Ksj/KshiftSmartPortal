@@ -147,6 +147,12 @@ namespace KShiftSmartPortalWeb
         private void SetFocusOnLoad()
         {
             txtUserId.Focus();
+            txtUserId.Text = "sjkim";
+            // txtPassword.Text = "1";
+            // 비밀번호는 Password 필드라 서버에서 Text 설정이 클라이언트에 반영되지 않음, 클라이언트 스크립트로 설정
+            ClientScript.RegisterStartupScript(this.GetType(), "SetPassword",
+                    "setTimeout(function() { txtPassword.SetText('1'); }, 100);", true);
+            // TODO : 임시로 기본 계정 셋팅, 향후 제거
         }
     }
 }

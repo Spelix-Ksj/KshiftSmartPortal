@@ -1,4 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Views/Site.Master" CodeBehind="ContractManagerXpo.aspx.cs" Inherits="KShiftSmartPortalWeb.ContractManagerXpo" %>
+<%@ Register Assembly="DevExpress.Web.v25.1, Version=25.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" 
+    Namespace="DevExpress.Web" TagPrefix="dx" %>
+
 
 <asp:Content ID="TitleContent" ContentPlaceHolderID="TitleContent" runat="server">
     계약정보 관리 - K-SHIFT Portal

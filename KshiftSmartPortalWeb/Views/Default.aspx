@@ -1,12 +1,11 @@
-<%@ Page Language="C#" MasterPageFile="~/Views/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="KShiftSmartPortalWeb.Default" %>
-<%@ Register Assembly="DevExpress.Web.Bootstrap.v25.1, Version=25.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web.Bootstrap" TagPrefix="dx" %>
+Ôªø<%@ Page Language="C#" MasterPageFile="~/Views/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="KShiftSmartPortalWeb.Default" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
     K-SHIFT Smart Portal
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="PageTitleContent" runat="server">
-    ∞Ëæ‡ ∞¸∏Æ »≠∏È
+    Í≥ÑÏïΩ Í¥ÄÎ¶¨ ÌôîÎ©¥
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="HeadContent" runat="server">
@@ -43,7 +42,7 @@
             flex-wrap: wrap;
         }
 
-        /* πˆ∆∞ æ∆¿Ãƒ‹ Ω∫≈∏¿œ */
+        /* Î≤ÑÌäº ÏïÑÏù¥ÏΩò Ïä§ÌÉÄÏùº */
         .button-group .btn i {
             margin-right: 5px;
         }
@@ -93,7 +92,7 @@
             font-size: 14px;
         }
 
-        /* Bootstrap GridView ƒøΩ∫≈Õ∏∂¿Ã¬° - «Ï¥ı ªˆªÛ ∞≠∑¬«œ∞‘ ºˆ¡§ */
+        /* Bootstrap GridView Ïª§Ïä§ÌÑ∞ÎßàÏù¥Ïßï - Ìó§Îçî ÏÉâÏÉÅ Í∞ïÎ†•ÌïòÍ≤å ÏàòÏ†ï */
         table.table thead tr th,
         table.table > thead > tr > th,
         .dxgvHeader,
@@ -108,7 +107,7 @@
             border: 1px solid #005a9e !important;
         }
 
-        /* «Ï¥ı ≥ª∫Œ ∏µÁ ø‰º“ ∞≠¡¶ »Úªˆ */
+        /* Ìó§Îçî ÎÇ¥Î∂Ä Î™®Îì† ÏöîÏÜå Í∞ïÏ†ú Ìù∞ÏÉâ */
         table.table thead tr th *,
         table.table > thead > tr > th *,
         .dxgvHeader *,
@@ -122,7 +121,7 @@
             color: #ffffff !important;
         }
 
-        /* « ≈Õ æ∆¿Ãƒ‹µµ »Úªˆ¿∏∑Œ */
+        /* ÌïÑÌÑ∞ ÏïÑÏù¥ÏΩòÎèÑ Ìù∞ÏÉâÏúºÎ°ú */
         .dxgvHeader .dxIcon,
         .dxgvHeader_Office365 .dxIcon {
             color: #ffffff !important;
@@ -142,19 +141,19 @@
             cursor: pointer;
         }
 
-        /* Grid π›¿¿«¸ √≥∏Æ */
+        /* Grid Î∞òÏùëÌòï Ï≤òÎ¶¨ */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
 
-        /* ∫“« ø‰«— Ω∫≈©∑—πŸ º˚±‚±‚ */
+        /* Î∂àÌïÑÏöîÌïú Ïä§ÌÅ¨Î°§Î∞î Ïà®Í∏∞Í∏∞ */
         .dxgvHSDC {
             display: none !important;
         }
 
-        /* ∞Àªˆ ¡∂∞« ∑π¿Ã∫Ì Ω∫≈∏¿œ */
+        /* Í≤ÄÏÉâ Ï°∞Í±¥ Î†àÏù¥Î∏î Ïä§ÌÉÄÏùº */
         .search-label {
             display: flex;
             align-items: center;
@@ -163,7 +162,7 @@
             color: #333;
         }
 
-        /* π›¿¿«¸ ≈◊¿Ã∫Ì */
+        /* Î∞òÏùëÌòï ÌÖåÏù¥Î∏î */
         @media (max-width: 1200px) {
             .grid-container {
                 padding: 15px;
@@ -199,41 +198,41 @@
 </asp:Content>
 
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <!-- ¡∂»∏ ¡∂∞« ∆–≥Œ -->
+    <!-- Ï°∞Ìöå Ï°∞Í±¥ Ìå®ÎÑê -->
     <div class="search-panel">
         <h2>
             <i class="fas fa-search"></i>
-            ¡∂»∏ ¡∂∞«
+            Ï°∞Ìöå Ï°∞Í±¥
         </h2>
 
-        <!-- ¿¸√º ¡∂»∏ √º≈©π⁄Ω∫ -->
+        <!-- Ï†ÑÏ≤¥ Ï°∞Ìöå Ï≤¥ÌÅ¨Î∞ïÏä§ -->
         <div class="search-row">
             <dx:BootstrapCheckBox ID="chkSelectAll" runat="server"
-                                  Text="¿¸√º ¡∂»∏"
+                                  Text="Ï†ÑÏ≤¥ Ï°∞Ìöå"
                                   Checked="true">
             </dx:BootstrapCheckBox>
         </div>
 
-        <!-- √π π¯¬∞ «‡: Company ±∏∫– -->
+        <!-- Ï≤´ Î≤àÏß∏ Ìñâ: Company Íµ¨Î∂Ñ -->
         <div class="search-row">
             <div class="row g-2 align-items-center">
                 <div class="col-auto">
-                    <label class="search-label">Company ±∏∫–:</label>
+                    <label class="search-label">Company Íµ¨Î∂Ñ:</label>
                 </div>
                 <div class="col">
                     <dx:BootstrapComboBox ID="cmbCompanyType" runat="server"
                                           ValueType="System.String">
                         <Items>
-                            <dx:BootstrapListEditItem Text="¿¸√º" Value="" Selected="true" />
-                            <dx:BootstrapListEditItem Text="∫ªªÁ" Value="H" />
-                            <dx:BootstrapListEditItem Text="¡ˆªÁ" Value="B" />
+                            <dx:BootstrapListEditItem Text="Ï†ÑÏ≤¥" Value="" Selected="true" />
+                            <dx:BootstrapListEditItem Text="Î≥∏ÏÇ¨" Value="H" />
+                            <dx:BootstrapListEditItem Text="ÏßÄÏÇ¨" Value="B" />
                         </Items>
                     </dx:BootstrapComboBox>
                 </div>
             </div>
         </div>
 
-        <!-- µŒ π¯¬∞ «‡: Company, ƒ…¿ÃΩ∫, ∞Ëæ‡¿œ -->
+        <!-- Îëê Î≤àÏß∏ Ìñâ: Company, ÏºÄÏù¥Ïä§, Í≥ÑÏïΩÏùº -->
         <div class="search-row">
             <div class="row g-3">
                 <div class="col-md-4">
@@ -248,7 +247,7 @@
                                                   ValueField="Value">
                                 <Items>
                                     <dx:BootstrapListEditItem Text="1002 - SPELIX" Value="1002" Selected="true" />
-                                    <dx:BootstrapListEditItem Text="1001 - ∫ªªÁ" Value="1001" />
+                                    <dx:BootstrapListEditItem Text="1001 - Î≥∏ÏÇ¨" Value="1001" />
                                 </Items>
                             </dx:BootstrapComboBox>
                         </div>
@@ -258,7 +257,7 @@
                 <div class="col-md-4">
                     <div class="row g-2 align-items-center">
                         <div class="col-auto">
-                            <label class="search-label">ƒ…¿ÃΩ∫:</label>
+                            <label class="search-label">ÏºÄÏù¥Ïä§:</label>
                         </div>
                         <div class="col">
                             <dx:BootstrapComboBox ID="cmbCase" runat="server"
@@ -276,18 +275,18 @@
                 </div>
 
                 <div class="col-md-4">
-                    <!-- ∫Û ∞¯∞£ -->
+                    <!-- Îπà Í≥µÍ∞Ñ -->
                 </div>
             </div>
         </div>
 
-        <!-- ºº π¯¬∞ «‡: ∞Ëæ‡¿œ -->
+        <!-- ÏÑ∏ Î≤àÏß∏ Ìñâ: Í≥ÑÏïΩÏùº -->
         <div class="search-row">
             <div class="row g-3">
                 <div class="col-md-6">
                     <div class="row g-2 align-items-center">
                         <div class="col-auto">
-                            <label class="search-label">∞Ëæ‡¿œ (Ω√¿€):</label>
+                            <label class="search-label">Í≥ÑÏïΩÏùº (ÏãúÏûë):</label>
                         </div>
                         <div class="col">
                             <dx:BootstrapDateEdit ID="dtStartDate" runat="server"
@@ -300,7 +299,7 @@
                 <div class="col-md-6">
                     <div class="row g-2 align-items-center">
                         <div class="col-auto">
-                            <label class="search-label">∞Ëæ‡¿œ (¡æ∑·):</label>
+                            <label class="search-label">Í≥ÑÏïΩÏùº (Ï¢ÖÎ£å):</label>
                         </div>
                         <div class="col">
                             <dx:BootstrapDateEdit ID="dtEndDate" runat="server"
@@ -312,24 +311,24 @@
             </div>
         </div>
 
-        <!-- πˆ∆∞ ±◊∑Ï -->
+        <!-- Î≤ÑÌäº Í∑∏Î£π -->
         <div class="button-group">
             <dx:BootstrapButton ID="btnSearch" runat="server"
-                                Text="<i class='fas fa-search'></i> ¡∂»∏"
+                                Text="<i class='fas fa-search'></i> Ï°∞Ìöå"
                                 OnClick="btnSearch_Click"
                                 EncodeHtml="false">
                 <SettingsBootstrap RenderOption="Primary" />
             </dx:BootstrapButton>
 
             <dx:BootstrapButton ID="btnReset" runat="server"
-                                Text="<i class='fas fa-redo'></i> √ ±‚»≠"
+                                Text="<i class='fas fa-redo'></i> Ï¥àÍ∏∞Ìôî"
                                 OnClick="btnReset_Click"
                                 EncodeHtml="false">
                 <SettingsBootstrap RenderOption="Secondary" />
             </dx:BootstrapButton>
 
             <dx:BootstrapButton ID="btnExport" runat="server"
-                                Text="<i class='fas fa-file-excel'></i> ø¢ºø ≥ª∫∏≥ª±‚"
+                                Text="<i class='fas fa-file-excel'></i> ÏóëÏÖÄ ÎÇ¥Î≥¥ÎÇ¥Í∏∞"
                                 OnClick="btnExport_Click"
                                 EncodeHtml="false">
                 <SettingsBootstrap RenderOption="Success" />
@@ -337,16 +336,16 @@
         </div>
     </div>
 
-    <!-- ±◊∏ÆµÂ ƒ¡≈◊¿Ã≥  -->
+    <!-- Í∑∏Î¶¨Îìú Ïª®ÌÖåÏù¥ÎÑà -->
     <div class="grid-container">
         <div class="grid-header">
             <h3>
                 <i class="fas fa-table"></i>
-                ∞Ëæ‡ ∏Ò∑œ
+                Í≥ÑÏïΩ Î™©Î°ù
             </h3>
         </div>
 
-        <!-- π›¿¿«¸ ∑°∆€ -->
+        <!-- Î∞òÏùëÌòï ÎûòÌçº -->
         <div class="table-responsive">
             <!-- BootstrapGridView -->
             <dx:BootstrapGridView ID="gridContracts" runat="server"
@@ -374,65 +373,65 @@
 
                 <Columns>
                     <dx:BootstrapGridViewTextColumn FieldName="COMPANY_NO"
-                                                    Caption="±‚æ˜"
+                                                    Caption="Í∏∞ÏóÖ"
                                                     Width="80px"
                                                     VisibleIndex="0">
                     </dx:BootstrapGridViewTextColumn>
 
                     <dx:BootstrapGridViewTextColumn FieldName="CASE_NO"
-                                                    Caption="ƒ…¿ÃΩ∫"
+                                                    Caption="ÏºÄÏù¥Ïä§"
                                                     Width="100px"
                                                     VisibleIndex="1">
                     </dx:BootstrapGridViewTextColumn>
 
                     <dx:BootstrapGridViewTextColumn FieldName="CONTRACT_ID"
-                                                    Caption="∞Ëæ‡ID"
+                                                    Caption="Í≥ÑÏïΩID"
                                                     Width="120px"
                                                     VisibleIndex="2">
                     </dx:BootstrapGridViewTextColumn>
 
                     <dx:BootstrapGridViewTextColumn FieldName="ACT_NO"
-                                                    Caption="ACT∏Ì"
+                                                    Caption="ACTÎ™Ö"
                                                     Width="150px"
                                                     VisibleIndex="3">
                     </dx:BootstrapGridViewTextColumn>
 
                     <dx:BootstrapGridViewTextColumn FieldName="MAIN_CONTRACTOR"
-                                                    Caption="ø¯√ª"
+                                                    Caption="ÏõêÏ≤≠"
                                                     Width="150px"
                                                     VisibleIndex="4" />
 
                     <dx:BootstrapGridViewTextColumn FieldName="SUB_CONTRACTOR"
-                                                    Caption="«œ√ª"
+                                                    Caption="ÌïòÏ≤≠"
                                                     Width="150px"
                                                     VisibleIndex="5" />
 
                     <dx:BootstrapGridViewTextColumn FieldName="MS_NO"
-                                                    Caption="µµ±ﬁπ¯»£"
+                                                    Caption="ÎèÑÍ∏âÎ≤àÌò∏"
                                                     Width="120px"
                                                     VisibleIndex="6" />
 
                     <dx:BootstrapGridViewDateColumn FieldName="MS_DT"
-                                                    Caption="µµ±ﬁ∞¯±ﬁ¿œ"
+                                                    Caption="ÎèÑÍ∏âÍ≥µÍ∏âÏùº"
                                                     Width="120px"
                                                     VisibleIndex="7">
                         <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
                     </dx:BootstrapGridViewDateColumn>
 
                     <dx:BootstrapGridViewTextColumn FieldName="MS_CONTRACTOR"
-                                                    Caption="µµ±ﬁæ˜√º"
+                                                    Caption="ÎèÑÍ∏âÏóÖÏ≤¥"
                                                     Width="150px"
                                                     VisibleIndex="8" />
 
                     <dx:BootstrapGridViewDateColumn FieldName="MAKING_DT"
-                                                    Caption="¡¶¿€øπ¡§¿œ"
+                                                    Caption="Ï†úÏûëÏòàÏ†ïÏùº"
                                                     Width="120px"
                                                     VisibleIndex="9">
                         <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
                     </dx:BootstrapGridViewDateColumn>
 
                     <dx:BootstrapGridViewDateColumn FieldName="MAKING_RES_DT"
-                                                    Caption="¡¶¿€Ω«¿˚¿œ"
+                                                    Caption="Ï†úÏûëÏã§Ï†ÅÏùº"
                                                     Width="120px"
                                                     VisibleIndex="10">
                         <PropertiesDateEdit DisplayFormatString="yyyy-MM-dd" />
@@ -447,16 +446,16 @@
                 <TotalSummary>
                     <dx:ASPxSummaryItem FieldName="CONTRACT_ID"
                                         SummaryType="Count"
-                                        DisplayFormat="√— {0}∞«" />
+                                        DisplayFormat="Ï¥ù {0}Í±¥" />
                 </TotalSummary>
             </dx:BootstrapGridView>
         </div>
-        <!-- π›¿¿«¸ ∑°∆€ ≥° -->
+        <!-- Î∞òÏùëÌòï ÎûòÌçº ÎÅù -->
 
-        <!-- ±◊∏ÆµÂ «œ¥‹ ¡§∫∏ -->
+        <!-- Í∑∏Î¶¨Îìú ÌïòÎã® Ï†ïÎ≥¥ -->
         <div class="record-count">
             <i class="fas fa-info-circle"></i>
-            <asp:Label ID="lblRecordCount" runat="server" Text="¡∂»∏µ» µ•¿Ã≈Õ∞° æ¯Ω¿¥œ¥Ÿ."></asp:Label>
+            <asp:Label ID="lblRecordCount" runat="server" Text="Ï°∞ÌöåÎêú Îç∞Ïù¥ÌÑ∞Í∞Ä ÏóÜÏäµÎãàÎã§."></asp:Label>
         </div>
     </div>
 </asp:Content>
