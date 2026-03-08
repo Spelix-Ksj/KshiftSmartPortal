@@ -71,6 +71,7 @@
     <Content Include="Global.asax" />
     <Content Include="Views\ContractManagerXpo.aspx" />
     <Content Include="Views\ToDoList.aspx" />
+    <Content Include="Views\ChatBot.aspx" />
     <Content Include="Views\Default.aspx" />
     <Content Include="Views\Home.aspx" />
     <Content Include="Views\Login.aspx" />
@@ -132,6 +133,13 @@
     </Compile>
     <Compile Include="Views\ToDoList.aspx.designer.cs">
       <DependentUpon>ToDoList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChatBot.aspx.cs">
+      <DependentUpon>ChatBot.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\ChatBot.aspx.designer.cs">
+      <DependentUpon>ChatBot.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
