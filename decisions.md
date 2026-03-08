@@ -1,3 +1,37 @@
+## Chatbot 페이지 연동 — 2026-03-07
+- Task Type: feature
+- Team: Explorer(조사) → Implementer(구현) → Critic(리뷰)
+- Key Decisions:
+  - Site.Master 사용 (포털 세션 인증 자동 적용)
+  - API: https://hq.spelix.co.kr/api/ (별도 JWT 인증)
+  - 전체 UI는 HTML/CSS/JS로 구현 (서버 코드 최소화)
+  - 챗봇 API 로그인은 페이지 내부에서 별도 처리
+- Status: COMPLETE
+
+### Phase 1: 조사 — 완료
+- Site.Master ContentPlaceHolder: TitleContent, HeadContent, PageTitleContent, MainContent, ScriptContent
+- 인증: Session["UserID"] 체크 (Site.Master.cs Page_Load)
+- API 사양: CHATBOT_WEB_HANDOFF.md에 상세 기술
+
+### Phase 2: 구현 — 완료
+- ChatBot.aspx: 챗봇 전체 UI (로그인패널 + 채팅패널) + CSS + JavaScript
+- ChatBot.aspx.cs: 최소 code-behind (세션 체크는 Site.Master 위임)
+- ChatBot.aspx.designer.cs: 디자이너 파일
+- Site.Master: 헤더에 ChatBot 네비게이션 버튼 추가
+
+### Phase 3: 1차 리뷰 — NEEDS_IMPROVEMENT
+- CRITICAL 4건: expiresAt 파싱, Health 인증헤더, Execute 본문, isBusy 경쟁조건
+- WARNING 5건: innerHTML, GPU 응답 파싱, 0건 메시지, password trim, textContent.trim
+
+### Phase 4: 수정 — 완료
+- CRITICAL 4건 + WARNING 5건 모두 수정
+- async/await로 비동기 함수 리팩터링
+
+### Phase 5: 재리뷰 — PASS
+- CRITICAL 이슈 없음, 배포 가능
+
+---
+
 ## DevExpress 버전 업데이트 후 태그 충돌 오류 수정 — 2026-03-04
 
 - Task Type: bugfix
