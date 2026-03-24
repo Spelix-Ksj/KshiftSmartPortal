@@ -124,7 +124,7 @@ namespace KShiftSmartPortalWeb.Controllers
             catch (Exception ex)
             {
                 SqlLogger.LogError(ex, "To-Do List 조회 실패 (XPO)");
-                throw;
+                return new List<ToDoListViewModel>();
             }
         }
 
@@ -197,7 +197,7 @@ namespace KShiftSmartPortalWeb.Controllers
             catch (Exception ex)
             {
                 SqlLogger.LogError(ex, "작업지시 수정 실패 (XPO)");
-                throw;
+                return false;
             }
         }
 
@@ -250,7 +250,7 @@ namespace KShiftSmartPortalWeb.Controllers
             catch (Exception ex)
             {
                 SqlLogger.LogError(ex, "일괄 저장 실패 (XPO)");
-                throw;
+                return 0;
             }
         }
 
@@ -409,7 +409,7 @@ namespace KShiftSmartPortalWeb.Controllers
             catch (Exception ex)
             {
                 SqlLogger.LogError(ex, "작업지시 등록 실패 (XPO)");
-                throw;
+                return false;
             }
         }
 
@@ -484,7 +484,7 @@ namespace KShiftSmartPortalWeb.Controllers
             catch (Exception ex)
             {
                 SqlLogger.LogError(ex, "프로젝트 목록 조회 실패");
-                throw;
+                return new DataTable();
             }
         }
 
@@ -523,7 +523,7 @@ namespace KShiftSmartPortalWeb.Controllers
             catch (Exception ex)
             {
                 SqlLogger.LogError(ex, "활성 케이스 목록 조회 실패");
-                throw;
+                return new DataTable();
             }
         }
 
@@ -595,7 +595,7 @@ namespace KShiftSmartPortalWeb.Controllers
             catch (Exception ex)
             {
                 SqlLogger.LogError(ex, "작업지시 삭제 실패 (XPO)");
-                throw;
+                return false;
             }
         }
 
@@ -636,7 +636,7 @@ namespace KShiftSmartPortalWeb.Controllers
             catch (Exception ex)
             {
                 SqlLogger.LogError(ex, "Company 목록 조회 실패");
-                throw;
+                return new DataTable();
             }
         }
 

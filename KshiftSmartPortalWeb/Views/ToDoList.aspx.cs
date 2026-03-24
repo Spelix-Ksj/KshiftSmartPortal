@@ -81,7 +81,9 @@ namespace KShiftSmartPortalWeb
         {
             try
             {
-                string companyNo = cmbCompany.Value != null ? cmbCompany.Value.ToString() : "100";
+                string companyNo = cmbCompany.Value != null
+                    ? cmbCompany.Value.ToString()
+                    : (Session["CompanyNo"] != null ? Session["CompanyNo"].ToString() : (cmbCompany.Items.Count > 0 ? cmbCompany.Items[0].Value.ToString() : string.Empty));
 
                 // 케이스 목록 로드
                 DataTable dtCase = _controller.GetActiveCaseList(companyNo);
@@ -148,8 +150,9 @@ namespace KShiftSmartPortalWeb
                     }
                 }
 
-                if (cmbCompany.Items.FindByValue("100") != null)
-                    cmbCompany.Value = "100";
+                string defaultCompanyNo = Session["CompanyNo"] != null ? Session["CompanyNo"].ToString() : null;
+                if (!string.IsNullOrEmpty(defaultCompanyNo) && cmbCompany.Items.FindByValue(defaultCompanyNo) != null)
+                    cmbCompany.Value = defaultCompanyNo;
                 else if (cmbCompany.Items.Count > 0)
                     cmbCompany.SelectedIndex = 0;
             }
@@ -204,6 +207,14 @@ namespace KShiftSmartPortalWeb
         /// </summary>
         protected void btnDelete_Click(object sender, EventArgs e)
         {
+            if (Session["UserID"] == null)
+            {
+                ShowMessage("세션이 만료되었습니다. 다시 로그인해주세요.");
+                Response.Redirect("~/Views/Login.aspx", false);
+                Context.ApplicationInstance.CompleteRequest();
+                return;
+            }
+
             try
             {
                 string companyNo = null, caseNo = null, projectNo = null, orderNo = null;
@@ -287,6 +298,14 @@ namespace KShiftSmartPortalWeb
         /// </summary>
         protected void btnAddSave_Click(object sender, EventArgs e)
         {
+            if (Session["UserID"] == null)
+            {
+                ShowMessage("세션이 만료되었습니다. 다시 로그인해주세요.");
+                Response.Redirect("~/Views/Login.aspx", false);
+                Context.ApplicationInstance.CompleteRequest();
+                return;
+            }
+
             try
             {
                 string companyNo = cmbCompany.Value != null ? cmbCompany.Value.ToString() : null;
@@ -429,9 +448,15 @@ namespace KShiftSmartPortalWeb
             // List<T> 데이터소스는 기본 업데이트를 지원하지 않으므로 항상 Cancel
             e.Cancel = true;
 
+            if (Session["UserID"] == null)
+            {
+                ShowMessageCallback("세션이 만료되었습니다. 다시 로그인해주세요.");
+                return;
+            }
+
             try
             {
-                string userId = Session["UserID"] != null ? Session["UserID"].ToString() : "SYSTEM";
+                string userId = Session["UserID"].ToString();
 
                 // 4개 복합키 모두 e.Keys에서 가져오기 (KeyFieldName이 복합키로 설정됨)
                 string companyNo = e.Keys["COMPANY_NO"] != null ? e.Keys["COMPANY_NO"].ToString() : null;
@@ -591,7 +616,7 @@ namespace KShiftSmartPortalWeb
 
         private void ShowMessage(string message)
         {
-            string script = $"alert('{message.Replace("'", "\\'")}');";
+            string script = $"alert({System.Web.HttpUtility.JavaScriptStringEncode(message, addDoubleQuotes: true)});";
             ScriptManager.RegisterStartupScript(this, GetType(), "alertScript", script, true);
         }
 

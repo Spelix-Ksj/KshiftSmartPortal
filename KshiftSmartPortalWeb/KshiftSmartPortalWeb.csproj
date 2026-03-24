@@ -63,6 +63,7 @@
     <!-- DevExpress 패키지 (NuGet으로 설치 필요) -->
     <PackageReference Include="DevExpress.Web" Version="25.2.5" />
     <PackageReference Include="DevExpress.Web.Bootstrap" Version="25.2.5" />
+    <PackageReference Include="DevExpress.Web.Themes" Version="25.2.5" />
     <PackageReference Include="DevExpress.Web.Mvc" Version="25.2.5" />
     <!-- Oracle 패키지 -->
     <PackageReference Include="Oracle.ManagedDataAccess" Version="23.5.1" />
