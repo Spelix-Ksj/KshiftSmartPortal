@@ -7,6 +7,7 @@ using DevExpress.Web.Bootstrap;
 using DevExpress.Web.Data;
 using KShiftSmartPortal.ViewModels;
 using KShiftSmartPortalWeb.Controllers;
+using KShiftSmartPortalWeb.Utils;
 
 namespace KShiftSmartPortalWeb
 {
@@ -14,7 +15,7 @@ namespace KShiftSmartPortalWeb
     /// To-Do List 페이지 코드비하인드 (Bootstrap + XPO + PopupEditForm 방식)
     /// 모바일 최적화 버전
     /// </summary>
-    public partial class ToDoList : System.Web.UI.Page
+    public partial class ToDoList : BasePage
     {
         private ToDoListController _controller = new ToDoListController();
         private LoginController _loginController = new LoginController();
@@ -31,20 +32,7 @@ namespace KShiftSmartPortalWeb
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["UserID"] == null)
-            {
-                // 콜백 요청 중에는 Response.Redirect 사용 불가
-                if (IsCallback)
-                {
-                    ASPxWebControl.RedirectOnCallback("~/Views/Login.aspx");
-                }
-                else
-                {
-                    Response.Redirect("~/Views/Login.aspx", false);
-                    Context.ApplicationInstance.CompleteRequest();
-                }
-                return;
-            }
+            if (!CheckSession()) return;
 
             if (!IsPostBack && !IsCallback)
             {
@@ -125,11 +113,7 @@ namespace KShiftSmartPortalWeb
 
         private void LoadCompanyTypeList()
         {
-            cmbCompanyType.Items.Clear();
-            cmbCompanyType.Items.Add("전체", "*");
-            cmbCompanyType.Items.Add("협력사", "VENDOR");
-            cmbCompanyType.Items.Add("MASTER", "MASTER");
-            cmbCompanyType.SelectedIndex = 0;
+            ComboBoxHelper.InitializeCompanyTypeCombo(cmbCompanyType);
         }
 
         private void LoadCompanyList()
@@ -138,23 +122,9 @@ namespace KShiftSmartPortalWeb
             {
                 DataTable dt = _loginController.GetCompanyList();
                 string companyType = cmbCompanyType.Value != null ? cmbCompanyType.Value.ToString() : "*";
-
-                cmbCompany.Items.Clear();
-
-                foreach (DataRow row in dt.Rows)
-                {
-                    if (companyType == "*" || row["COMPANY_TYPE"]?.ToString() == companyType)
-                    {
-                        string text = $"{row["COMPANY_NO"]} - {row["COMPANY_NAME"]}";
-                        cmbCompany.Items.Add(text, row["COMPANY_NO"].ToString());
-                    }
-                }
-
                 string defaultCompanyNo = Session["CompanyNo"] != null ? Session["CompanyNo"].ToString() : null;
-                if (!string.IsNullOrEmpty(defaultCompanyNo) && cmbCompany.Items.FindByValue(defaultCompanyNo) != null)
-                    cmbCompany.Value = defaultCompanyNo;
-                else if (cmbCompany.Items.Count > 0)
-                    cmbCompany.SelectedIndex = 0;
+
+                ComboBoxHelper.LoadCompanyCombo(cmbCompany, dt, companyType, defaultCompanyNo);
             }
             catch (Exception ex)
             {
@@ -207,13 +177,7 @@ namespace KShiftSmartPortalWeb
         /// </summary>
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            if (Session["UserID"] == null)
-            {
-                ShowMessage("세션이 만료되었습니다. 다시 로그인해주세요.");
-                Response.Redirect("~/Views/Login.aspx", false);
-                Context.ApplicationInstance.CompleteRequest();
-                return;
-            }
+            if (!EnsureAuthenticated()) return;
 
             try
             {
@@ -298,13 +262,7 @@ namespace KShiftSmartPortalWeb
         /// </summary>
         protected void btnAddSave_Click(object sender, EventArgs e)
         {
-            if (Session["UserID"] == null)
-            {
-                ShowMessage("세션이 만료되었습니다. 다시 로그인해주세요.");
-                Response.Redirect("~/Views/Login.aspx", false);
-                Context.ApplicationInstance.CompleteRequest();
-                return;
-            }
+            if (!EnsureAuthenticated()) return;
 
             try
             {
@@ -450,7 +408,7 @@ namespace KShiftSmartPortalWeb
 
             if (Session["UserID"] == null)
             {
-                ShowMessageCallback("세션이 만료되었습니다. 다시 로그인해주세요.");
+                ShowMessageCallback(gridToDoList, "세션이 만료되었습니다. 다시 로그인해주세요.");
                 return;
             }
 
@@ -467,7 +425,7 @@ namespace KShiftSmartPortalWeb
                 if (string.IsNullOrEmpty(orderNo) || string.IsNullOrEmpty(caseNo) ||
                     string.IsNullOrEmpty(companyNo) || string.IsNullOrEmpty(projectNo))
                 {
-                    ShowMessageCallback("필수 정보가 없습니다.");
+                    ShowMessageCallback(gridToDoList, "필수 정보가 없습니다.");
                     return;
                 }
 
@@ -489,18 +447,18 @@ namespace KShiftSmartPortalWeb
                     // 저장 성공: 팝업 닫기 및 데이터 새로고침
                     gridToDoList.CancelEdit();
                     LoadData();
-                    ShowMessageCallback("데이터가 수정되었습니다.");
+                    ShowMessageCallback(gridToDoList, "데이터가 수정되었습니다.");
                     // 모바일 뷰에서 새로고침 필요 플래그
                     gridToDoList.JSProperties["cpNeedRefresh"] = true;
                 }
                 else
                 {
-                    ShowMessageCallback("수정에 실패했습니다.");
+                    ShowMessageCallback(gridToDoList, "수정에 실패했습니다.");
                 }
             }
             catch (Exception ex)
             {
-                ShowMessageCallback($"수정 오류: {ex.Message}");
+                ShowMessageCallback(gridToDoList, $"수정 오류: {ex.Message}");
             }
         }
 
@@ -613,20 +571,6 @@ namespace KShiftSmartPortalWeb
         #endregion
 
         #region Helper Methods
-
-        private void ShowMessage(string message)
-        {
-            string script = $"alert({System.Web.HttpUtility.JavaScriptStringEncode(message, addDoubleQuotes: true)});";
-            ScriptManager.RegisterStartupScript(this, GetType(), "alertScript", script, true);
-        }
-
-        /// <summary>
-        /// 콜백 모드에서 메시지 표시 (JSProperties 사용)
-        /// </summary>
-        private void ShowMessageCallback(string message)
-        {
-            gridToDoList.JSProperties["cpMessage"] = message;
-        }
 
         /// <summary>
         /// 모바일 카드 상태 배지 CSS 클래스 반환

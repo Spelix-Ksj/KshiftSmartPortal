@@ -16,12 +16,8 @@ namespace KShiftSmartPortalWeb.Controllers
     /// XPO�� �̿��� ������� ���� ���� ��Ʈ�ѷ�
     /// ���� Oracle ��� ��Ʈ�ѷ��� �и��Ǿ� �����մϴ�.
     /// </summary>
-    public class ContractManagerXpoController
+    public class ContractManagerXpoController : BaseController
     {
-        private string ConnectionString
-        {
-            get { return ConfigurationManager.ConnectionStrings["OracleConnection"].ConnectionString; }
-        }
 
         /// <summary>
         /// ���� ��ȸ (������ + ��) - XPO ���, ���� �ּ�ȭ

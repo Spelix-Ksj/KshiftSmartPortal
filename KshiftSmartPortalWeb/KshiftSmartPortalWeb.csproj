@@ -73,6 +73,8 @@
     <Content Include="Views\ContractManagerXpo.aspx" />
     <Content Include="Views\ToDoList.aspx" />
     <Content Include="Views\ChatBot.aspx" />
+    <Content Include="Views\CompanyManager.aspx" />
+    <Content Include="Views\OrganizationManager.aspx" />
     <Content Include="Views\Default.aspx" />
     <Content Include="Views\Home.aspx" />
     <Content Include="Views\Login.aspx" />
@@ -81,11 +83,17 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ToDoListController.cs" />
     <Compile Include="Controllers\ContractManagerController.cs" />
     <Compile Include="Controllers\ContractController.cs" />
     <Compile Include="Controllers\ContractManagerXpoController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\CompanyManagerController.cs" />
+    <Compile Include="Controllers\OrganizationManagerController.cs" />
     <Compile Include="Controllers\ShortcutController.cs" />
     <Compile Include="Dababase\XpoConnectionHelper.cs" />
     <Compile Include="ORMDataModel1Code\SCM_CONTRACT_DETAIL.cs" />
@@ -114,13 +122,30 @@
     </Compile>
     <Compile Include="Repositories\UserShortcutRepository.cs" />
     <Compile Include="Services\ShortcutService.cs" />
+    <Compile Include="Utils\ComboBoxHelper.cs" />
     <Compile Include="Utils\SqlLogger.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\ToDoListViewModel.cs" />
     <Compile Include="ViewModels\ContractViewModel.cs" />
+    <Compile Include="ViewModels\CompanyViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModel.cs" />
     <Compile Include="Views\Birthday.aspx.designer.cs" />
+    <Compile Include="Views\CompanyManager.aspx.cs">
+      <DependentUpon>CompanyManager.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\CompanyManager.aspx.designer.cs">
+      <DependentUpon>CompanyManager.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrganizationManager.aspx.cs">
+      <DependentUpon>OrganizationManager.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\OrganizationManager.aspx.designer.cs">
+      <DependentUpon>OrganizationManager.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\ContractManagerXpo.aspx.cs">
       <DependentUpon>ContractManagerXpo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

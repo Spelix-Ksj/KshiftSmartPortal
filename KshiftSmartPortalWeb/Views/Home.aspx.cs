@@ -6,19 +6,13 @@ using KShiftSmartPortalWeb.Models;
 
 namespace KShiftSmartPortalWeb
 {
-    public partial class Home : System.Web.UI.Page
+    public partial class Home : BasePage
     {
         private ShortcutController _shortcutController = new ShortcutController();
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // 세션 체크
-            if (Session["UserID"] == null)
-            {
-                Response.Redirect("~/Views/Login.aspx", false);
-                Context.ApplicationInstance.CompleteRequest();
-                return;
-            }
+            if (!CheckSession()) return;
 
             if (!IsPostBack)
             {
@@ -191,13 +185,6 @@ namespace KShiftSmartPortalWeb
             }
         }
 
-        /// <summary>
-        /// 메시지 표시
-        /// </summary>
-        private void ShowMessage(string message)
-        {
-            string script = $"alert('{message.Replace("'", "\\'")}');";
-            ScriptManager.RegisterStartupScript(this, GetType(), "ShowMessage", script, true);
-        }
+        // ShowMessage is inherited from BasePage with XSS-safe encoding
     }
 }

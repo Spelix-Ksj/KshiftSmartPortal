@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using KShiftSmartPortalWeb.Models;
@@ -11,12 +10,8 @@ namespace KShiftSmartPortalWeb.Controllers
     /// <summary>
     /// 계약정보 관리 컨트롤러
     /// </summary>
-    public class ContractManagerController
+    public class ContractManagerController : BaseController
     {
-        private string ConnectionString
-        {
-            get { return ConfigurationManager.ConnectionStrings["OracleConnection"].ConnectionString; }
-        }
 
         #region 케이스 목록 조회
 

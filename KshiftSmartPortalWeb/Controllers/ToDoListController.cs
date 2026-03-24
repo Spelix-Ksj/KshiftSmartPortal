@@ -17,12 +17,8 @@ namespace KShiftSmartPortalWeb.Controllers
     /// 작업지시 목록 조회 및 수정 기능을 제공합니다.
     /// 4개 테이블 조인: SCM_CASE_MASTER, STD_PERSONNEL_INFO, SCM_WORK_ORDER_MASTER, SCM_WORK_ORDER_DETAIL
     /// </summary>
-    public class ToDoListController
+    public class ToDoListController : BaseController
     {
-        private string ConnectionString
-        {
-            get { return ConfigurationManager.ConnectionStrings["OracleConnection"].ConnectionString; }
-        }
 
         #region 조회 메서드 (XPO 방식)
 
@@ -601,45 +597,6 @@ namespace KShiftSmartPortalWeb.Controllers
 
         #endregion
 
-        #region 공통 메서드
-
-        /// <summary>
-        /// Company 목록 조회 (Oracle 직접 조회)
-        /// </summary>
-        public DataTable GetCompanyList()
-        {
-            try
-            {
-                using (OracleConnection conn = new OracleConnection(ConnectionString))
-                {
-                    conn.Open();
-
-                    string query = @"
-                        SELECT COMPANY_NO, COMPANY_NAME, COMPANY_TYPE
-                        FROM STD_COMPANY_MASTER
-                        WHERE USE_YN = 'Y'
-                        ORDER BY COMPANY_NO";
-
-                    using (OracleCommand cmd = new OracleCommand(query, conn))
-                    {
-                        SqlLogger.LogCommand(cmd, "Company 목록 조회");
-
-                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
-                        {
-                            DataTable dt = new DataTable();
-                            adapter.Fill(dt);
-                            return dt;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                SqlLogger.LogError(ex, "Company 목록 조회 실패");
-                return new DataTable();
-            }
-        }
-
-        #endregion
+        // GetCompanyList is inherited from BaseController
     }
 }

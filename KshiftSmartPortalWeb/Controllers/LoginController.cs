@@ -3,57 +3,18 @@ using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using KShiftSmartPortalWeb.Utils;
 
 namespace KShiftSmartPortalWeb.Controllers
 {
     /// <summary>
     /// 로그인 비즈니스 로직을 담당하는 컨트롤러
     /// </summary>
-    public class LoginController
+    public class LoginController : BaseController
     {
         private const int MAX_LOGIN_FAIL_COUNT = 5;
 
-        private string ConnectionString
-        {
-            get
-            {
-                return ConfigurationManager.ConnectionStrings["OracleConnection"].ConnectionString;
-            }
-        }
-
-        /// <summary>
-        /// 회사 목록 조회
-        /// </summary>
-        public DataTable GetCompanyList()
-        {
-            try
-            {
-                using (OracleConnection conn = new OracleConnection(ConnectionString))
-                {
-                    conn.Open();
-
-                    string query = @"
-                        SELECT COMPANY_NO, COMPANY_NAME, COMPANY_TYPE
-                        FROM STD_COMPANY_MASTER 
-                        WHERE NVL(USE_YN, 'Y') = 'Y' 
-                        ORDER BY COMPANY_TYPE, VIEW_ORDER";
-
-                    using (OracleCommand cmd = new OracleCommand(query, conn))
-                    {
-                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
-                        {
-                            DataTable dt = new DataTable();
-                            adapter.Fill(dt);
-                            return dt;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"회사 목록 조회 실패: {ex.Message}", ex);
-            }
-        }
+        // GetCompanyList is inherited from BaseController
 
         /// <summary>
         /// 사용자 인증

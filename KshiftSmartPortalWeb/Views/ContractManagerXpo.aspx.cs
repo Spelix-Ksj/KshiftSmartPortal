@@ -6,10 +6,11 @@ using DevExpress.Web;
 using KShiftSmartPortal.ViewModels;
 using KShiftSmartPortalWeb.Controllers;
 using KShiftSmartPortalWeb.Models;
+using KShiftSmartPortalWeb.Utils;
 
 namespace KShiftSmartPortalWeb
 {
-    public partial class ContractManagerXpo : System.Web.UI.Page
+    public partial class ContractManagerXpo : BasePage
     {
         private ContractManagerXpoController _xpoController = new ContractManagerXpoController();
         private LoginController _loginController = new LoginController();
@@ -24,12 +25,7 @@ namespace KShiftSmartPortalWeb
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["UserID"] == null)
-            {
-                Response.Redirect("~/Views/Login.aspx", false);
-                Context.ApplicationInstance.CompleteRequest();
-                return;
-            }
+            if (!CheckSession()) return;
 
             if (!IsPostBack && !IsCallback)
             {
@@ -64,11 +60,7 @@ namespace KShiftSmartPortalWeb
         #region ComboBox 초기화 (기존)
         private void LoadCompanyTypeList()
         {
-            cmbCompanyType.Items.Clear();
-            cmbCompanyType.Items.Add("전체", "*");
-            cmbCompanyType.Items.Add("협력사", "VENDOR");
-            cmbCompanyType.Items.Add("MASTER", "MASTER");
-            cmbCompanyType.SelectedIndex = 0;
+            ComboBoxHelper.InitializeCompanyTypeCombo(cmbCompanyType);
         }
 
         private void LoadCompanyList()
@@ -78,21 +70,7 @@ namespace KShiftSmartPortalWeb
                 DataTable dt = _loginController.GetCompanyList();
                 string companyType = cmbCompanyType.Value?.ToString() ?? "*";
 
-                cmbCompany.Items.Clear();
-
-                foreach (DataRow row in dt.Rows)
-                {
-                    if (companyType == "*" || row["COMPANY_TYPE"]?.ToString() == companyType)
-                    {
-                        string text = $"{row["COMPANY_NO"]} - {row["COMPANY_NAME"]}";
-                        cmbCompany.Items.Add(text, row["COMPANY_NO"].ToString());
-                    }
-                }
-
-                if (cmbCompany.Items.FindByValue("1002") != null)
-                    cmbCompany.Value = "1002";
-                else if (cmbCompany.Items.Count > 0)
-                    cmbCompany.SelectedIndex = 0;
+                ComboBoxHelper.LoadCompanyCombo(cmbCompany, dt, companyType, "1002");
             }
             catch (Exception ex)
             {
@@ -452,11 +430,7 @@ namespace KShiftSmartPortalWeb
         #endregion
 
         #region Helper
-        private void ShowMessage(string message)
-        {
-            string script = $"alert('{message.Replace("'", "\\'")}');";
-            ScriptManager.RegisterStartupScript(this, GetType(), "ShowMessage", script, true);
-        }
+        // ShowMessage is inherited from BasePage with XSS-safe encoding
         #endregion
 
     }

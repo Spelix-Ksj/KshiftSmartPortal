@@ -9,15 +9,8 @@ namespace KShiftSmartPortalWeb.Controllers
     /// <summary>
     /// 계약 데이터 비즈니스 로직을 담당하는 컨트롤러
     /// </summary>
-    public class ContractController
+    public class ContractController : BaseController
     {
-        private string ConnectionString
-        {
-            get
-            {
-                return ConfigurationManager.ConnectionStrings["OracleConnection"].ConnectionString;
-            }
-        }
 
         /// <summary>
         /// 계약 목록 조회
