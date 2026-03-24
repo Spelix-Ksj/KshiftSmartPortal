@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Web;
 using DevExpress.Web;
+using DevExpress.Web.Localization;
 using KShiftSmartPortal.Database;
+using KShiftSmartPortalWeb.Utils;
 
 namespace KShiftSmartPortalWeb
 {
@@ -9,6 +11,9 @@ namespace KShiftSmartPortalWeb
     {
         protected void Application_Start(object sender, EventArgs e)
         {
+            // DevExpress GridView 필터 메뉴 한글화
+            ASPxGridViewLocalizer.Active = new KoreanGridViewLocalizer();
+
             // 애플리케이션 시작 시 초기화
             XpoConnectionHelper.Connect(DevExpress.Xpo.DB.AutoCreateOption.SchemaAlreadyExists, true);
         }

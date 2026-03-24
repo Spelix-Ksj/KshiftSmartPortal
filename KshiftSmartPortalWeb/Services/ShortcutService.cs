@@ -152,8 +152,8 @@ namespace KShiftSmartPortalWeb.Services
                 new UserShortcut
                 {
                     ShortcutOrder = 1,
-                    MenuName = "계약정보 업로드",
-                    MenuUrl = "ContractUpload.aspx",
+                    MenuName = "To-Do-List",
+                    MenuUrl = "ToDoList.aspx",
                     MenuIcon = "fas fa-upload",
                     MenuColor = "#e74c3c",
                     IsLocked = "N"
@@ -161,55 +161,19 @@ namespace KShiftSmartPortalWeb.Services
                 new UserShortcut
                 {
                     ShortcutOrder = 2,
-                    MenuName = "실산 달력터",
-                    MenuUrl = "CalendarView.aspx",
-                    MenuIcon = "fas fa-calendar",
-                    MenuColor = "#3498db",
+                    MenuName = "고객사 관리",
+                    MenuUrl = "CompanyManager.aspx",
+                    MenuIcon = "fas fa-building",
+                    MenuColor = "#2980b9",
                     IsLocked = "N"
                 },
                 new UserShortcut
                 {
                     ShortcutOrder = 3,
-                    MenuName = "계약관리",
-                    MenuUrl = "Default.aspx",
-                    MenuIcon = "fas fa-file-contract",
-                    MenuColor = "#e67e22",
-                    IsLocked = "N"
-                },
-                new UserShortcut
-                {
-                    ShortcutOrder = 4,
-                    MenuName = "계약정보 관리",
-                    MenuUrl = "ContractManagement.aspx",
-                    MenuIcon = "fas fa-chart-line",
-                    MenuColor = "#9b59b6",
-                    IsLocked = "N"
-                },
-                new UserShortcut
-                {
-                    ShortcutOrder = 5,
-                    MenuName = "프로젝트 ACT...",
-                    MenuUrl = "ProjectActivity.aspx",
-                    MenuIcon = "fas fa-tasks",
-                    MenuColor = "#16a085",
-                    IsLocked = "N"
-                },
-                new UserShortcut
-                {
-                    ShortcutOrder = 6,
-                    MenuName = "마스터플랜",
-                    MenuUrl = "MasterPlan.aspx",
-                    MenuIcon = "fas fa-project-diagram",
-                    MenuColor = "#d35400",
-                    IsLocked = "N"
-                },
-                new UserShortcut
-                {
-                    ShortcutOrder = 7,
-                    MenuName = "프로젝트 부품...",
-                    MenuUrl = "ProjectParts.aspx",
-                    MenuIcon = "fas fa-cog",
-                    MenuColor = "#34495e",
+                    MenuName = "조직 관리",
+                    MenuUrl = "OrganizationManager.aspx",
+                    MenuIcon = "fas fa-sitemap",
+                    MenuColor = "#8e44ad",
                     IsLocked = "N"
                 }
             };

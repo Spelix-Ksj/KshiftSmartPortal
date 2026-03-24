@@ -124,6 +124,7 @@
     <Compile Include="Services\ShortcutService.cs" />
     <Compile Include="Utils\ComboBoxHelper.cs" />
     <Compile Include="Utils\SqlLogger.cs" />
+    <Compile Include="Utils\KoreanGridViewLocalizer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
