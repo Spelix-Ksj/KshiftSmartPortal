@@ -58,6 +58,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="DevExpress.Web.ASPxTreeList.v25.2">
+      <HintPath>bin\DevExpress.Web.ASPxTreeList.v25.2.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <!-- DevExpress 패키지 (NuGet으로 설치 필요) -->
@@ -75,6 +78,7 @@
     <Content Include="Views\ChatBot.aspx" />
     <Content Include="Views\CompanyManager.aspx" />
     <Content Include="Views\OrganizationManager.aspx" />
+    <Content Include="Views\ResourceManager.aspx" />
     <Content Include="Views\Default.aspx" />
     <Content Include="Views\Home.aspx" />
     <Content Include="Views\Login.aspx" />
@@ -94,6 +98,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\CompanyManagerController.cs" />
     <Compile Include="Controllers\OrganizationManagerController.cs" />
+    <Compile Include="Controllers\ResourceManagerController.cs" />
     <Compile Include="Controllers\ShortcutController.cs" />
     <Compile Include="Dababase\XpoConnectionHelper.cs" />
     <Compile Include="ORMDataModel1Code\SCM_CONTRACT_DETAIL.cs" />
@@ -132,6 +137,7 @@
     <Compile Include="ViewModels\ContractViewModel.cs" />
     <Compile Include="ViewModels\CompanyViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModel.cs" />
+    <Compile Include="ViewModels\ResourceViewModel.cs" />
     <Compile Include="Views\Birthday.aspx.designer.cs" />
     <Compile Include="Views\CompanyManager.aspx.cs">
       <DependentUpon>CompanyManager.aspx</DependentUpon>
@@ -146,6 +152,13 @@
     </Compile>
     <Compile Include="Views\OrganizationManager.aspx.designer.cs">
       <DependentUpon>OrganizationManager.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ResourceManager.aspx.cs">
+      <DependentUpon>ResourceManager.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\ResourceManager.aspx.designer.cs">
+      <DependentUpon>ResourceManager.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\ContractManagerXpo.aspx.cs">
       <DependentUpon>ContractManagerXpo.aspx</DependentUpon>
