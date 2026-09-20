@@ -12,49 +12,7 @@ namespace KShiftSmartPortalWeb.Controllers
     /// </summary>
     public class ContractManagerController : BaseController
     {
-
-        #region 케이스 목록 조회
-
-        /// <summary>
-        /// 회사별 케이스 목록 조회
-        /// </summary>
-        public DataTable GetCaseList(string companyNo)
-        {
-            try
-            {
-                using (OracleConnection conn = new OracleConnection(ConnectionString))
-                {
-                    conn.Open();
-
-                    string query = @"
-                        SELECT CASE_NO, CASE_NAME, COMPANY_NO, VIEW_ORDER
-                        FROM SCM_CASE_MASTER
-                        WHERE COMPANY_NO = :COMPANY_NO
-                        ORDER BY VIEW_ORDER";
-
-                    using (OracleCommand cmd = new OracleCommand(query, conn))
-                    {
-                        cmd.Parameters.Add("COMPANY_NO", OracleDbType.Varchar2).Value = companyNo;
-
-                        SqlLogger.LogCommand(cmd, "케이스 목록 조회");
-
-                        using (OracleDataAdapter adapter = new OracleDataAdapter(cmd))
-                        {
-                            DataTable dt = new DataTable();
-                            adapter.Fill(dt);
-                            return dt;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                SqlLogger.LogError(ex, "케이스 목록 조회 실패");
-                throw;
-            }
-        }
-
-        #endregion
+        // 케이스 목록 조회는 BaseController.GetCaseList 상속 사용
 
         #region 계약 마스터 조회
 

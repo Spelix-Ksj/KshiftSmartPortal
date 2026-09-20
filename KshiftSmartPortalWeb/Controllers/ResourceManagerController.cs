@@ -320,47 +320,6 @@ namespace KShiftSmartPortalWeb.Controllers
             }
         }
 
-        /// <summary>
-        /// 케이스 목록을 조회합니다. (SCM_CASE_MASTER에서 해당 회사의 전체 케이스)
-        /// </summary>
-        /// <param name="companyNo">회사번호</param>
-        /// <returns>케이스 목록 DataTable (CASE_NO, CASE_NAME)</returns>
-        public DataTable GetCaseList(string companyNo)
-        {
-            try
-            {
-                using (var conn = new OracleConnection(ConnectionString))
-                {
-                    conn.Open();
-
-                    string query = @"
-                        SELECT CASE_NO, CASE_NAME
-                        FROM SCM_CASE_MASTER
-                        WHERE COMPANY_NO = :companyNo
-                        ORDER BY CASE_NO";
-
-                    using (var cmd = new OracleCommand(query, conn))
-                    {
-                        cmd.Parameters.Add(new OracleParameter("companyNo", companyNo));
-
-                        SqlLogger.LogCommand(cmd, "케이스 목록 조회");
-
-                        using (var adapter = new OracleDataAdapter(cmd))
-                        {
-                            DataTable dt = new DataTable();
-                            adapter.Fill(dt);
-                            return dt;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                SqlLogger.LogError(ex, $"케이스 목록 조회 실패: {companyNo}");
-                return new DataTable();
-            }
-        }
-
         #region Private Helper
 
         /// <summary>

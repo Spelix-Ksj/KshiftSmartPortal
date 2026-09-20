@@ -168,6 +168,22 @@ namespace KShiftSmartPortalWeb.Utils
         }
 
         /// <summary>
+        /// 경고 로깅 (예외 없이 상황만 기록할 때 사용. LogError와 같은 출력창/콘솔 형식)
+        /// </summary>
+        /// <param name="message">경고 메시지</param>
+        public static void LogWarning(string message)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("!".PadRight(80, '!'));
+            sb.AppendLine("[경고]");
+            sb.AppendLine($"메시지: {message}");
+            sb.AppendLine("!".PadRight(80, '!'));
+
+            Debug.WriteLine(sb.ToString());
+            Console.WriteLine(sb.ToString());
+        }
+
+        /// <summary>
         /// XPO 쿼리 로깅 (파라메터 치환된 형태로 출력)
         /// </summary>
         /// <param name="tableName">테이블명</param>

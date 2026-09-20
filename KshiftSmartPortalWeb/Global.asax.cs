@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Web;
 using DevExpress.Web;
 using DevExpress.Web.Localization;
+using DevExpress.Web.Office;
 using KShiftSmartPortal.Database;
 using KShiftSmartPortalWeb.Utils;
 
@@ -67,7 +69,10 @@ namespace KShiftSmartPortalWeb
 
         protected void Session_End(object sender, EventArgs e)
         {
-            // 세션 종료
+            // 세션 종료: 이 세션이 연 블록제작 스프레드시트 문서를 앱 전역 캐시(DocumentManager)에서 정리
+            string prefix = $"BlockSchedule_{Session.SessionID}_";
+            foreach (var d in DocumentManager.GetAllDocuments().Where(d => d.DocumentId.StartsWith(prefix)).ToList())
+                DocumentManager.CloseDocument(d.DocumentId);
         }
 
         protected void Application_End(object sender, EventArgs e)

@@ -141,7 +141,7 @@ namespace KShiftSmartPortalWeb.Controllers
         /// <summary>
         /// ȸ�纰 ���̽� ��� ��ȸ
         /// </summary>
-        public DataTable GetCaseList(string companyNo)
+        public new DataTable GetCaseList(string companyNo)
         {
             try
             {

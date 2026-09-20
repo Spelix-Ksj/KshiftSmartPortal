@@ -79,10 +79,15 @@
     <Content Include="Views\CompanyManager.aspx" />
     <Content Include="Views\OrganizationManager.aspx" />
     <Content Include="Views\ResourceManager.aspx" />
+    <Content Include="Views\BlockSchedule.aspx" />
     <Content Include="Views\Default.aspx" />
     <Content Include="Views\Home.aspx" />
     <Content Include="Views\Login.aspx" />
     <Content Include="Views\Logout.aspx" />
+    <Content Include="App_Data\ExcelTemplates\2. 마스터 SCHEDULE.xlsx" />
+    <Content Include="App_Data\ExcelTemplates\2. 가공 SCHEDULE.xlsx" />
+    <Content Include="App_Data\ExcelTemplates\2. 조립 SCHEDULE.xlsx" />
+    <Content Include="App_Data\ExcelTemplates\2. PE SCHEDULE.xlsx" />
     <Content Include="Web.config" />
     <Content Include="packages.config" />
   </ItemGroup>
@@ -99,6 +104,7 @@
     <Compile Include="Controllers\CompanyManagerController.cs" />
     <Compile Include="Controllers\OrganizationManagerController.cs" />
     <Compile Include="Controllers\ResourceManagerController.cs" />
+    <Compile Include="Controllers\BlockScheduleController.cs" />
     <Compile Include="Controllers\ShortcutController.cs" />
     <Compile Include="Dababase\XpoConnectionHelper.cs" />
     <Compile Include="ORMDataModel1Code\SCM_CONTRACT_DETAIL.cs" />
@@ -129,6 +135,7 @@
     <Compile Include="Services\ShortcutService.cs" />
     <Compile Include="Utils\ComboBoxHelper.cs" />
     <Compile Include="Utils\SqlLogger.cs" />
+    <Compile Include="Utils\ScheduleSheetInjector.cs" />
     <Compile Include="Utils\KoreanGridViewLocalizer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -159,6 +166,13 @@
     </Compile>
     <Compile Include="Views\ResourceManager.aspx.designer.cs">
       <DependentUpon>ResourceManager.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BlockSchedule.aspx.cs">
+      <DependentUpon>BlockSchedule.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\BlockSchedule.aspx.designer.cs">
+      <DependentUpon>BlockSchedule.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\ContractManagerXpo.aspx.cs">
       <DependentUpon>ContractManagerXpo.aspx</DependentUpon>
